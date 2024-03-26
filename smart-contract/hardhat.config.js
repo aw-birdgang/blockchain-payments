@@ -37,6 +37,16 @@ module.exports = {
       url: `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
       accounts: [`0x${DEPLOYER_PRIVATE_KEY}`]
     },
+    wemix_testnet: {
+      url: "https://api.test.wemix.com",
+      accounts: [`0x${DEPLOYER_PRIVATE_KEY}`]
+      // gasPrice: 101000000000
+    },
+    wemix_mainnet: {
+      url: "https://api.wemix.com",
+      accounts: [`0x${DEPLOYER_PRIVATE_KEY}`]
+      // gasPrice: 101000000000
+    }
     // gpextest: {
     //   url: `https://testnet.rpc.gb.gpexdev.com`,
     //   accounts: [`${DEPLOYER_PRIVATE_KEY}`]
@@ -49,7 +59,7 @@ module.exports = {
       // polygon
       polygon: POLYGON_KEY_MUMBAI,
       // mumbai: POLYGON_KEY_MUMBAI,
-      polygonMumbai: POLYGON_KEY_MUMBAI,
+      polygonMumbai: POLYGON_KEY_MUMBAI
     }
   }
 };
