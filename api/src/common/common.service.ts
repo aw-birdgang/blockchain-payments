@@ -411,7 +411,7 @@ export class CommonService {
       },
       {
         symbol: 'USDC',
-        contractAddress: process.env.USDC_Ethereum_Token_Contract,
+        contractAddress: process.env.USDC_ETHEREUM_TOKEN_CONTRACT,
         decimals: 6,
         balance: 0,
       },

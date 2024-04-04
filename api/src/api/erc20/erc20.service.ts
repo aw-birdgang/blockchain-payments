@@ -1,19 +1,38 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, Logger} from '@nestjs/common';
 import { Web3 } from 'web3';
 import { ethers } from 'ethers';
 import { readFileSync } from 'fs';
 import { CommonService } from 'src/common/common.service';
+import {ConfigService} from "../../config";
 
 @Injectable()
 export class ERC20Service {
-  rpcurl = process.env.ETHEREUM_ENDPOINT;
-  web3 = new Web3(new Web3.providers.HttpProvider(this.rpcurl));
-  provider = new ethers.JsonRpcProvider(this.rpcurl);
+  // rpcurl = process.env.ETHEREUM_ENDPOINT;
+  // web3 = new Web3(new Web3.providers.HttpProvider(this.rpcurl));
+  // provider = new ethers.JsonRpcProvider(this.rpcurl);
 
-  erc20abiFile = './abi/erc20.json';
-  contract_abi = JSON.parse(readFileSync(this.erc20abiFile).toString());
+  private readonly rpcurl: string;
+  private web3: any;
+  private readonly provider: any;
 
-  constructor(private readonly commonService: CommonService) {}
+  private erc20abiFile: string;
+  private readonly contract_abi: string;
+
+  private readonly logger = new Logger(ERC20Service.name);
+
+  constructor(
+      private readonly commonService: CommonService,
+      private readonly configService: ConfigService
+  ) {
+    this.rpcurl = configService.get("ETHEREUM_ENDPOINT");
+    this.logger.log("rpcurl : " + this.rpcurl);
+
+    this.web3 = new Web3(new Web3.providers.HttpProvider(this.rpcurl));
+    this.provider = new ethers.JsonRpcProvider(this.rpcurl);
+    this.erc20abiFile = './abi/erc20.json';
+    this.contract_abi = JSON.parse(readFileSync(this.erc20abiFile).toString());
+    this.logger.log("contract_abi : " + this.contract_abi);
+  }
 
   /* 계정(address)이 보유한 자산 조회 */
   async balanceOf(ownerAddress: string, token: string) {

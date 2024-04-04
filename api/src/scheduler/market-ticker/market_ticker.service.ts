@@ -80,7 +80,7 @@ export class MarketTickerService {
     const hours = date_ob.getHours();
     const minutes = date_ob.getMinutes();
     const cmcTickerUrl = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=USDT,USDC';
-    const API_KEY = process.env.Coinmarketcap_Api_Key;
+    const API_KEY = process.env.COINMARKETCAP_API_KEY;
 
     try {
       if (hours % 1 == 0 && minutes == 0) {

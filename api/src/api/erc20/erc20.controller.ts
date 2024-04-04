@@ -19,10 +19,10 @@ export class ERC20Controller {
 
   @Post('balanceOf')
   @ApiOperation({
-    summary: '계정주소가 보유한 ERC20 자산 조회',
+    summary: '계정 주소가 보유한 ERC20 자산 조회',
     description: '계정 주소의 자산을 알 수 있다.',
   })
-  @ApiCreatedResponse({ description: '보유자산조회', type: ResponseBalanceOfDto })
+  @ApiCreatedResponse({ description: '보유 자산 조회', type: ResponseBalanceOfDto })
   async balanceOf(@Req() req, @Body() requestBalanceOfDto: RequestBalanceOfDto) {
     try {
       const balance = await this.erc20Service.balanceOf(requestBalanceOfDto.ownerAddress, requestBalanceOfDto.token);
