@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {BadRequestException, Injectable, InternalServerErrorException, Logger} from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager, DataSource } from 'typeorm';
 import * as crypto from 'crypto';
@@ -13,12 +13,17 @@ import {
   Group_Fee_Purse_History,
   Common_Code,
 } from '../entities';
+import {ConfigService} from "../config";
 
 @Injectable()
 export class CommonService {
+
+  private readonly logger = new Logger(CommonService.name);
+
   constructor(
     @InjectEntityManager() private readonly entityManager: EntityManager,
     private readonly dataSource: DataSource,
+    private readonly configService: ConfigService
   ) {}
 
   // === Encrypt ===
@@ -402,16 +407,20 @@ export class CommonService {
 
   // Ethereum ERC20 Token List
   getEthereumTokens() {
+    const usdtContract = this.configService.get("USDT_ETHEREUM_TOKEN_CONTRACT");
+    const usdcContract = this.configService.get("USDC_ETHEREUM_TOKEN_CONTRACT");
+    this.logger.log("usdtContract : " + usdtContract);
+    this.logger.log("usdcContract : " + usdcContract);
+
     return [
       {
-        symbol: 'USDT',
-        contractAddress: process.env.USDT_ETHEREUM_TOKEN_CONTRACT,
+        symbol: 'USDT',usdtContract,
         decimals: 6,
         balance: 0,
       },
       {
         symbol: 'USDC',
-        contractAddress: process.env.USDC_ETHEREUM_TOKEN_CONTRACT,
+        contractAddress: usdcContract,
         decimals: 6,
         balance: 0,
       },

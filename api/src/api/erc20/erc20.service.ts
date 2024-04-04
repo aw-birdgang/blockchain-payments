@@ -7,10 +7,6 @@ import {ConfigService} from "../../config";
 
 @Injectable()
 export class ERC20Service {
-  // rpcurl = process.env.ETHEREUM_ENDPOINT;
-  // web3 = new Web3(new Web3.providers.HttpProvider(this.rpcurl));
-  // provider = new ethers.JsonRpcProvider(this.rpcurl);
-
   private readonly rpcurl: string;
   private web3: any;
   private readonly provider: any;
@@ -18,13 +14,15 @@ export class ERC20Service {
   private erc20abiFile: string;
   private readonly contract_abi: string;
 
+  private readonly USDT_ADDRESS = '여기에 실제 USDT 컨트랙트 주소 입력';
+
   private readonly logger = new Logger(ERC20Service.name);
 
   constructor(
       private readonly commonService: CommonService,
       private readonly configService: ConfigService
   ) {
-    this.rpcurl = configService.get("ETHEREUM_ENDPOINT");
+    this.rpcurl = this.configService.get("ETHEREUM_ENDPOINT");
     this.logger.log("rpcurl : " + this.rpcurl);
 
     this.web3 = new Web3(new Web3.providers.HttpProvider(this.rpcurl));
@@ -36,13 +34,18 @@ export class ERC20Service {
 
   /* 계정(address)이 보유한 자산 조회 */
   async balanceOf(ownerAddress: string, token: string) {
-    const signer = new ethers.Wallet(process.env.Wallet_PrivateKey, this.provider);
-    const erctoken = this.getERC20Token(token);
+    this.logger.log("ownerAddress : " + ownerAddress);
+    this.logger.log("token : " + token);
+
+    const privateKey = this.configService.get("WALLET_PRIVATEKEY");
+    this.logger.log("privateKey : " + privateKey);
+    const signer = new ethers.Wallet(privateKey, this.provider);
 
     // Balance 조회
-    const erc20Contract = new ethers.Contract(erctoken.ContractAddress, this.contract_abi, signer);
+    const contractAddress = this.configService.get("USDT_ETHEREUM_TOKEN_CONTRACT");
+    const erc20Contract = new ethers.Contract(contractAddress, this.contract_abi, signer);
     const balance = await erc20Contract.balanceOf(ownerAddress);
-    return Number(ethers.formatUnits(balance, erctoken.Decimals));
+    return Number(ethers.formatUnits(balance, 18));
   }
 
   /* 계정(address)이 보유한 전체 ERC20 자산 조회 */
@@ -200,6 +203,12 @@ export class ERC20Service {
 
     return erc20token;
   }
+
+
+  async isUSDTAddress(address: string): Promise<boolean> {
+    return this.USDT_ADDRESS.toLowerCase() === address.toLowerCase();
+  }
+
 }
 
 export class ERC20Token {
