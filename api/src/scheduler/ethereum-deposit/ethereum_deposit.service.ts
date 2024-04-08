@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {Injectable, Logger, OnModuleInit} from '@nestjs/common';
 import { CommonService } from 'src/common/common.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Not, Repository } from 'typeorm';
@@ -8,33 +8,39 @@ import Web3 from 'web3';
 
 // Entities
 import { Coin_Address, Common_Code, Ethereum_Deposit_Transactions } from '../../entities';
+import {ConfigService} from "../../config";
+import {Interval} from "@nestjs/schedule";
+import {weiToEth} from "../../common/util/utils";
 
 /**
  * 이더리움 블록체인내에서 Ether 및 ERC20 토큰 입금 트랙잭션 읽어서 등록하도록 한다.
  */
 @Injectable()
-export class EthereumDepositService {
+export class EthereumDepositService implements OnModuleInit {
+
   private readonly logger = new Logger(EthereumDepositService.name);
 
-  rpcurl = process.env.ETHEREUM_ENDPOINT;
-  web3 = new Web3(new Web3.providers.HttpProvider(this.rpcurl));
+  //
+  private readonly rpcurl: string;
+  private web3: any;
 
-  erc20abiFile = './abi/erc20.json';
-  contract_abi = JSON.parse(readFileSync(this.erc20abiFile).toString());
+  private erc20abiFile: string;
+  private readonly contract_abi: string;
 
-  ERC20_Token_Map = new Map();
-  ERC20_Token_Decimal = new Map();
+  private ERC20_Token_Map = new Map();
+  private ERC20_Token_Decimal = new Map();
 
-  // Ethreum Address List
+// Ethreum Address List
   addressList: string[] = [];
   addressPKList = new Map();
 
-  processing = false;
-  processTimer;
+  private processing: boolean = false;
 
-  tokenList;
+  private readonly USDT_ADDRESS = '0x16d1e20a0d1435b653934d34abdf9d0e6f9f7cf5';
+
 
   constructor(
+    private readonly configService: ConfigService,
     private readonly commonService: CommonService,
     @InjectRepository(Common_Code)
     private CommonCodeRepository: Repository<Common_Code>,
@@ -43,34 +49,35 @@ export class EthereumDepositService {
     @InjectRepository(Ethereum_Deposit_Transactions)
     private EthereumDepositTransactionsRepository: Repository<Ethereum_Deposit_Transactions>,
   ) {
-    this.tokenList = commonService.getEthereumTokens();
+    this.rpcurl = this.configService.get("ETHEREUM_ENDPOINT");
+    this.logger.log("EthereumDepositService > rpcurl : " + this.rpcurl);
 
-    for (const item of this.tokenList) {
-      this.ERC20_Token_Map.set(item.contractAddress, item.symbol);
-      this.ERC20_Token_Decimal.set(item.symbol, item.decimals);
-    }
+    this.web3 = new Web3(new Web3.providers.HttpProvider(this.rpcurl));
+    this.erc20abiFile = './abi/erc20.json';
+    this.contract_abi = JSON.parse(readFileSync(this.erc20abiFile).toString());
+    this.logger.log("contract_abi : " + this.contract_abi);
 
-    this.main();
+    this.ERC20_Token_Map.set(this.USDT_ADDRESS, "USDT");
+    this.ERC20_Token_Decimal.set("USDT", 6);
   }
 
-  async main() {
-    // DB로부터 Address list 획득
-    await this.getEthereumDBAddress();
 
+
+  async onModuleInit() {
+    this.logger.log('onModuleInit()');
+    const result = await this.init ();
+  }
+
+  async init () {
+    // 여기에 초기화 로직을 추가합니다.
+    await this.getEthereumDBAddress();
     this.logger.log('DB Address Count : ' + this.addressList.length);
     const currentBlockNumber = await this.web3.eth.getBlockNumber();
     this.logger.log('Current network block number : ' + currentBlockNumber);
-
-    // Test (특정 블럭 확인)
-    // await this.checkSingleBlock(4863890);
-
-    await this.checkBlock();
-    this.processTimer = setInterval(async () => {
-      await this.checkBlock();
-    }, 12 * 1000);
   }
 
   // 블록 확인
+  @Interval(10000)
   async checkBlock() {
     if (this.processing) {
       return;
@@ -93,7 +100,9 @@ export class EthereumDepositService {
         await this.writeBlockNumber(blockNumber);
       }
       this.logger.debug('DB blockNumber : ' + blockNumber + ', network blockNumber : ' + cbn);
-      const currentBlockNumber = cbn - Number(process.env.ETHEREUM_CONFIRM_COUNT);
+      const confirmCount = this.configService.get("ETHEREUM_CONFIRM_COUNT");
+      this.logger.debug('confirmCount : ' + confirmCount);
+      const currentBlockNumber = cbn - Number(confirmCount);
 
       if (blockNumber == 0) {
         this.logger.log(`First time running at block ${currentBlockNumber.toString()}`);
@@ -125,21 +134,60 @@ export class EthereumDepositService {
     const saveBlockData = new Common_Code();
     saveBlockData.code_index = 'ethereum_current_block';
     saveBlockData.code_value = block_number;
-
     return await this.CommonCodeRepository.save(saveBlockData);
   }
+
+
+  async findBlockByNumber(blockNumber: number) {
+    const block = await this.web3.eth.getBlock(blockNumber, true);
+    if (!block || !block.transactions) {
+      await this.writeBlockNumber(blockNumber);
+      return [];
+    }
+
+    return block;
+  }
+
+  /**
+   * 블록에서 특정 주소로 보내려고 하는 트랜 잭션의 목록 가져 오기.
+   * @param blockNumber
+   * @param toAddress
+   */
+  async filterTransactionsByToAddress(blockNumber: number, toAddress: string): Promise<any[]> {
+    const block = await this.findBlockByNumber(blockNumber);
+    const transactions = block.transactions.filter(tx => tx.to === toAddress);
+    return transactions;
+  }
+
+
+  /**
+   * 블록에서 특정 주소들로 보내려고 하는 트랜 잭션의 목록 가져 오기.
+   * @param blockNumber
+   * @param toAddress
+   */
+  async getTransactionsByAddresses(transactions: any, addresses: string[]): Promise<any[]> {
+    // 주어진 주소 배열에 포함된 `toAddress`를 가진 트랜잭션만 필터링
+    const txs_filtered = transactions.filter(tx => {
+      // tx.to 주소가 존재하는지 확인하고 로깅합니다.
+      if (tx.to) {
+        //this.logger.debug(`Transaction to: ${tx.to}`); // tx.to 주소 로깅
+        return addresses.includes(tx.to.toLowerCase());
+      } else {
+        //this.logger.debug('Transaction to: null'); // tx.to가 null인 경우 로깅
+        return false; // tx.to가 null이면 필터링에서 제외합니다.
+      }
+    });
+    return txs_filtered;
+  }
+
+
 
   // 블럭 내 Transaction 확인
   async checkSingleBlock(blockNumber) {
     try {
       this.logger.log(`Checking block number : ${blockNumber.toString()}`);
       // 블럭정보 가져오기
-      const block = await this.web3.eth.getBlock(blockNumber, true);
-      if (block == null || block.transactions == undefined) {
-        // DB 현재 블럭 번호 저장
-        await this.writeBlockNumber(blockNumber);
-        return;
-      }
+      const block = await this.findBlockByNumber(blockNumber);
       this.logger.log(`Found block ${blockNumber.toString()} with ${block.transactions.length} transactions`);
 
       // ==========================
@@ -147,32 +195,30 @@ export class EthereumDepositService {
       // ==========================
 
       // 블럭 내 tx들 중 to주소에 회원 주소가 있는지 필터링
-      const addresses = block.transactions.map((t) => t.to);
-      //this.logger.debug('addresses.length : ' + addresses.length);
-      const filteredAddresses = await this.getEthereumAddress(addresses);
-      this.logger.log(`Number of interested vanity address [Ether]: ${filteredAddresses.length}`);
+      const txs_filtered = await this.getTransactionsByAddresses(block.transactions, this.addressList);
+      // const txs_filtered = block.transactions.filter(tx => {
+      //   // tx.to 주소가 존재하는지 확인하고 로깅합니다.
+      //   if (tx.to) {
+      //     this.logger.debug(`Transaction to: ${tx.to}`); // tx.to 주소 로깅
+      //     return this.addressList.includes(tx.to.toLowerCase());
+      //   } else {
+      //     this.logger.debug('Transaction to: null'); // tx.to가 null인 경우 로깅
+      //     return false; // tx.to가 null이면 필터링에서 제외합니다.
+      //   }
+      // });
 
-      // 필터링된 주소가 있는 트랜잭션만 분리
-      const txs_filtered = [];
-      block.transactions.forEach((tx) => {
-        const toAddress = tx.to == null ? '' : tx.to.toLowerCase();
-        filteredAddresses.forEach((fa) => {
-          if (toAddress == fa.toLowerCase()) {
-            txs_filtered.push(tx);
-          }
-        });
-      });
+
+      this.logger.log(`Number of interested vanity address [Ether]: ${txs_filtered.length}`);
 
       //const txs = block.transactions.filter((t) => filteredAddresses.indexOf(t.to) != -1);
       if (txs_filtered.length > 0) this.logger.log(txs_filtered);
 
       // 트랜잭션 읽기
-      txs_filtered.forEach(async (tx) => {
+      for (const tx of txs_filtered) {
         const receiptData = await this.web3.eth.getTransactionReceipt(tx.hash);
-
-        if (receiptData.status && tx.from != process.env.HOT_WALLET_ADDRESS) {
+        const hotWalletAddress = this.configService.get("HOT_WALLET_ADDRESS");
+        if (receiptData.status && tx.from != hotWalletAddress) {
           const edt = await this.EthereumDepositTransactionsRepository.find({ where: { txhash: tx.hash } });
-
           if (edt.length == 0) {
             const addressData = await this.CoinAddressRepository.findOne({ where: { address: tx.to, network: 'Ethereum' } });
 
@@ -183,13 +229,13 @@ export class EthereumDepositService {
             ethereum_Deposit_Transactions.from_address = tx.from;
             ethereum_Deposit_Transactions.to_address = tx.to;
             ethereum_Deposit_Transactions.coin = 'Ether';
-            ethereum_Deposit_Transactions.amounts = Number(this.web3.utils.fromWei(tx.value.toString(), 'ether'));
+            ethereum_Deposit_Transactions.amounts = Number(weiToEth(tx.value.toString()));
             ethereum_Deposit_Transactions.blkhash = '0x' + crypto.randomBytes(24).toString('hex');
 
             await this.EthereumDepositTransactionsRepository.save(ethereum_Deposit_Transactions);
           }
         }
-      });
+      }
 
       // ===========================
       // === Etherem ERC20 Token ===
@@ -252,7 +298,7 @@ export class EthereumDepositService {
       if (txs_filteredERC20.length > 0) this.logger.log(txs_filteredERC20);
 
       // 트랜잭션 읽기
-      txs_filteredERC20.forEach(async (tx) => {
+      for (const tx of txs_filteredERC20) {
         const receiptData = await this.web3.eth.getTransactionReceipt(tx.hash);
 
         if (receiptData.status) {
@@ -274,13 +320,12 @@ export class EthereumDepositService {
             await this.EthereumDepositTransactionsRepository.save(ethereum_Deposit_Transactions);
           }
         }
-      });
+      }
 
       // DB 현재 블럭 번호 저장
       await this.writeBlockNumber(blockNumber);
     } catch (e) {
       console.error(e);
-      clearInterval(this.processTimer);
     }
   }
 

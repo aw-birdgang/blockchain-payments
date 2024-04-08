@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CommonService } from 'src/common/common.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Interval } from '@nestjs/schedule';
 
 // Entities
 import { Ethereum_Deposit_Transactions, Polygon_Deposit_Transactions } from '../../entities';
@@ -16,8 +17,7 @@ import { Ethereum_Deposit_Transactions, Polygon_Deposit_Transactions } from '../
 export class DepositCheckerService {
   private readonly logger = new Logger(DepositCheckerService.name);
 
-  processing = false;
-  processTimer;
+  private processing: boolean = false;
 
   constructor(
     private readonly commonService: CommonService,
@@ -26,18 +26,12 @@ export class DepositCheckerService {
     @InjectRepository(Polygon_Deposit_Transactions)
     private PolygonDepositTransactionsRepository: Repository<Ethereum_Deposit_Transactions>,
   ) {
-    this.main();
-  }
-
-  async main() {
-    await this.checkDepositTransactions();
-    this.processTimer = setInterval(async () => {
-      await this.checkDepositTransactions();
-    }, 1 * 1000);
   }
 
   // 입금내역 확인
+  @Interval(10000)
   async checkDepositTransactions() {
+    this.logger.log('checkDepositTransactions > processing : ' + this.processing);
     if (this.processing) {
       return;
     }
@@ -46,11 +40,10 @@ export class DepositCheckerService {
     try {
       // Ethereum 블록체인 입금처리 [수수료 차감]
       const ethereumTransactions = await this.EthereumDepositTransactionsRepository.find({ where: { is_sended: 'N' } });
-
       if (ethereumTransactions.length > 0) {
         for await (const tx of ethereumTransactions) {
           const group_code = tx.group_code;
-          console.log('Ethereum : ' + tx.id + ' Fee => ' + tx.amounts);
+          this.logger.log('Ethereum : ' + tx.id + ' Fee => ' + tx.amounts);
 
           // 수수료 잔고
           const etherFeePurse = await this.commonService.getFeePurse(group_code, 'Ethereum', 'Ether');
@@ -75,68 +68,18 @@ export class DepositCheckerService {
 
       // Ethereum 블록체인 입금처리 [마스터 지갑 입금]
       const ethereumTransactionsFees = await this.EthereumDepositTransactionsRepository.find({ where: { is_sended: 'F' } });
-
       if (ethereumTransactionsFees.length > 0) {
         for await (const tx of ethereumTransactionsFees) {
           const group_code = tx.group_code;
           const coin = tx.coin;
           const amounts = tx.amounts;
-          console.log('Ethereum : ' + tx.id + ' Deposit => ' + tx.amounts);
+          this.logger.log('Ethereum : ' + tx.id + ' Deposit => ' + tx.amounts);
 
           // 마스터지갑 입금처리
           const rtnData = await this.commonService.deposit_master_purse(group_code, 'Ethereum', coin, amounts, tx.txhash, '');
-
           if (rtnData == true) {
             tx.is_sended = 'Y';
             await this.EthereumDepositTransactionsRepository.save(tx);
-          }
-        }
-      }
-
-      // Polygon 블록체인 입금처리 [수수료 차감]
-      const polygonTransactions = await this.PolygonDepositTransactionsRepository.find({ where: { is_sended: 'N' } });
-
-      if (polygonTransactions.length > 0) {
-        for await (const tx of polygonTransactions) {
-          const group_code = tx.group_code;
-          console.log('Polygon : ' + tx.id + ' Fee => ' + tx.amounts);
-
-          // 수수료 잔고
-          const maticFeePurse = await this.commonService.getFeePurse(group_code, 'Polygon', 'Matic');
-          // 수수료 조회
-          const maticFee = await this.commonService.selectCommonCode('polygon_deposit_fee');
-
-          if (maticFeePurse == 0) {
-            this.logger.error(tx.id + '] Matic 수수료 부족 [수수료 지갑 : ' + maticFeePurse + ' (' + group_code + ')]');
-          } else if (maticFeePurse >= maticFee) {
-            // 수수료 차감
-            const feeData = await this.commonService.deposit_fee_purse(group_code, 'Polygon', 'Matic', -1 * maticFee, tx.txhash, '');
-            if (feeData == true) {
-              tx.is_sended = 'F';
-              await this.PolygonDepositTransactionsRepository.save(tx);
-            }
-          } else {
-            this.logger.error(tx.id + '] Matic 수수료 부족 [수수료 지갑 : ' + maticFeePurse + ' (' + group_code + ')]');
-          }
-        }
-      }
-
-      // Polygon 블록체인 입금처리 [마스터 지갑 입금]
-      const polygonTransactionsFees = await this.PolygonDepositTransactionsRepository.find({ where: { is_sended: 'F' } });
-
-      if (polygonTransactionsFees.length > 0) {
-        for await (const tx of polygonTransactionsFees) {
-          const group_code = tx.group_code;
-          const coin = tx.coin;
-          const amounts = tx.amounts;
-          console.log('Polygon : ' + tx.id + ' Deposit => ' + tx.amounts);
-
-          // 마스터지갑 입금처리
-          const rtnData = await this.commonService.deposit_master_purse(group_code, 'Polygon', coin, amounts, tx.txhash, '');
-
-          if (rtnData == true) {
-            tx.is_sended = 'Y';
-            await this.PolygonDepositTransactionsRepository.save(tx);
           }
         }
       }

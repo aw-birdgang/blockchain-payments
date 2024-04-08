@@ -9,9 +9,12 @@ import {
 } from 'src/entities';
 import { DepositCheckerService } from './deposit_checker.service';
 import { CommonService } from 'src/common/common.service';
+import {ConfigService} from "../../config";
+import {ScheduleModule} from "@nestjs/schedule";
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
       Coin_Address,
       Coin_Address_Register,
@@ -20,6 +23,6 @@ import { CommonService } from 'src/common/common.service';
       Polygon_Deposit_Transactions,
     ]),
   ],
-  providers: [DepositCheckerService, CommonService],
+  providers: [ConfigService, DepositCheckerService, CommonService],
 })
 export class DepositCheckerModule {}

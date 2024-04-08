@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {Injectable, Logger, OnModuleInit} from '@nestjs/common';
 import { CommonService } from 'src/common/common.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Not, Repository } from 'typeorm';
@@ -8,34 +8,41 @@ import Web3 from 'web3';
 
 // Entities
 import { Coin_Address, Common_Code, Ethereum_Deposit_Transactions } from '../../entities';
+import {ethers} from "ethers";
+import {ConfigService} from "../../config";
+import {Interval} from "@nestjs/schedule";
 
 /**
- * 이더리움 블록체인내에서 ERC20 토큰 입금 트랙잭션 읽어서 등록하도록 한다.
+ * 이더리움 블록체인 내에서 ERC20 토큰 입금 트랙잭션 읽어서 등록 하도록 한다.
  */
 @Injectable()
-export class ERC20DepositService {
+export class ERC20DepositService implements OnModuleInit {
+
   private readonly logger = new Logger(ERC20DepositService.name);
 
-  rpcurl = process.env.ETHEREUM_ENDPOINT;
-  web3 = new Web3(new Web3.providers.HttpProvider(this.rpcurl));
+  //
+  private readonly rpcurl: string;
+  private web3: any;
+  private readonly provider: any;
 
-  erc20abiFile = './abi/erc20.json';
-  contract_abi = JSON.parse(readFileSync(this.erc20abiFile).toString());
+  private erc20abiFile: string;
+  private readonly contract_abi: string;
 
-  ERC20_Token_Map = new Map();
-  ERC20_Token_Decimal = new Map();
+  private ERC20_Token_Map = new Map();
+  private ERC20_Token_Decimal = new Map();
 
-  // Ethreum Address List
+// Ethreum Address List
   addressList: string[] = [];
   addressPKList = new Map();
 
-  processing = false;
-  processTimer;
+  private processing: boolean = false;
 
-  tokenList;
+  private readonly USDT_ADDRESS = '0x16d1e20a0d1435b653934d34abdf9d0e6f9f7cf5';
+
 
   constructor(
     private readonly commonService: CommonService,
+    private readonly configService: ConfigService,
     @InjectRepository(Common_Code)
     private CommonCodeRepository: Repository<Common_Code>,
     @InjectRepository(Coin_Address)
@@ -43,37 +50,38 @@ export class ERC20DepositService {
     @InjectRepository(Ethereum_Deposit_Transactions)
     private EthereumDepositTransactionsRepository: Repository<Ethereum_Deposit_Transactions>,
   ) {
-    this.tokenList = commonService.getEthereumTokens();
 
-    for (const item of this.tokenList) {
-      this.ERC20_Token_Map.set(item.contractAddress, item.symbol);
-      this.ERC20_Token_Decimal.set(item.symbol, item.decimals);
-    }
+    this.rpcurl = this.configService.get("ETHEREUM_ENDPOINT");
+    this.logger.log("ERC20DepositService > rpcurl : " + this.rpcurl);
 
-    //this.main();
+    this.web3 = new Web3(new Web3.providers.HttpProvider(this.rpcurl));
+    this.provider = new ethers.JsonRpcProvider(this.rpcurl);
+    this.erc20abiFile = './abi/erc20.json';
+    this.contract_abi = JSON.parse(readFileSync(this.erc20abiFile).toString());
+    this.logger.log("contract_abi : " + this.contract_abi);
+
+    this.ERC20_Token_Map.set(this.USDT_ADDRESS, "USDT");
+    this.ERC20_Token_Decimal.set("USDT", 6);
   }
 
-  async main() {
-    // DB로부터 Address list 획득
-    await this.getEthereumDBAddress();
 
+  async onModuleInit() {
+    this.logger.log('onModuleInit()');
+    const result = await this.init ();
+  }
+
+  async init () {
+    // 여기에 초기화 로직을 추가합니다.
+    await this.getEthereumDBAddress();
     this.logger.log('DB Address Count : ' + this.addressList.length);
     const currentBlockNumber = await this.web3.eth.getBlockNumber();
     this.logger.log('Current network block number : ' + currentBlockNumber);
-
-    // =====================================
-    // Test (특정 블럭 확인)
-    // await this.checkSingleBlock(4819588);
-    // =====================================
-
-    // await this.checkBlock();
-    // this.processTimer = setInterval(async () => {
-    //   await this.checkBlock();
-    // }, 12 * 1000);
   }
 
   // 블록 확인
+  @Interval(10000)
   async checkBlock() {
+    this.logger.log('ERC20DepositService > processing : ' + this.processing);
     if (this.processing) {
       return;
     }
@@ -88,6 +96,7 @@ export class ERC20DepositService {
       let blockNumber = await this.readBlockNumber();
       // Blockchain에서 현재 블록확인 (컨펌 확인)
       const cbn = Number(await this.web3.eth.getBlockNumber());
+      this.logger.log('checkBlock >>> cbn : ' + cbn);
 
       // DB 블럭넘버 오류 수정
       if (blockNumber > cbn) {
@@ -127,7 +136,6 @@ export class ERC20DepositService {
     const saveBlockData = new Common_Code();
     saveBlockData.code_index = 'erc20_current_block';
     saveBlockData.code_value = block_number;
-
     return await this.CommonCodeRepository.save(saveBlockData);
   }
 
@@ -228,8 +236,7 @@ export class ERC20DepositService {
       // DB 현재 블럭 번호 저장
       await this.writeBlockNumber(blockNumber);
     } catch (e) {
-      console.error(e);
-      clearInterval(this.processTimer);
+      this.logger.error(e);
     }
   }
 
@@ -237,7 +244,7 @@ export class ERC20DepositService {
   async getEthereumDBAddress() {
     const addressListData = await this.CoinAddressRepository.find({ where: { group_code: Not(IsNull() || '') } });
     this.addressList = [];
-    this.addressPKList = new Map();
+    this.addressPKList = new Map([]);
 
     for (let i = 0; i < addressListData.length; i++) {
       this.addressList.push(addressListData[i].address);
@@ -248,7 +255,6 @@ export class ERC20DepositService {
   // Address List 에서 필터링된 List 획득
   async getEthereumAddress(addresses) {
     const addressListData = [];
-
     try {
       this.addressList.forEach((item1) => {
         addresses.forEach((item2) => {

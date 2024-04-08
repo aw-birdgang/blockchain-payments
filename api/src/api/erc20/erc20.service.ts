@@ -14,7 +14,7 @@ export class ERC20Service {
   private erc20abiFile: string;
   private readonly contract_abi: string;
 
-  private readonly USDT_ADDRESS = '여기에 실제 USDT 컨트랙트 주소 입력';
+  private readonly USDT_ADDRESS = '0x16d1e20a0d1435b653934d34abdf9d0e6f9f7cf5';
 
   private readonly logger = new Logger(ERC20Service.name);
 

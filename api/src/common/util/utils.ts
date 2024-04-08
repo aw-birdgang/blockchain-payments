@@ -23,3 +23,8 @@ export function convertFormatUnits(amount: BigNumberish): string {
 export function convertParseUnits(amount: string): bigint {
   return parseUnits(amount, 18);
 }
+
+// Wei를 ETH로 변환하는 함수
+export function weiToEth(weiValue: string): string {
+  return this.web3.utils.fromWei(weiValue, 'ether');
+}

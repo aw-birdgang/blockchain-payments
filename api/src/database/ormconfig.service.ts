@@ -20,7 +20,8 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     // const entities2 = this.configService.get('ENTITIES');
     // const synchronize = this.configService.isEnv('dev');
     const synchronize = true;
-    const logging = this.configService.isEnv('dev');
+    // const logging = this.configService.isEnv('dev');
+    const logging = false;
 
     this.logger.log('type : ' + type);
     this.logger.log('host : ' + host);

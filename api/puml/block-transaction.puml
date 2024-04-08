@@ -1,0 +1,21 @@
+@startuml
+
+!theme plain
+
+participant Client
+entity "Blockchain Controller" as Controller
+entity "Blockchain Service" as Service
+database "Ethereum Blockchain" as Blockchain
+database "Database" as DB
+
+Client -> Controller : Request(blockNumber)
+Controller -> Service : extractTransactions(blockNumber)
+Service -> Blockchain : getBlock(blockNumber)
+Blockchain -> Service : blockDetails
+Service -> Service : filterTransactions(blockDetails)
+Service -> DB : saveTransactions(filteredTransactions)
+DB -> Service : saveConfirmation
+Service -> Controller : transactionsDetails
+Controller -> Client : Response(transactionsDetails)
+
+@enduml
