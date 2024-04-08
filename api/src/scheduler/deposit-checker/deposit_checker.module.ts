@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
-  Coin_Address,
-  Coin_Address_Register,
+  CoinAddress,
+  CoinAddressRegister,
   Common_Code,
-  Ethereum_Deposit_Transactions,
+  EthereumDepositTransactions,
   Polygon_Deposit_Transactions,
 } from 'src/entities';
 import { DepositCheckerService } from './deposit_checker.service';
@@ -16,10 +16,10 @@ import {ScheduleModule} from "@nestjs/schedule";
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-      Coin_Address,
-      Coin_Address_Register,
+      CoinAddress,
+      CoinAddressRegister,
       Common_Code,
-      Ethereum_Deposit_Transactions,
+      EthereumDepositTransactions,
       Polygon_Deposit_Transactions,
     ]),
   ],

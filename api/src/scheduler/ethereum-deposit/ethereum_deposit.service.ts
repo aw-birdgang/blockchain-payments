@@ -7,7 +7,7 @@ import * as crypto from 'crypto';
 import Web3 from 'web3';
 
 // Entities
-import { Coin_Address, Common_Code, Ethereum_Deposit_Transactions } from '../../entities';
+import {CoinAddress, Common_Code, EthereumDepositTransactions} from '../../entities';
 import {ConfigService} from "../../config";
 import {Interval} from "@nestjs/schedule";
 import {weiToEth} from "../../common/util/utils";
@@ -44,10 +44,10 @@ export class EthereumDepositService implements OnModuleInit {
     private readonly commonService: CommonService,
     @InjectRepository(Common_Code)
     private CommonCodeRepository: Repository<Common_Code>,
-    @InjectRepository(Coin_Address)
-    private CoinAddressRepository: Repository<Coin_Address>,
-    @InjectRepository(Ethereum_Deposit_Transactions)
-    private EthereumDepositTransactionsRepository: Repository<Ethereum_Deposit_Transactions>,
+    @InjectRepository(CoinAddress)
+    private CoinAddressRepository: Repository<CoinAddress>,
+    @InjectRepository(EthereumDepositTransactions)
+    private EthereumDepositTransactionsRepository: Repository<EthereumDepositTransactions>,
   ) {
     this.rpcurl = this.configService.get("ETHEREUM_ENDPOINT");
     this.logger.log("EthereumDepositService > rpcurl : " + this.rpcurl);
@@ -222,17 +222,17 @@ export class EthereumDepositService implements OnModuleInit {
           if (edt.length == 0) {
             const addressData = await this.CoinAddressRepository.findOne({ where: { address: tx.to, network: 'Ethereum' } });
 
-            const ethereum_Deposit_Transactions = new Ethereum_Deposit_Transactions();
-            ethereum_Deposit_Transactions.group_code = addressData != null ? addressData.group_code : '';
-            ethereum_Deposit_Transactions.txhash = tx.hash;
-            ethereum_Deposit_Transactions.block_number = Number(tx.blockNumber);
-            ethereum_Deposit_Transactions.from_address = tx.from;
-            ethereum_Deposit_Transactions.to_address = tx.to;
-            ethereum_Deposit_Transactions.coin = 'Ether';
-            ethereum_Deposit_Transactions.amounts = Number(weiToEth(tx.value.toString()));
-            ethereum_Deposit_Transactions.blkhash = '0x' + crypto.randomBytes(24).toString('hex');
+            const ethereumDepositTransactions = new EthereumDepositTransactions();
+            ethereumDepositTransactions.group_code = addressData != null ? addressData.group_code : '';
+            ethereumDepositTransactions.txhash = tx.hash;
+            ethereumDepositTransactions.block_number = Number(tx.blockNumber);
+            ethereumDepositTransactions.from_address = tx.from;
+            ethereumDepositTransactions.to_address = tx.to;
+            ethereumDepositTransactions.coin = 'Ether';
+            ethereumDepositTransactions.amounts = Number(weiToEth(tx.value.toString()));
+            ethereumDepositTransactions.blkhash = '0x' + crypto.randomBytes(24).toString('hex');
 
-            await this.EthereumDepositTransactionsRepository.save(ethereum_Deposit_Transactions);
+            await this.EthereumDepositTransactionsRepository.save(ethereumDepositTransactions);
           }
         }
       }
@@ -307,17 +307,17 @@ export class EthereumDepositService implements OnModuleInit {
           if (edt.length == 0) {
             const addressData = await this.CoinAddressRepository.findOne({ where: { address: tx.toAddress, network: 'Ethereum' } });
 
-            const ethereum_Deposit_Transactions = new Ethereum_Deposit_Transactions();
-            ethereum_Deposit_Transactions.group_code = addressData != null ? addressData.group_code : '';
-            ethereum_Deposit_Transactions.txhash = tx.hash;
-            ethereum_Deposit_Transactions.block_number = Number(tx.blockNumber);
-            ethereum_Deposit_Transactions.from_address = tx.from;
-            ethereum_Deposit_Transactions.to_address = tx.toAddress;
-            ethereum_Deposit_Transactions.coin = tx.Token;
-            ethereum_Deposit_Transactions.amounts = tx.toAmount;
-            ethereum_Deposit_Transactions.blkhash = '0x' + crypto.randomBytes(24).toString('hex');
+            const ethereumDepositTransactions = new EthereumDepositTransactions();
+            ethereumDepositTransactions.group_code = addressData != null ? addressData.group_code : '';
+            ethereumDepositTransactions.txhash = tx.hash;
+            ethereumDepositTransactions.block_number = Number(tx.blockNumber);
+            ethereumDepositTransactions.from_address = tx.from;
+            ethereumDepositTransactions.to_address = tx.toAddress;
+            ethereumDepositTransactions.coin = tx.Token;
+            ethereumDepositTransactions.amounts = tx.toAmount;
+            ethereumDepositTransactions.blkhash = '0x' + crypto.randomBytes(24).toString('hex');
 
-            await this.EthereumDepositTransactionsRepository.save(ethereum_Deposit_Transactions);
+            await this.EthereumDepositTransactionsRepository.save(ethereumDepositTransactions);
           }
         }
       }

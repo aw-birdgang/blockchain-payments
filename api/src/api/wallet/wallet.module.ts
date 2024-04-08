@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   Group_Apikey,
   Group_Master_Wallet,
-  Coin_Address,
-  Coin_Address_Register,
+  CoinAddress,
+  CoinAddressRegister,
   Group_Master_Purse,
   Group_Fee_Wallet,
   Group_Fee_Purse,
@@ -19,8 +19,8 @@ import {EtherService} from "../ether/ether.service";
     TypeOrmModule.forFeature([
       Group_Apikey,
       Group_Master_Wallet,
-      Coin_Address,
-      Coin_Address_Register,
+      CoinAddress,
+      CoinAddressRegister,
       Group_Master_Purse,
       Group_Fee_Wallet,
       Group_Fee_Purse,

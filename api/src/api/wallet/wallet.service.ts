@@ -8,8 +8,8 @@ import { v1 as uuid } from 'uuid';
 import {
   Group_Apikey,
   Group_Master_Wallet,
-  Coin_Address,
-  Coin_Address_Register,
+  CoinAddress,
+  CoinAddressRegister,
   Group_Master_Purse,
   Group_Fee_Purse,
   Group_Fee_Wallet,
@@ -25,10 +25,10 @@ export class WalletService {
     private MasterWalletRepository: Repository<Group_Master_Wallet>,
     @InjectRepository(Group_Fee_Wallet)
     private FeeWalletRepository: Repository<Group_Fee_Wallet>,
-    @InjectRepository(Coin_Address)
-    private CoinAddressRepository: Repository<Coin_Address>,
-    @InjectRepository(Coin_Address_Register)
-    private CoinAddressRegisterRepository: Repository<Coin_Address_Register>,
+    @InjectRepository(CoinAddress)
+    private CoinAddressRepository: Repository<CoinAddress>,
+    @InjectRepository(CoinAddressRegister)
+    private CoinAddressRegisterRepository: Repository<CoinAddressRegister>,
     @InjectRepository(Group_Master_Purse)
     private GroupMasterPurseRepository: Repository<Group_Master_Purse>,
     @InjectRepository(Group_Fee_Purse)
@@ -293,7 +293,7 @@ export class WalletService {
     addressData.mapped_at = new Date();
     await this.CoinAddressRepository.save(addressData);
 
-    const coin_Address_Register = new Coin_Address_Register();
+    const coin_Address_Register = new CoinAddressRegister();
     coin_Address_Register.address = addressData.address;
     coin_Address_Register.network = network;
     coin_Address_Register.group_code = group_code;
@@ -307,7 +307,7 @@ export class WalletService {
     await this.commonService.selectGroup(group_code);
 
     const addressData = await this.entityManager
-      .createQueryBuilder(Coin_Address, 'ca')
+      .createQueryBuilder(CoinAddress, 'ca')
       .select('address')
       .addSelect('mapped_at')
       .where('ca.group_code = :group_code', { group_code: group_code })
@@ -322,7 +322,7 @@ export class WalletService {
     await this.commonService.selectGroup(group_code);
 
     const addressData = await this.entityManager
-      .createQueryBuilder(Coin_Address_Register, 'ca')
+      .createQueryBuilder(CoinAddressRegister, 'ca')
       .select('ROW_NUMBER () OVER (ORDER BY "id" DESC) as "id"')
       .addSelect('address')
       .addSelect('mapped_at')

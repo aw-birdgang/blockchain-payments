@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Interval } from '@nestjs/schedule';
 
 // Entities
-import { Ethereum_Deposit_Transactions, Polygon_Deposit_Transactions } from '../../entities';
+import {EthereumDepositTransactions, Polygon_Deposit_Transactions} from '../../entities';
 
 /**
  * 입금내역 확인 서비스
@@ -21,10 +21,8 @@ export class DepositCheckerService {
 
   constructor(
     private readonly commonService: CommonService,
-    @InjectRepository(Ethereum_Deposit_Transactions)
-    private EthereumDepositTransactionsRepository: Repository<Ethereum_Deposit_Transactions>,
-    @InjectRepository(Polygon_Deposit_Transactions)
-    private PolygonDepositTransactionsRepository: Repository<Ethereum_Deposit_Transactions>,
+    @InjectRepository(EthereumDepositTransactions)
+    private EthereumDepositTransactionsRepository: Repository<EthereumDepositTransactions>,
   ) {
   }
 

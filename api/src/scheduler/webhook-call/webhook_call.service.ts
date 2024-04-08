@@ -3,7 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, Repository } from 'typeorm';
 
 // Entities
-import { Group_Webhook_Call, Group_Apikey, Ethereum_Deposit_Transactions, Polygon_Deposit_Transactions } from '../../entities';
+import {
+  Group_Webhook_Call,
+  Group_Apikey,
+  Polygon_Deposit_Transactions,
+  EthereumDepositTransactions
+} from '../../entities';
 import { DepositTransactions } from 'src/api/wallet/dto/request-deposit-transactions.dto';
 import axios from 'axios';
 
@@ -23,10 +28,10 @@ export class WebhookCallService {
     private GroupWebhookCallRepository: Repository<Group_Webhook_Call>,
     @InjectRepository(Group_Apikey)
     private GroupApikeyRepository: Repository<Group_Apikey>,
-    @InjectRepository(Ethereum_Deposit_Transactions)
-    private EthereumDepositTransactionsRepository: Repository<Ethereum_Deposit_Transactions>,
+    @InjectRepository(EthereumDepositTransactions)
+    private EthereumDepositTransactionsRepository: Repository<EthereumDepositTransactions>,
     @InjectRepository(Polygon_Deposit_Transactions)
-    private PolygonDepositTransactionsRepository: Repository<Ethereum_Deposit_Transactions>,
+    private PolygonDepositTransactionsRepository: Repository<EthereumDepositTransactions>,
   ) {
     this.main();
   }

@@ -2,7 +2,7 @@ import { Transform } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
-export class Coin_Address {
+export class CoinAddress {
   @Transform((params) => params.value.trim())
   @PrimaryColumn({ length: 10 })
   network: string;

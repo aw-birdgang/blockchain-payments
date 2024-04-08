@@ -2,7 +2,7 @@ import { Transform } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Coin_Address_Register {
+export class CoinAddressRegister {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 

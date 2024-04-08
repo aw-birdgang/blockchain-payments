@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 import { Transform } from 'class-transformer';
 
 @Entity()
-export class Ethereum_Deposit_Transactions {
+export class EthereumDepositTransactions {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
