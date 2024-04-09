@@ -1,5 +1,5 @@
-export * from './group_info.entity';
-export * from './group_apikey.entity';
+export * from './group.entity';
+export * from './group_container.entity';
 export * from './group_master_wallet.entity';
 export * from './group_master_purse.entity';
 export * from './group_fee_purse.entity';

@@ -5,7 +5,7 @@ import * as crypto from 'crypto';
 
 // Entities
 import {
-  GroupInfo,
+  Group,
   Group_Master_Purse,
   Group_Master_Purse_History,
   GroupFeePurse,
@@ -68,7 +68,7 @@ export class CommonService {
   // 그룹 선택
   async selectGroup(group_code: string) {
     const groupData = await this.entityManager
-      .createQueryBuilder(GroupInfo, 'data')
+      .createQueryBuilder(Group, 'data')
       .select('group_code')
       .select('group_name')
       .where('data.group_code = :group_code', { group_code: group_code })
