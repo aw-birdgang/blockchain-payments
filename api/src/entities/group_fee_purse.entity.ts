@@ -2,7 +2,7 @@ import { Transform } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
-export class Group_Fee_Purse {
+export class GroupFeePurse {
   @Transform((params) => params.value.trim())
   @PrimaryColumn({ length: 30 })
   group_code: string;

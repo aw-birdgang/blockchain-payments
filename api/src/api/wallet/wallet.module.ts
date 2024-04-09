@@ -3,13 +3,13 @@ import { WalletService } from './wallet.service';
 import { WalletController } from './wallet.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
-  Group_Apikey,
-  Group_Master_Wallet,
+  GroupApikey,
+  GroupMasterWallet,
   CoinAddress,
   CoinAddressRegister,
   Group_Master_Purse,
-  Group_Fee_Wallet,
-  Group_Fee_Purse,
+  GroupFeeWallet,
+  GroupFeePurse,
 } from 'src/entities';
 import { CommonService } from 'src/common/common.service';
 import {EtherService} from "../ether/ether.service";
@@ -17,13 +17,13 @@ import {EtherService} from "../ether/ether.service";
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      Group_Apikey,
-      Group_Master_Wallet,
+      GroupApikey,
+      GroupMasterWallet,
       CoinAddress,
       CoinAddressRegister,
       Group_Master_Purse,
-      Group_Fee_Wallet,
-      Group_Fee_Purse,
+      GroupFeeWallet,
+      GroupFeePurse,
     ]),
   ],
   controllers: [WalletController],

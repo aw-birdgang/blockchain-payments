@@ -5,11 +5,10 @@ import * as crypto from 'crypto';
 
 // Entities
 import {
-  Member,
-  Group_Info,
+  GroupInfo,
   Group_Master_Purse,
   Group_Master_Purse_History,
-  Group_Fee_Purse,
+  GroupFeePurse,
   Group_Fee_Purse_History,
   Common_Code,
 } from '../entities';
@@ -66,30 +65,10 @@ export class CommonService {
   }
 
   // ===== 회원 / 그룹 선택 =====
-
-  // 회원 선택
-  async selectMember(member_id: string) {
-    const memberData = await this.entityManager
-      .createQueryBuilder(Member, 'mem')
-      .leftJoinAndSelect(Group_Info, 'grp', 'mem.group_code = grp.group_code')
-      .select('mem.member_id', 'member_id')
-      .addSelect('mem.member_name', 'member_name')
-      .addSelect('mem.member_type', 'member_type')
-      .addSelect('mem.email', 'email')
-      .addSelect('mem.group_code', 'group_code')
-      .addSelect('grp.group_name', 'group_name')
-      .where('mem.member_id = :member_id', { member_id: member_id })
-      .getRawMany();
-
-    if (memberData.length == 0) throw new BadRequestException('Member ID is invalid. [' + member_id + ']');
-
-    return memberData;
-  }
-
   // 그룹 선택
   async selectGroup(group_code: string) {
     const groupData = await this.entityManager
-      .createQueryBuilder(Group_Info, 'data')
+      .createQueryBuilder(GroupInfo, 'data')
       .select('group_code')
       .select('group_name')
       .where('data.group_code = :group_code', { group_code: group_code })
@@ -277,7 +256,7 @@ export class CommonService {
    */
   async getFeePurse(group_code: string, network: string, coin: string) {
     const purseData = await this.entityManager
-      .createQueryBuilder(Group_Fee_Purse, 'gmp')
+      .createQueryBuilder(GroupFeePurse, 'gmp')
       .select('gmp.coin_amount / 100000000', 'coin_amount')
       .where('gmp.group_code = :group_code', { group_code })
       .andWhere('gmp.network = :network', { network })
@@ -294,7 +273,7 @@ export class CommonService {
   // Fee 지갑 오류 체크
   async selectFeePurseError(group_code: string) {
     const errorData = await this.entityManager
-      .createQueryBuilder(Group_Fee_Purse, 'gmp')
+      .createQueryBuilder(GroupFeePurse, 'gmp')
       .select('gmp.group_code', 'group_code')
       .addSelect('gmp.network', 'network')
       .addSelect('gmp.coin', 'coin')
@@ -354,10 +333,10 @@ export class CommonService {
 
     try {
       // 지갑 업데이트(없으면 생성)
-      const group_purse = await queryRunner.manager.findOneBy(Group_Fee_Purse, { group_code: group_code, network: network, coin: coin });
+      const group_purse = await queryRunner.manager.findOneBy(GroupFeePurse, { group_code: group_code, network: network, coin: coin });
 
       if (group_purse == null) {
-        const create_group_purse = await queryRunner.manager.create(Group_Fee_Purse, {
+        const create_group_purse = await queryRunner.manager.create(GroupFeePurse, {
           group_code: group_code,
           network: network,
           coin: coin,
@@ -366,7 +345,7 @@ export class CommonService {
 
         await queryRunner.manager.save(create_group_purse);
       } else {
-        const update_group_purse = await queryRunner.manager.create(Group_Fee_Purse, {
+        const update_group_purse = await queryRunner.manager.create(GroupFeePurse, {
           group_code: group_code,
           network: network,
           coin: coin,

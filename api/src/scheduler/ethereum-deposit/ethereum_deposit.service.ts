@@ -62,7 +62,6 @@ export class EthereumDepositService implements OnModuleInit {
   }
 
 
-
   async onModuleInit() {
     this.logger.log('onModuleInit()');
     const result = await this.init ();

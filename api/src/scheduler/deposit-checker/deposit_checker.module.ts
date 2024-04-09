@@ -5,7 +5,6 @@ import {
   CoinAddressRegister,
   Common_Code,
   EthereumDepositTransactions,
-  Polygon_Deposit_Transactions,
 } from 'src/entities';
 import { DepositCheckerService } from './deposit_checker.service';
 import { CommonService } from 'src/common/common.service';
@@ -20,7 +19,6 @@ import {ScheduleModule} from "@nestjs/schedule";
       CoinAddressRegister,
       Common_Code,
       EthereumDepositTransactions,
-      Polygon_Deposit_Transactions,
     ]),
   ],
   providers: [ConfigService, DepositCheckerService, CommonService],

@@ -2,7 +2,7 @@ import { Controller, HttpException, HttpStatus, Logger, Body, Param, Get, Post, 
 import { WalletService } from './wallet.service';
 
 import { ApiTags, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
-import { Group_Apikey } from 'src/entities';
+import { GroupApikey } from 'src/entities';
 import { RequestUserIDDto } from './dto/request-userid.dto';
 import { RequestUserIDWebHookDto } from './dto/request-userid-webhook.dto';
 import { ResponseApiKeyDto } from './dto/response-account.dto';
@@ -23,7 +23,7 @@ export class WalletController {
     try {
       const resultData = await this.walletService.selectApiKey(group_code);
 
-      const responseDto = new Group_Apikey();
+      const responseDto = new GroupApikey();
 
       if (resultData.length == 0) {
         responseDto.group_code = group_code;

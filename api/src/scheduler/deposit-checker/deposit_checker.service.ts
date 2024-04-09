@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Interval } from '@nestjs/schedule';
 
 // Entities
-import {EthereumDepositTransactions, Polygon_Deposit_Transactions} from '../../entities';
+import {EthereumDepositTransactions} from '../../entities';
 
 /**
  * 입금내역 확인 서비스

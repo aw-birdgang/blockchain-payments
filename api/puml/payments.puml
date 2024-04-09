@@ -215,14 +215,6 @@ table( coin_address_register ) {
     column( mapped_at ) : datetime
 }
 
-table( coin_trade_fee ) {
-    primary_key( transaction_no ) : bigint
-    primary_key( coin ) : varchar(10)
-    column( network ) : varchar(10)
-    column( fees ): bigint
-    column( created_at ) : datetime
-}
-
 table( common_code ) {
     primary_key( code_index) : varchar(30)
     column( code_value ) : varchar(100)
@@ -283,20 +275,6 @@ table( ethereum_withdraw_transactions ) {
     column( created_at ) : datetime
 }
 
-table( polygon_withdraw_transactions ) {
-    primary_key( id ) : bigint
-    column( txhash ) : varchar(66)
-    column( to_address ) : varchar(42)
-    column( speed ) : double(3,2)
-    column( coin ) : varchar(10)
-    column( amounts ) : decimal(16,8)
-    column( group_code ) : varchar(30)
-    column( blkhash ) : varchar(50)
-    column( usd_price ) : decimal(20,2)
-    column( fee ) : decimal(12,8)
-    column( created_at ) : datetime
-}
-
 group::group_code ||--|| member::group_code
 member::member_id ||--|| member_login_log::member_id
 member::member_id ||--|| member_login_fail::member_id
@@ -312,7 +290,6 @@ group::group_code||--|| coin_address_register::group_code
 group::group_code||--|| ethereum_deposit_transactions::group_code
 group::group_code||--|| polygon_deposit_transactions::group_code
 group::group_code||--|| ethereum_withdraw_transactions::group_code
-group::group_code||--|| polygon_withdraw_transactions::group_code
 
 admin_users::member_id ||--|| admin_menu_role::member_id
 admin_users::member_id ||--|| admin_user_login_log::member_id

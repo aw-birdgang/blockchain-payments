@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { Transform } from 'class-transformer';
 
 @Entity()
-export class Market_Ticker {
+export class MarketTicker {
   @Transform((params) => params.value.trim())
   @PrimaryColumn({ length: 20 })
   exchange: string;

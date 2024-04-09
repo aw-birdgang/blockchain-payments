@@ -2,7 +2,7 @@ import { Transform } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
-export class Group_Master_Wallet {
+export class GroupMasterWallet {
   @Transform((params) => params.value.trim())
   @PrimaryColumn({ length: 30 })
   group_code: string;

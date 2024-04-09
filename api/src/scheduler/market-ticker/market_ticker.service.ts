@@ -6,7 +6,7 @@ import { HttpService } from '@nestjs/axios';
 import axios from 'axios';
 
 // Entities
-import { Market_Ticker } from '../../entities';
+import {MarketTicker} from '../../entities';
 
 /**
  * 현재 블록체인 거래소에서 거래되는 토큰들의 현재가를 등록한다.
@@ -21,8 +21,8 @@ export class MarketTickerService {
   constructor(
     private readonly http: HttpService,
     private readonly commonService: CommonService,
-    @InjectRepository(Market_Ticker)
-    private MarketTickerRepository: Repository<Market_Ticker>,
+    @InjectRepository(MarketTicker)
+    private MarketTickerRepository: Repository<MarketTicker>,
   ) {
     this.main();
   }
@@ -62,13 +62,13 @@ export class MarketTickerService {
       const symbol = response.data[i].symbol.replace('USDT', '');
       logData += symbol + ' : ' + response.data[i].lastPrice + ', ';
 
-      const market_Ticker = new Market_Ticker();
-      market_Ticker.exchange = 'binance';
-      market_Ticker.symbol = symbol;
-      market_Ticker.ticker = response.data[i].lastPrice;
-      market_Ticker.ticker_percent = response.data[i].priceChangePercent;
+      const marketTicker = new MarketTicker();
+      marketTicker.exchange = 'binance';
+      marketTicker.symbol = symbol;
+      marketTicker.ticker = response.data[i].lastPrice;
+      marketTicker.ticker_percent = response.data[i].priceChangePercent;
 
-      await this.MarketTickerRepository.save(market_Ticker);
+      await this.MarketTickerRepository.save(marketTicker);
     }
 
     this.logger.log(logData.substring(0, logData.length - 2));
@@ -117,13 +117,13 @@ export class MarketTickerService {
             fixedTickerPercent = Math.floor(item.ticker_percent * 1000) / 1000;
           }
 
-          const market_Ticker = new Market_Ticker();
-          market_Ticker.exchange = 'coinmarketcap';
-          market_Ticker.symbol = item.symbol;
-          market_Ticker.ticker = fixedTicker;
-          market_Ticker.ticker_percent = fixedTickerPercent;
+          const marketTicker = new MarketTicker();
+          marketTicker.exchange = 'coinmarketcap';
+          marketTicker.symbol = item.symbol;
+          marketTicker.ticker = fixedTicker;
+          marketTicker.ticker_percent = fixedTickerPercent;
 
-          await this.MarketTickerRepository.save(market_Ticker);
+          await this.MarketTickerRepository.save(marketTicker);
         }
 
         this.logger.log(logData.substring(0, logData.length - 2));

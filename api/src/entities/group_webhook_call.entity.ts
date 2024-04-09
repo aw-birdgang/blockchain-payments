@@ -2,7 +2,7 @@ import { Transform } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Group_Webhook_Call {
+export class GroupWebhookCall {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 

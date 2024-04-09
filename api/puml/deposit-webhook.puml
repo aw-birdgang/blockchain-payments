@@ -1,0 +1,44 @@
+@startuml
+participant "Cron Job" as Cron
+entity "WebhookCallService" as Service
+database "EthereumDepositTransactionsRepository" as EthereumRepo
+database "GroupApikeyRepository" as ApikeyRepo
+database "GroupWebhookCallRepository" as WebhookCallRepo
+participant "External System" as External
+
+Cron -> Service: Trigger checkDepositTransactions()
+activate Service
+
+Service -> EthereumRepo: Find pending transactions
+activate EthereumRepo
+EthereumRepo --> Service: Return transactions
+deactivate EthereumRepo
+
+loop for each transaction
+    Service -> ApikeyRepo: Get webhook URL
+    activate ApikeyRepo
+    ApikeyRepo --> Service: Return URL
+    deactivate ApikeyRepo
+
+    Service -> External: POST transaction details
+    activate External
+    External --> Service: Respond (200, 201, error)
+    deactivate External
+
+    alt success (200, 201)
+        Service -> WebhookCallRepo: Save success status
+    else failure
+        Service -> WebhookCallRepo: Save failure status
+    end
+    activate WebhookCallRepo
+    WebhookCallRepo --> Service: Acknowledge
+    deactivate WebhookCallRepo
+
+    Service -> EthereumRepo: Update transaction status
+    activate EthereumRepo
+    EthereumRepo --> Service: Acknowledge
+    deactivate EthereumRepo
+end
+
+deactivate Service
+@enduml

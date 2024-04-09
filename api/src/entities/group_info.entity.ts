@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } fro
 import { Transform } from 'class-transformer';
 
 @Entity()
-export class Group_Info {
+export class GroupInfo {
   @Transform((params) => params.value.trim())
   @PrimaryColumn({ length: 30 })
   group_code: string;

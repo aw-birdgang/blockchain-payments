@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import Web3 from 'web3';
 
 // Entities
-import { Group_Fee_Wallet, Group_Fee_Purse_History, Common_Code } from '../../entities';
+import {GroupFeeWallet, Group_Fee_Purse_History, Common_Code} from '../../entities';
 
 /**
  * 이더리움 블록체인내에서 수수료 지갑 입금 트랙잭션 읽어서 등록하도록 한다. [Ether]
@@ -28,8 +28,8 @@ export class EthereumFeeDepositService {
     private readonly commonService: CommonService,
     @InjectRepository(Common_Code)
     private CommonCodeRepository: Repository<Common_Code>,
-    @InjectRepository(Group_Fee_Wallet)
-    private GroupFeeWalletRepository: Repository<Group_Fee_Wallet>,
+    @InjectRepository(GroupFeeWallet)
+    private GroupFeeWalletRepository: Repository<GroupFeeWallet>,
     @InjectRepository(Group_Fee_Purse_History)
     private GroupFeePurseHistoryRepository: Repository<Group_Fee_Purse_History>,
   ) {

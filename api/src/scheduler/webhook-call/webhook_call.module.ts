@@ -1,19 +1,20 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
-  Group_Webhook_Call,
-  Group_Apikey,
-  Polygon_Deposit_Transactions,
+  GroupWebhookCall,
+  GroupApikey,
   EthereumDepositTransactions
 } from 'src/entities';
 import { WebhookCallService } from './webhook_call.service';
 import { CommonService } from 'src/common/common.service';
 import { HttpModule } from '@nestjs/axios';
+import {ScheduleModule} from "@nestjs/schedule";
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     HttpModule,
-    TypeOrmModule.forFeature([Group_Webhook_Call, Group_Apikey, EthereumDepositTransactions, Polygon_Deposit_Transactions]),
+    TypeOrmModule.forFeature([GroupWebhookCall, GroupApikey, EthereumDepositTransactions, ]),
   ],
   providers: [WebhookCallService, CommonService],
 })

@@ -1,0 +1,132 @@
+@startuml
+!define primary_key(x) <b><color:red><&key> x</color></b>
+!define foreign_key(x) <color:blue><&key> x</color>
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+left to right direction
+skinparam roundcorner 5
+skinparam shadowing false
+skinparam handwritten false
+skinparam class {
+    BackgroundColor white
+    ArrowColor #2688d4
+    BorderColor #2688d4
+}
+
+title 'Blockchain Deposit Service ERD
+
+
+table( group ) {
+    primary_key( group_code ) : varchar(30)
+    column( group_name ): varchar(30)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( group_purse ) {
+    primary_key( coin ) : varchar(10)
+    foreign_key( group_code ): varchar(30)
+    column( coin_in_enable ): bigint
+    column( coin_in_disable ): bigint
+    column( coin_price_avg ) : float
+    column( updated_at ) : datetime
+}
+
+table( group_apikey ) {
+    primary_key( group_code ): varchar(30)
+    column( api_key ): varchar(50)
+    column( webhook_href ): varchar(60)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( group_master_wallet ) {
+    primary_key( group_code ): varchar(30)
+    column( network ) : varchar(10)
+    column( wallet_address ) : varchar(44)
+    column( wallet_private_key ) : varchar(140)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( coin_address ) {
+    primary_key( network ) : varchar(10)
+    primary_key( address ) : varchar(44)
+    column( private_key ): varchar(140)
+    column( group_code ): varchar(30)
+    column( mapped_at ) : datetime
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( coin_address_register ) {
+    primary_key( id ) : bigint
+    foreign_key( network ) : varchar(10)
+    foreign_key( address ) : varchar(44)
+    foreign_key( group_code ): varchar(30)
+    column( mapped_at ) : datetime
+}
+
+table( coin_trade_fee ) {
+    primary_key( transaction_no ) : bigint
+    primary_key( coin ) : varchar(10)
+    column( network ) : varchar(10)
+    column( fees ): bigint
+    column( created_at ) : datetime
+}
+
+table( common_code ) {
+    primary_key( code_index) : varchar(30)
+    column( code_value ) : varchar(100)
+    column( code_temp1 ) : varchar(100)
+    column( code_temp2 ) : varchar(100)
+    column( code_temp3 ) : varchar(100)
+    column( code_temp4 ) : varchar(100)
+    column( code_temp5 ) : varchar(100)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( ethereum_deposit_transactions ) {
+    primary_key( id ) : bigint
+    column( txhash ) : varchar(66)
+    column( from_address ) : varchar(42)
+    column( to_address ) : varchar(42)
+    column( block_number ) : int
+    column( coin ) : varchar(10)
+    column( amounts ) : decimal(16,8)
+    column( group_code ) : varchar(30)
+    column( blkhash ) : varchar(50)
+    column( is_sended ) : varchar(1)
+    column( usd_price ) : decimal(20,2)
+    column( krw_price ) : decimal(20,8)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( ethereum_withdraw_transactions ) {
+    primary_key( id ) : bigint
+    column( txhash ) : varchar(66)
+    column( to_address ) : varchar(42)
+    column( speed ) : double(3,2)
+    column( coin ) : varchar(10)
+    column( amounts ) : decimal(16,8)
+    column( group_code ) : varchar(30)
+    column( blkhash ) : varchar(50)
+    column( usd_price ) : decimal(20,2)
+    column( fee ) : decimal(12,8)
+    column( created_at ) : datetime
+}
+
+
+group::group_code||--|| group_purse::group_code
+group::group_code||--|| group_apikey::group_code
+group::group_code||--|| group_master_wallet::group_code
+group::group_code||--|| coin_address_register::group_code
+group::group_code||--|| ethereum_deposit_transactions::group_code
+group::group_code||--|| ethereum_withdraw_transactions::group_code
+
+coin_address::network ||--|| coin_address_register::network
+coin_address::address ||--|| coin_address_register::address
+@enduml

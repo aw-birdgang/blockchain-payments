@@ -6,33 +6,33 @@ import { v1 as uuid } from 'uuid';
 
 // Entities
 import {
-  Group_Apikey,
-  Group_Master_Wallet,
+  GroupApikey,
+  GroupMasterWallet,
   CoinAddress,
   CoinAddressRegister,
   Group_Master_Purse,
-  Group_Fee_Purse,
-  Group_Fee_Wallet,
+  GroupFeePurse,
+  GroupFeeWallet,
 } from '../../entities';
 import {CommonService} from "../../common/common.service";
 
 @Injectable()
 export class WalletService {
   constructor(
-    @InjectRepository(Group_Apikey)
-    private ApiKeyRepository: Repository<Group_Apikey>,
-    @InjectRepository(Group_Master_Wallet)
-    private MasterWalletRepository: Repository<Group_Master_Wallet>,
-    @InjectRepository(Group_Fee_Wallet)
-    private FeeWalletRepository: Repository<Group_Fee_Wallet>,
+    @InjectRepository(GroupApikey)
+    private ApiKeyRepository: Repository<GroupApikey>,
+    @InjectRepository(GroupMasterWallet)
+    private MasterWalletRepository: Repository<GroupMasterWallet>,
+    @InjectRepository(GroupFeeWallet)
+    private FeeWalletRepository: Repository<GroupFeeWallet>,
     @InjectRepository(CoinAddress)
     private CoinAddressRepository: Repository<CoinAddress>,
     @InjectRepository(CoinAddressRegister)
     private CoinAddressRegisterRepository: Repository<CoinAddressRegister>,
     @InjectRepository(Group_Master_Purse)
     private GroupMasterPurseRepository: Repository<Group_Master_Purse>,
-    @InjectRepository(Group_Fee_Purse)
-    private GroupFeePurseRepository: Repository<Group_Fee_Purse>,
+    @InjectRepository(GroupFeePurse)
+    private GroupFeePurseRepository: Repository<GroupFeePurse>,
     @InjectEntityManager() private readonly entityManager: EntityManager,
     private readonly commonService: CommonService,
     private readonly etherService: EtherService,
@@ -43,7 +43,7 @@ export class WalletService {
     await this.commonService.selectGroup(group_code);
 
     const group_Apikey = await this.entityManager
-      .createQueryBuilder(Group_Apikey, 'data')
+      .createQueryBuilder(GroupApikey, 'data')
       .select('group_code')
       .addSelect('api_key')
       .addSelect('webhook_href')
@@ -63,7 +63,7 @@ export class WalletService {
 
     const api_key: string = uuid().replaceAll('-', '').substring(0, 20);
 
-    const member_Apikey = new Group_Apikey();
+    const member_Apikey = new GroupApikey();
     member_Apikey.group_code = group_code;
     member_Apikey.api_key = api_key;
     member_Apikey.webhook_href = '';
@@ -78,7 +78,7 @@ export class WalletService {
   async updateWebhookHref(group_code: string, webhook_href: string) {
     await this.commonService.selectGroup(group_code);
 
-    const member_Apikey = new Group_Apikey();
+    const member_Apikey = new GroupApikey();
     member_Apikey.group_code = group_code;
     member_Apikey.webhook_href = webhook_href;
 
@@ -95,7 +95,7 @@ export class WalletService {
     await this.commonService.selectGroup(group_code);
 
     const member_MasterWallet = await this.entityManager
-      .createQueryBuilder(Group_Master_Wallet, 'mem')
+      .createQueryBuilder(GroupMasterWallet, 'mem')
       .select('group_code')
       //.addSelect('network')
       .addSelect('wallet_address')
@@ -161,7 +161,7 @@ export class WalletService {
     if (network != 'Ethereum' && network != 'Polygon' && network != 'Tron') network = 'Ethereum';
 
     const member_MasterWallet = await this.entityManager
-      .createQueryBuilder(Group_Master_Wallet, 'mem')
+      .createQueryBuilder(GroupMasterWallet, 'mem')
       .select('group_code')
       .addSelect('wallet_address')
       .addSelect('created_at')
@@ -173,7 +173,7 @@ export class WalletService {
 
     const account = await this.etherService.createAccount();
 
-    const memberMasterWallet = new Group_Master_Wallet();
+    const memberMasterWallet = new GroupMasterWallet();
     memberMasterWallet.group_code = group_code;
     memberMasterWallet.network = network;
     memberMasterWallet.wallet_address = account.address;
@@ -192,7 +192,7 @@ export class WalletService {
     await this.commonService.selectGroup(group_code);
 
     const member_FeeWallet = await this.entityManager
-      .createQueryBuilder(Group_Fee_Wallet, 'mem')
+      .createQueryBuilder(GroupFeeWallet, 'mem')
       .select('group_code')
       //.addSelect('network')
       .addSelect('wallet_address')
@@ -217,7 +217,7 @@ export class WalletService {
     });
 
     if (EtherPurse.length == 0) {
-      const group_Fee_Purse = new Group_Fee_Purse();
+      const group_Fee_Purse = new GroupFeePurse();
       group_Fee_Purse.group_code = group_code;
       group_Fee_Purse.network = 'Ethereum';
       group_Fee_Purse.coin = 'Ether';
@@ -231,7 +231,7 @@ export class WalletService {
     });
 
     if (MaticPurse.length == 0) {
-      const group_Fee_Purse = new Group_Fee_Purse();
+      const group_Fee_Purse = new GroupFeePurse();
       group_Fee_Purse.group_code = group_code;
       group_Fee_Purse.network = 'Polygon';
       group_Fee_Purse.coin = 'Matic';
@@ -240,7 +240,7 @@ export class WalletService {
     }
 
     const member_FeeWallet_Purse = await this.entityManager
-      .createQueryBuilder(Group_Fee_Purse, 'gmp')
+      .createQueryBuilder(GroupFeePurse, 'gmp')
       .select('group_code')
       .addSelect('network')
       .addSelect('coin')
@@ -258,7 +258,7 @@ export class WalletService {
     if (network != 'Ethereum' && network != 'Polygon' && network != 'Tron') network = 'Ethereum';
 
     const member_FeeWallet = await this.entityManager
-      .createQueryBuilder(Group_Fee_Wallet, 'mem')
+      .createQueryBuilder(GroupFeeWallet, 'mem')
       .select('group_code')
       .addSelect('wallet_address')
       .addSelect('created_at')
@@ -270,7 +270,7 @@ export class WalletService {
 
     const account = await this.etherService.createAccount();
 
-    const memberFeeWallet = new Group_Fee_Wallet();
+    const memberFeeWallet = new GroupFeeWallet();
     memberFeeWallet.group_code = group_code;
     memberFeeWallet.network = network;
     memberFeeWallet.wallet_address = account.address;
