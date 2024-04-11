@@ -1,44 +1,28 @@
 @startuml
-participant "Cron Job" as Cron
-entity "WebhookCallService" as Service
-database "EthereumDepositTransactionsRepository" as EthereumRepo
-database "GroupApikeyRepository" as ApikeyRepo
-database "GroupWebhookCallRepository" as WebhookCallRepo
-participant "External System" as External
+!theme plain
 
-Cron -> Service: Trigger checkDepositTransactions()
-activate Service
+actor "유저" as User
+actor "클라이언트" as Client
+participant "A 플랫폼 백오피스" as Backoffice
+participant "이더리움 블록체인" as Blockchain
+participant "A 플랫폼" as APlatform
+participant "클라이언트 서버" as ClientServer
 
-Service -> EthereumRepo: Find pending transactions
-activate EthereumRepo
-EthereumRepo --> Service: Return transactions
-deactivate EthereumRepo
+== 백오피스 접근 및 입금주소 관리 ==
+Client -> Backoffice : KEY를 사용한 접근
+Backoffice -> Client : 입금주소 관리 옵션 제공
 
-loop for each transaction
-    Service -> ApikeyRepo: Get webhook URL
-    activate ApikeyRepo
-    ApikeyRepo --> Service: Return URL
-    deactivate ApikeyRepo
+== 입금주소 생성 및 유저에게 노출 ==
+Client -> Backoffice : 입금주소 생성 요청
+Backoffice -> Client : 생성된 입금주소 제공
+Client -> User : 입금주소 노출
 
-    Service -> External: POST transaction details
-    activate External
-    External --> Service: Respond (200, 201, error)
-    deactivate External
+== 유저 입금 및 감지 ==
+User -> Blockchain : USDT 입금
+Blockchain -> APlatform : 입금 감지
 
-    alt success (200, 201)
-        Service -> WebhookCallRepo: Save success status
-    else failure
-        Service -> WebhookCallRepo: Save failure status
-    end
-    activate WebhookCallRepo
-    WebhookCallRepo --> Service: Acknowledge
-    deactivate WebhookCallRepo
+== 트랜잭션 정보 전달 ==
+APlatform -> ClientServer : 입금 트랜잭션 정보 (Webhook/callback URL 사용)
+ClientServer -> APlatform : 정보 수신 확인
 
-    Service -> EthereumRepo: Update transaction status
-    activate EthereumRepo
-    EthereumRepo --> Service: Acknowledge
-    deactivate EthereumRepo
-end
-
-deactivate Service
 @enduml

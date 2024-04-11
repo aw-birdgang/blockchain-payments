@@ -2,7 +2,7 @@ import { Transform } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
-export class GroupApikey {
+export class GroupContainer {
   @Transform((params) => params.value.trim())
   @PrimaryColumn({ length: 30 })
   group_code: string;

@@ -7,7 +7,7 @@ import * as crypto from 'crypto';
 import Web3 from 'web3';
 
 // Entities
-import {CoinAddress, Common_Code, EthereumDepositTransactions} from '../../entities';
+import {Wallet, Common_Code, EthereumDepositTransactions} from '../../entities';
 import {ConfigService} from "../../config";
 import {Interval} from "@nestjs/schedule";
 import {weiToEth} from "../../common/util/utils";
@@ -44,8 +44,8 @@ export class EthereumDepositService implements OnModuleInit {
     private readonly commonService: CommonService,
     @InjectRepository(Common_Code)
     private CommonCodeRepository: Repository<Common_Code>,
-    @InjectRepository(CoinAddress)
-    private CoinAddressRepository: Repository<CoinAddress>,
+    @InjectRepository(Wallet)
+    private CoinAddressRepository: Repository<Wallet>,
     @InjectRepository(EthereumDepositTransactions)
     private EthereumDepositTransactionsRepository: Repository<EthereumDepositTransactions>,
   ) {

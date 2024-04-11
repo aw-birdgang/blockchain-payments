@@ -1,0 +1,21 @@
+@startuml
+!theme plain
+
+actor "클라이언트" as Client
+participant "결제 시스템" as CryptoPaymentSystem
+participant "체인" as Blockchain
+
+
+== 솔루션 및 백 오피스 접근 ==
+Client -> CryptoPaymentSystem : 솔루션 요청
+CryptoPaymentSystem -> Client : 백 오피스 제공
+
+== 입금 주소 생성 및 관리 ==
+Client -> CryptoPaymentSystem : 입금 주소 생성 요청
+CryptoPaymentSystem -> Client : 생성된 입금 주소 제공
+
+== 입금 감지 프로세스 ==
+CryptoPaymentSystem <--> Blockchain : 입금 감지
+CryptoPaymentSystem -> Client : 입금 정보 전달
+
+@enduml

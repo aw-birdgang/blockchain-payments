@@ -1,0 +1,11 @@
+@startuml
+!theme plain
+
+actor "클라이언트" as Client
+participant "결제 시스템" as CryptoPaymentSystem
+participant "체인" as Blockchain
+
+CryptoPaymentSystem <--> Blockchain : 입금 감지
+CryptoPaymentSystem -> Client : 입금 정보 전달
+
+@enduml

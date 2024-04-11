@@ -1,11 +1,6 @@
 import {Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
-import {
-    CoinAddress,
-    CoinAddressRegister,
-    Common_Code,
-    EthereumDepositTransactions
-} from 'src/entities';
+import {Wallet, Common_Code, EthereumDepositTransactions} from 'src/entities';
 import {EthereumDepositService} from './ethereum_deposit.service';
 import {CommonService} from 'src/common/common.service';
 import {ScheduleModule} from "@nestjs/schedule";
@@ -15,8 +10,7 @@ import {ConfigService} from "../../config";
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-        CoinAddress,
-        CoinAddressRegister,
+        Wallet,
         Common_Code,
         EthereumDepositTransactions
       ]

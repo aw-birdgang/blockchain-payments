@@ -2,21 +2,24 @@ import { Transform } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
-export class GroupMasterWallet {
-  @Transform((params) => params.value.trim())
-  @PrimaryColumn({ length: 30 })
-  group_code: string;
-
+export class Wallet {
   @Transform((params) => params.value.trim())
   @PrimaryColumn({ length: 10 })
   network: string;
 
   @Transform((params) => params.value.trim())
-  @Column({ length: 44 })
-  wallet_address: string;
+  @PrimaryColumn({ length: 44 })
+  address: string;
 
+  @Transform((params) => params.value.trim())
   @Column({ length: 140 })
-  wallet_private_key: string;
+  private_key: string;
+
+  @Column({ length: 30, nullable: true })
+  group_code: string;
+
+  @Column({ type: 'datetime', nullable: true })
+  mapped_at: Date;
 
   @CreateDateColumn({ type: 'datetime' })
   created_at: Date;

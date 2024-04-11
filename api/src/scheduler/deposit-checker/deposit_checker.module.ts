@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
-  CoinAddress,
-  CoinAddressRegister,
+  Wallet,
   Common_Code,
   EthereumDepositTransactions,
 } from 'src/entities';
@@ -15,8 +14,7 @@ import {ScheduleModule} from "@nestjs/schedule";
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-      CoinAddress,
-      CoinAddressRegister,
+      Wallet,
       Common_Code,
       EthereumDepositTransactions,
     ]),

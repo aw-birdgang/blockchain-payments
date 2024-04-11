@@ -2,7 +2,7 @@ import {Injectable, Logger, OnModuleInit} from '@nestjs/common';
 import {ConfigService} from "../../config";
 import {CommonService} from "../../common/common.service";
 import {InjectRepository} from "@nestjs/typeorm";
-import {CoinAddress, Common_Code, EthereumDepositTransactions} from "../../entities";
+import {Wallet, Common_Code, EthereumDepositTransactions} from "../../entities";
 import {Repository} from "typeorm";
 import Web3 from "web3";
 import {readFileSync} from "fs";
@@ -36,8 +36,8 @@ export class EthereumService implements OnModuleInit {
         private readonly commonService: CommonService,
         @InjectRepository(Common_Code)
         private CommonCodeRepository: Repository<Common_Code>,
-        @InjectRepository(CoinAddress)
-        private CoinAddressRepository: Repository<CoinAddress>,
+        @InjectRepository(Wallet)
+        private CoinAddressRepository: Repository<Wallet>,
         @InjectRepository(EthereumDepositTransactions)
         private EthereumDepositTransactionsRepository: Repository<EthereumDepositTransactions>,
     ) {
