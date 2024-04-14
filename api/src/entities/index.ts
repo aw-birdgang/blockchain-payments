@@ -1,5 +1,5 @@
-export * from './group.entity';
-export * from './group_container.entity';
+export * from './client.entity';
+export * from './client_container.entity';
 export * from './wallet.entity';
 export * from './common_code.entity';
 export * from './market_ticker.entity';

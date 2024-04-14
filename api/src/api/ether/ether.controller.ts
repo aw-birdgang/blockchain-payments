@@ -1,13 +1,12 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post, Req } from '@nestjs/common';
-import { EtherService } from './ether.service';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ResponseBalanceOfDto } from './dto/response-balance-of.dto';
-import { ResponseBlockNumberDto } from './dto/response-block-number.dto';
-import { ResponseRPCAddressDto } from './dto/response-rpcaddress.dto';
-import { ResponseGasPriceDto } from './dto/response-gasprice.dto';
-import { ResponseAccountDto } from './dto/response-account.dto';
-import { GetTransferGasPriceDto } from './dto/request-gettransfer-gasprice.dto';
-import { TransferAmountDto } from './dto/request-transfer-amount.dto';
+import {Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post, Req} from '@nestjs/common';
+import {EtherService} from './ether.service';
+import {ApiCreatedResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {ResponseBalanceOfDto} from './dto/response-balance-of.dto';
+import {ResponseBlockNumberDto} from './dto/response-block-number.dto';
+import {ResponseGasPriceDto} from './dto/response-gasprice.dto';
+import {ResponseAccountDto} from './dto/response-account.dto';
+import {GetTransferGasPriceDto} from './dto/request-gettransfer-gasprice.dto';
+import {TransferAmountDto} from './dto/request-transfer-amount.dto';
 
 @ApiTags('Ethereum')
 @Controller('ether')
@@ -92,26 +91,6 @@ export class EtherController {
     }
   }
 
-  @Get('rpcAddress')
-  @ApiOperation({
-    summary: 'RPC Address',
-    description: 'RPC Address를 찾을 수 있다.',
-  })
-  @ApiCreatedResponse({ description: 'rpc주소 조회', type: ResponseRPCAddressDto })
-  async rpcAddress(@Req() req) {
-    try {
-      const rpcaddress = await this.etherService.rpcurl;
-      this.logger.log(req.url + ' => ' + rpcaddress);
-
-      const responseRPCAddressDto = new ResponseRPCAddressDto();
-      responseRPCAddressDto.address = rpcaddress;
-
-      return responseRPCAddressDto;
-    } catch (ex) {
-      this.logger.error(ex.message);
-      throw new HttpException(ex.message, HttpStatus.BAD_REQUEST);
-    }
-  }
 
   @Get('getTransactionReceipt/:transactionHash')
   @ApiOperation({

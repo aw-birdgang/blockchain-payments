@@ -3,14 +3,13 @@ import {ClientService} from "./client.service";
 import {ClientController} from "./client.controller";
 import {CommonModule} from "../../common/common.module";
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {Client, ClientContainer} from "../../entities/client.entity";
+import {Client} from "../../entities";
 
 @Module({
     imports: [
         forwardRef(() => CommonModule),
         TypeOrmModule.forFeature([
             Client,
-            ClientContainer,
         ]),
     ],
 

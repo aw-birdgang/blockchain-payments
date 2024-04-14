@@ -21,7 +21,7 @@ export class Ethereum_Withdraw_Transactions {
   coin: string;
 
   @Column({ length: 30, nullable: true })
-  group_code: string;
+  client_code: string;
 
   @Column({ type: 'decimal', precision: 16, scale: 8, default: 0 })
   amounts: number;

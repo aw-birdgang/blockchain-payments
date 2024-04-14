@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ResponseApiKeyDto {
-  @ApiProperty({ description: '그룹코드', default: 'group_code' })
-  group_code: string;
+  @ApiProperty({ description: '그룹코드', default: 'client_code' })
+  client_code: string;
 
   @ApiProperty({ description: '사용자 API Key', default: 'api key' })
   api_key: string;

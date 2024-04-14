@@ -1,42 +1,40 @@
-import {Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import { Transform } from 'class-transformer';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryColumn,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
+import {ApiProperty} from "@nestjs/swagger";
 
 @Entity('client')
-export class Client {
+export class Client extends BaseEntity {
     @PrimaryGeneratedColumn({ name: 'id', type: 'int' })
     id: number;
 
-    @PrimaryColumn({ name: 'client_code', length: 30 })
-    clientCode: string;
+    @PrimaryColumn({ name: 'code', length: 30 })
+    @ApiProperty({ description: '코드' })
+    code: string;
 
-    @Column({ name: 'client_name',length: 30 })
-    clientName: string;
+    @Column({ name: 'name',length: 30 })
+    @ApiProperty({ description: '이름' })
+    name: string;
 
     @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
     createdAt: Date;
 
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
     updatedAt: Date;
-}
 
+    static of(params: Partial<Client>): Client {
+        const client = new Client();
+        Object.assign(client, params);
+        return client;
+    }
 
-@Entity('client_container')
-export class ClientContainer {
-    @Transform((params) => params.value.trim())
-    @PrimaryColumn({ length: 30 })
-    group_code: string;
+    update(name: string, breed: string, age: number): void {
+    }
 
-    @Transform((params) => params.value.trim())
-    @Column({ length: 50 })
-    api_key: string;
-
-    @Transform((params) => params.value.trim())
-    @Column({ length: 120 })
-    webhook_href: string;
-
-    @CreateDateColumn({ type: 'datetime' })
-    created_at: Date;
-
-    @UpdateDateColumn({ type: 'datetime' })
-    updated_at: Date;
 }

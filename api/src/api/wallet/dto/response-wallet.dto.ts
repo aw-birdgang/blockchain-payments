@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ResponseWalletDto {
-  @ApiProperty({ description: '그룹코드', default: 'group_code' })
-  group_code: string;
+  @ApiProperty({ description: '그룹코드', default: 'client_code' })
+  client_code: string;
 
   @ApiProperty({ description: '블록체인 네트워크', default: 'Ethereum' })
   network: string;

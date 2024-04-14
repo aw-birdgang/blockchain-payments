@@ -17,7 +17,7 @@ skinparam class {
 title 'Gangnam Blockchain Deposit Service ERD
 
 table( group ) {
-    primary_key( group_code ) : varchar(30)
+    primary_key( client_code ) : varchar(30)
     column( group_name ): varchar(30)
     column( created_at ) : datetime
     column( updated_at ) : datetime
@@ -28,7 +28,7 @@ table( member ) {
     column( user_name ): varchar(30)
     column( user_pass ): varchar(100)
     column( email ): varchar(50)
-    column( group_code ): varchar(30)
+    column( client_code ): varchar(30)
     column( member_type): varchar(1)
     column( created_at ) : datetime
     column( updated_at ) : datetime
@@ -60,7 +60,7 @@ table( member_ban ) {
 
 table( group_purse ) {
     primary_key( coin ) : varchar(10)
-    foreign_key( group_code ): varchar(30)
+    foreign_key( client_code ): varchar(30)
     column( coin_in_enable ): bigint
     column( coin_in_disable ): bigint
     column( coin_price_avg ) : float
@@ -68,7 +68,7 @@ table( group_purse ) {
 }
 
 table( group_apikey ) {
-    primary_key( group_code ): varchar(30)
+    primary_key( client_code ): varchar(30)
     column( api_key ): varchar(50)
     column( webhook_href ): varchar(60)
     column( created_at ) : datetime
@@ -76,7 +76,7 @@ table( group_apikey ) {
 }
 
 table( group_master_wallet ) {
-    primary_key( group_code ): varchar(30)
+    primary_key( client_code ): varchar(30)
     column( network ) : varchar(10)
     column( wallet_address ) : varchar(44)
     column( wallet_private_key ) : varchar(140)
@@ -201,7 +201,7 @@ table( coin_address ) {
     primary_key( network ) : varchar(10)
     primary_key( address ) : varchar(44)
     column( private_key ): varchar(140)
-    column( group_code ): varchar(30)
+    column( client_code ): varchar(30)
     column( mapped_at ) : datetime
     column( created_at ) : datetime
     column( updated_at ) : datetime
@@ -211,7 +211,7 @@ table( coin_address_register ) {
     primary_key( id ) : bigint
     foreign_key( network ) : varchar(10)
     foreign_key( address ) : varchar(44)
-    foreign_key( group_code ): varchar(30)
+    foreign_key( client_code ): varchar(30)
     column( mapped_at ) : datetime
 }
 
@@ -235,7 +235,7 @@ table( ethereum_deposit_transactions ) {
     column( block_number ) : int
     column( coin ) : varchar(10)
     column( amounts ) : decimal(16,8)
-    column( group_code ) : varchar(30)
+    column( client_code ) : varchar(30)
     column( blkhash ) : varchar(50)
     column( is_sended ) : varchar(1)
     column( usd_price ) : decimal(20,2)
@@ -252,7 +252,7 @@ table( polygon_deposit_transactions ) {
     column( block_number ) : int
     column( coin ) : varchar(10)
     column( amounts ) : decimal(16,8)
-    column( group_code ) : varchar(30)
+    column( client_code ) : varchar(30)
     column( blkhash ) : varchar(50)
     column( is_sended ) : varchar(1)
     column( usd_price ) : decimal(20,2)
@@ -268,14 +268,14 @@ table( ethereum_withdraw_transactions ) {
     column( speed ) : double(3,2)
     column( coin ) : varchar(10)
     column( amounts ) : decimal(16,8)
-    column( group_code ) : varchar(30)
+    column( client_code ) : varchar(30)
     column( blkhash ) : varchar(50)
     column( usd_price ) : decimal(20,2)
     column( fee ) : decimal(12,8)
     column( created_at ) : datetime
 }
 
-group::group_code ||--|| member::group_code
+group::client_code ||--|| member::client_code
 member::member_id ||--|| member_login_log::member_id
 member::member_id ||--|| member_login_fail::member_id
 member::member_id ||--|| member_ban::member_id
@@ -283,13 +283,13 @@ member::member_id ||--|| member_access_token::member_id
 member::member_id ||--|| board_content::member_id
 member::member_id ||--|| board_reply::member_id
 
-group::group_code||--|| group_purse::group_code
-group::group_code||--|| group_apikey::group_code
-group::group_code||--|| group_master_wallet::group_code
-group::group_code||--|| coin_address_register::group_code
-group::group_code||--|| ethereum_deposit_transactions::group_code
-group::group_code||--|| polygon_deposit_transactions::group_code
-group::group_code||--|| ethereum_withdraw_transactions::group_code
+group::client_code||--|| group_purse::client_code
+group::client_code||--|| group_apikey::client_code
+group::client_code||--|| group_master_wallet::client_code
+group::client_code||--|| coin_address_register::client_code
+group::client_code||--|| ethereum_deposit_transactions::client_code
+group::client_code||--|| polygon_deposit_transactions::client_code
+group::client_code||--|| ethereum_withdraw_transactions::client_code
 
 admin_users::member_id ||--|| admin_menu_role::member_id
 admin_users::member_id ||--|| admin_user_login_log::member_id

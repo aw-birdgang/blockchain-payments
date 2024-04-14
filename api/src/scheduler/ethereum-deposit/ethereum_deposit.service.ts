@@ -13,7 +13,7 @@ import {Interval} from "@nestjs/schedule";
 import {weiToEth} from "../../common/util/utils";
 
 /**
- * 이더리움 블록체인내에서 Ether 및 ERC20 토큰 입금 트랙잭션 읽어서 등록하도록 한다.
+ * 이더리움 블록체인내에서 Ether 및 ERC20 토큰 입금 트랙잭션 읽어서 등록 하도록 한다.
  */
 @Injectable()
 export class EthereumDepositService implements OnModuleInit {
@@ -222,7 +222,7 @@ export class EthereumDepositService implements OnModuleInit {
             const addressData = await this.CoinAddressRepository.findOne({ where: { address: tx.to, network: 'Ethereum' } });
 
             const ethereumDepositTransactions = new EthereumDepositTransactions();
-            ethereumDepositTransactions.group_code = addressData != null ? addressData.group_code : '';
+            ethereumDepositTransactions.client_code = addressData != null ? addressData.client_code : '';
             ethereumDepositTransactions.txhash = tx.hash;
             ethereumDepositTransactions.block_number = Number(tx.blockNumber);
             ethereumDepositTransactions.from_address = tx.from;
@@ -307,7 +307,7 @@ export class EthereumDepositService implements OnModuleInit {
             const addressData = await this.CoinAddressRepository.findOne({ where: { address: tx.toAddress, network: 'Ethereum' } });
 
             const ethereumDepositTransactions = new EthereumDepositTransactions();
-            ethereumDepositTransactions.group_code = addressData != null ? addressData.group_code : '';
+            ethereumDepositTransactions.client_code = addressData != null ? addressData.client_code : '';
             ethereumDepositTransactions.txhash = tx.hash;
             ethereumDepositTransactions.block_number = Number(tx.blockNumber);
             ethereumDepositTransactions.from_address = tx.from;
@@ -330,7 +330,7 @@ export class EthereumDepositService implements OnModuleInit {
 
   // DB로부터 Address list 획득
   async getEthereumDBAddress() {
-    const addressListData = await this.CoinAddressRepository.find({ where: { group_code: Not(IsNull() || '') } });
+    const addressListData = await this.CoinAddressRepository.find({ where: { client_code: Not(IsNull() || '') } });
     this.addressList = [];
     this.addressPKList = new Map();
 

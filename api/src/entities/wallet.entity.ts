@@ -16,7 +16,7 @@ export class Wallet {
   private_key: string;
 
   @Column({ length: 30, nullable: true })
-  group_code: string;
+  client_code: string;
 
   @Column({ type: 'datetime', nullable: true })
   mapped_at: Date;

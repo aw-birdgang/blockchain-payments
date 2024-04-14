@@ -1,10 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { Web3 } from 'web3';
+import {Injectable, Logger} from '@nestjs/common';
+import {Web3} from 'web3';
+import {ConfigService} from "../../config";
 
 @Injectable()
 export class EtherService {
-  rpcurl = process.env.ETHEREUM_ENDPOINT;
-  web3 = new Web3(new Web3.providers.HttpProvider(this.rpcurl));
+
+  //
+  private readonly rpcUrl: string;
+  private web3: any;
+
+  private readonly logger = new Logger(EtherService.name);
+
+  constructor(
+      private readonly configService: ConfigService,
+  ) {
+    this.rpcUrl = this.configService.get("ETHEREUM_ENDPOINT");
+    this.logger.log("EtherService > rpcUrl : " + this.rpcUrl);
+    this.web3 = new Web3(new Web3.providers.HttpProvider(this.rpcUrl));
+  }
+
 
   /* 계정(address)이 보유한 자산 조회 */
   async balanceOf(ownerAddress: string) {
@@ -50,8 +64,7 @@ export class EtherService {
 
   /* Blockchain 네트워크 내 계정 생성 */
   async createAccount() {
-    const account = await this.web3.eth.accounts.create();
-    return account;
+    return this.web3.eth.accounts.create();
   }
 
   /* transfer에 필요한 gas price 구하기 */

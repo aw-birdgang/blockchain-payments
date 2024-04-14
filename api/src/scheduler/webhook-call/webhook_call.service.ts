@@ -2,7 +2,7 @@ import {Injectable, Logger} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {LessThan, Repository} from 'typeorm';
 
-import {EthereumDepositTransactions, GroupContainer,} from '../../entities';
+import {EthereumDepositTransactions, ClientContainer, } from '../../entities';
 import {DepositTransactions} from 'src/api/wallet/dto/request-deposit-transactions.dto';
 import {Interval} from "@nestjs/schedule";
 import {WebhookService} from "../../webhook/webhook.service";
@@ -19,8 +19,8 @@ export class WebhookCallService {
   private processing: boolean = false;
 
   constructor(
-    @InjectRepository(GroupContainer)
-    private GroupApikeyRepository: Repository<GroupContainer>,
+    @InjectRepository(ClientContainer)
+    private clientContainerRepository: Repository<ClientContainer>,
     @InjectRepository(EthereumDepositTransactions)
     private EthereumDepositTransactionsRepository: Repository<EthereumDepositTransactions>,
     private readonly webhookService: WebhookService,
@@ -48,8 +48,8 @@ export class WebhookCallService {
 
       if (ethereumTransactions.length > 0) {
         for await (const tx of ethereumTransactions) {
-          const webhook_Url_Data = await this.GroupApikeyRepository.findOne({ where: { group_code: tx.group_code } });
-          let webhook_Url = webhook_Url_Data.webhook_href ? webhook_Url_Data.webhook_href : "";
+          const webhook_Url_Data = await this.clientContainerRepository.findOne({ where: { client_code: tx.client_code } });
+          let webhook_Url = webhook_Url_Data.webhook_url ? webhook_Url_Data.webhook_url : "";
           this.logger.log('Ethereum : ' + tx.id + ' ==> ' + webhook_Url);
 
           const ethereumDepositTransactions = new DepositTransactions();

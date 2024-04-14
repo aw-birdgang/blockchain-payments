@@ -5,7 +5,7 @@ import * as crypto from 'crypto';
 
 // Entities
 import {
-  Group,
+  Client,
   Common_Code,
 } from '../entities';
 import {ConfigService} from "../config";
@@ -62,15 +62,15 @@ export class CommonService {
 
   // ===== 회원 / 그룹 선택 =====
   // 그룹 선택
-  async selectGroup(group_code: string) {
+  async selectGroup(client_code: string) {
     const groupData = await this.entityManager
-      .createQueryBuilder(Group, 'data')
-      .select('group_code')
+      .createQueryBuilder(Client, 'data')
+      .select('client_code')
       .select('group_name')
-      .where('data.group_code = :group_code', { group_code: group_code })
+      .where('data.client_code = :client_code', { client_code: client_code })
       .getRawMany();
 
-    if (groupData.length == 0) throw new BadRequestException('Group code is invalid. [' + group_code + ']');
+    if (groupData.length == 0) throw new BadRequestException('Group code is invalid. [' + client_code + ']');
 
     return groupData;
   }
@@ -78,10 +78,10 @@ export class CommonService {
   // ===== 마스터 지갑 =====
 
   // 마스터 지갑 오류 체크
-  async selectMasterPurseError2(group_code: string) {
+  async selectMasterPurseError2(client_code: string) {
     const errorData = await this.entityManager.query(
       `
-  SELECT gmp.group_code,
+  SELECT gmp.client_code,
       gmp.network,
       gmp.coin,
          COALESCE(gmp.coin_amount, 0) - COALESCE(b.t, 0) AS gap,
@@ -89,17 +89,17 @@ export class CommonService {
          COALESCE(b.t, 0)                                AS history
   FROM   group_master_purse gmp
          LEFT JOIN
-                ( SELECT  gmph.group_code,
+                ( SELECT  gmph.client_code,
                          gmph.network,
                          gmph.coin,
                          COALESCE(SUM(gmph.coin_in_amount - gmph.coin_out_amount), 0) AS t
                 FROM     group_master_purse_history gmph
-                WHERE    gmph.group_code = "${group_code}"
-                GROUP BY gmph.group_code, gmph.network, gmph.coin
+                WHERE    gmph.client_code = "${client_code}"
+                GROUP BY gmph.client_code, gmph.network, gmph.coin
                 )
                 b
-         ON     gmp.group_code         = b.group_code
-  WHERE  gmp.group_code                = "${group_code}"
+         ON     gmp.client_code         = b.client_code
+  WHERE  gmp.client_code                = "${client_code}"
   AND gmp.network = b.network
  AND gmp.coin = b.coin
   AND COALESCE(gmp.coin_amount, 0) <> COALESCE(b.t, 0);
