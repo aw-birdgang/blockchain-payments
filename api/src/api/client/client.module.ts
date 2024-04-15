@@ -12,7 +12,6 @@ import {Client} from "../../entities";
             Client,
         ]),
     ],
-
     providers: [ClientService,],
     controllers: [ClientController,],
     exports: [ClientService,],

@@ -2,8 +2,8 @@ import {Injectable, Logger} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {LessThan, Repository} from 'typeorm';
 
-import {EthereumDepositTransactions, ClientContainer, } from '../../entities';
-import {DepositTransactions} from 'src/api/wallet/dto/request-deposit-transactions.dto';
+import {EthereumDepositTransactions, Client, } from '../../entities';
+import {DepositTransactions} from 'src/dto/wallet-request-deposit-transactions.dto';
 import {Interval} from "@nestjs/schedule";
 import {WebhookService} from "../../webhook/webhook.service";
 
@@ -19,8 +19,8 @@ export class WebhookCallService {
   private processing: boolean = false;
 
   constructor(
-    @InjectRepository(ClientContainer)
-    private clientContainerRepository: Repository<ClientContainer>,
+    @InjectRepository(Client)
+    private clientRepository: Repository<Client>,
     @InjectRepository(EthereumDepositTransactions)
     private EthereumDepositTransactionsRepository: Repository<EthereumDepositTransactions>,
     private readonly webhookService: WebhookService,
@@ -48,8 +48,8 @@ export class WebhookCallService {
 
       if (ethereumTransactions.length > 0) {
         for await (const tx of ethereumTransactions) {
-          const webhook_Url_Data = await this.clientContainerRepository.findOne({ where: { client_code: tx.client_code } });
-          let webhook_Url = webhook_Url_Data.webhook_url ? webhook_Url_Data.webhook_url : "";
+          const webhook_Url_Data = await this.clientRepository.findOne({ where: { id: tx.clientId } });
+          let webhook_Url = webhook_Url_Data.webhookUrl ? webhook_Url_Data.webhookUrl : "";
           this.logger.log('Ethereum : ' + tx.id + ' ==> ' + webhook_Url);
 
           const ethereumDepositTransactions = new DepositTransactions();

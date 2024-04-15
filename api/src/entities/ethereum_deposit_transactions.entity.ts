@@ -28,7 +28,7 @@ export class EthereumDepositTransactions {
   amounts: number;
 
   @Column({ length: 30, nullable: true })
-  client_code: string;
+  clientId: string;
 
   @Column({ length: 50, nullable: true, default: '' })
   blkhash: string;

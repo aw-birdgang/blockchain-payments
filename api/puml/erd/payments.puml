@@ -17,38 +17,6 @@ skinparam class {
 title 'Blockchain Deposit Service ERD
 
 
-table( group ) {
-    primary_key( client_code ) : varchar(30)
-    column( group_name ): varchar(30)
-    column( created_at ) : datetime
-    column( updated_at ) : datetime
-}
-
-table( group_purse ) {
-    primary_key( coin ) : varchar(10)
-    foreign_key( client_code ): varchar(30)
-    column( coin_in_enable ): bigint
-    column( coin_in_disable ): bigint
-    column( coin_price_avg ) : float
-    column( updated_at ) : datetime
-}
-
-table( group_apikey ) {
-    primary_key( client_code ): varchar(30)
-    column( api_key ): varchar(50)
-    column( webhook_href ): varchar(60)
-    column( created_at ) : datetime
-    column( updated_at ) : datetime
-}
-
-table( group_master_wallet ) {
-    primary_key( client_code ): varchar(30)
-    column( network ) : varchar(10)
-    column( wallet_address ) : varchar(44)
-    column( wallet_private_key ) : varchar(140)
-    column( created_at ) : datetime
-    column( updated_at ) : datetime
-}
 
 table( coin_address ) {
     primary_key( network ) : varchar(10)

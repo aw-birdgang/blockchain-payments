@@ -5,7 +5,6 @@ import {ERC20Module} from "./api/erc20/erc20.module";
 import {CommonModule} from "./common/common.module";
 import {WebhookModule} from './webhook/webhook.module';
 import {ClientModule} from './api/client/client.module';
-import { ClientContainerModule } from './api/client-container/client-container.module';
 import {EtherModule} from "./api/ether/ether.module";
 import {WalletModule} from "./api/wallet/wallet.module";
 
@@ -16,7 +15,6 @@ import {WalletModule} from "./api/wallet/wallet.module";
     CommonModule,
     EtherModule,
     ClientModule,
-    ClientContainerModule,
     WalletModule,
     // EthereumDepositModule,
     // DepositCheckerModule,

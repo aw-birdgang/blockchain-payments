@@ -1,26 +1,19 @@
-import {
-    BaseEntity,
-    Column,
-    CreateDateColumn,
-    Entity,
-    PrimaryColumn,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn
-} from 'typeorm';
+import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ApiProperty} from "@nestjs/swagger";
 
 @Entity('client')
 export class Client extends BaseEntity {
-    @PrimaryGeneratedColumn({ name: 'id', type: 'int' })
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    @ApiProperty({ description: 'id' })
+    id: string;
 
-    @PrimaryColumn({ name: 'code', length: 30 })
-    @ApiProperty({ description: '코드' })
-    code: string;
-
-    @Column({ name: 'name',length: 30 })
+    @Column({ name: 'name', length: 30 })
     @ApiProperty({ description: '이름' })
     name: string;
+
+    @Column({ name: 'webhookUrl', length: 120 })
+    @ApiProperty({ description: '콜백 주소' })
+    webhookUrl: string;
 
     @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
     createdAt: Date;

@@ -1,8 +1,19 @@
 import { Transform } from 'class-transformer';
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm';
 
 @Entity()
-export class Wallet {
+export class Wallet extends BaseEntity {
+  @PrimaryGeneratedColumn({ name: 'id', type: 'int' })
+  id: number;
+
   @Transform((params) => params.value.trim())
   @PrimaryColumn({ length: 10 })
   network: string;
@@ -15,15 +26,21 @@ export class Wallet {
   @Column({ length: 140 })
   private_key: string;
 
-  @Column({ length: 30, nullable: true })
-  client_code: string;
+  @Transform((params) => params.value.trim())
+  @Column({ name: 'client_id', length: 50, nullable: true })
+  clientId: string;
 
-  @Column({ type: 'datetime', nullable: true })
-  mapped_at: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
 
-  @CreateDateColumn({ type: 'datetime' })
-  created_at: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  updatedAt: Date;
 
-  @UpdateDateColumn({ type: 'datetime' })
-  updated_at: Date;
+
+  static of(params: Partial<Wallet>): Wallet {
+    const wallet = new Wallet();
+    Object.assign(wallet, params);
+    return wallet;
+  }
+
 }

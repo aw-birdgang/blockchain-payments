@@ -1,6 +1,6 @@
 import {Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
-import {EthereumDepositTransactions, ClientContainer} from 'src/entities';
+import {EthereumDepositTransactions, Client} from 'src/entities';
 import {WebhookCallService} from './webhook_call.service';
 import {CommonService} from 'src/common/common.service';
 import {HttpModule} from '@nestjs/axios';
@@ -12,7 +12,7 @@ import {WebhookModule} from "../../webhook/webhook.module";
     ScheduleModule.forRoot(),
     HttpModule,
     WebhookModule,
-    TypeOrmModule.forFeature([ ClientContainer, EthereumDepositTransactions, ]),
+    TypeOrmModule.forFeature([ Client, EthereumDepositTransactions, ]),
   ],
   providers: [WebhookCallService, CommonService],
 })

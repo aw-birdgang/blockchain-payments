@@ -7,7 +7,7 @@ import {ConfigService} from "../../config";
 
 @Injectable()
 export class ERC20Service {
-  private readonly rpcurl: string;
+  private readonly rpcUrl: string;
   private web3: any;
   private readonly provider: any;
 
@@ -22,11 +22,11 @@ export class ERC20Service {
       private readonly commonService: CommonService,
       private readonly configService: ConfigService
   ) {
-    this.rpcurl = this.configService.get("ETHEREUM_ENDPOINT");
-    this.logger.log("rpcurl : " + this.rpcurl);
+    this.rpcUrl = this.configService.get("ETHEREUM_ENDPOINT");
+    this.logger.log("rpcUrl : " + this.rpcUrl);
 
-    this.web3 = new Web3(new Web3.providers.HttpProvider(this.rpcurl));
-    this.provider = new ethers.JsonRpcProvider(this.rpcurl);
+    this.web3 = new Web3(new Web3.providers.HttpProvider(this.rpcUrl));
+    this.provider = new ethers.JsonRpcProvider(this.rpcUrl);
     this.erc20abiFile = './abi/erc20.json';
     this.contract_abi = JSON.parse(readFileSync(this.erc20abiFile).toString());
     this.logger.log("contract_abi : " + this.contract_abi);

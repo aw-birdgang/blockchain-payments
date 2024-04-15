@@ -75,40 +75,6 @@ export class CommonService {
     return groupData;
   }
 
-  // ===== 마스터 지갑 =====
-
-  // 마스터 지갑 오류 체크
-  async selectMasterPurseError2(client_code: string) {
-    const errorData = await this.entityManager.query(
-      `
-  SELECT gmp.client_code,
-      gmp.network,
-      gmp.coin,
-         COALESCE(gmp.coin_amount, 0) - COALESCE(b.t, 0) AS gap,
-         COALESCE(gmp.coin_amount, 0)                    AS purse,
-         COALESCE(b.t, 0)                                AS history
-  FROM   group_master_purse gmp
-         LEFT JOIN
-                ( SELECT  gmph.client_code,
-                         gmph.network,
-                         gmph.coin,
-                         COALESCE(SUM(gmph.coin_in_amount - gmph.coin_out_amount), 0) AS t
-                FROM     group_master_purse_history gmph
-                WHERE    gmph.client_code = "${client_code}"
-                GROUP BY gmph.client_code, gmph.network, gmph.coin
-                )
-                b
-         ON     gmp.client_code         = b.client_code
-  WHERE  gmp.client_code                = "${client_code}"
-  AND gmp.network = b.network
- AND gmp.coin = b.coin
-  AND COALESCE(gmp.coin_amount, 0) <> COALESCE(b.t, 0);
-    `,
-    );
-    return errorData;
-  }
-
-
 
   // ===== ERC20 =====
 

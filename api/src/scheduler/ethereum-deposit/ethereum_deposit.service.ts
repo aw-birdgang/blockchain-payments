@@ -222,7 +222,7 @@ export class EthereumDepositService implements OnModuleInit {
             const addressData = await this.CoinAddressRepository.findOne({ where: { address: tx.to, network: 'Ethereum' } });
 
             const ethereumDepositTransactions = new EthereumDepositTransactions();
-            ethereumDepositTransactions.client_code = addressData != null ? addressData.client_code : '';
+            ethereumDepositTransactions.clientId = addressData != null ? addressData.clientId : '';
             ethereumDepositTransactions.txhash = tx.hash;
             ethereumDepositTransactions.block_number = Number(tx.blockNumber);
             ethereumDepositTransactions.from_address = tx.from;
@@ -307,7 +307,7 @@ export class EthereumDepositService implements OnModuleInit {
             const addressData = await this.CoinAddressRepository.findOne({ where: { address: tx.toAddress, network: 'Ethereum' } });
 
             const ethereumDepositTransactions = new EthereumDepositTransactions();
-            ethereumDepositTransactions.client_code = addressData != null ? addressData.client_code : '';
+            ethereumDepositTransactions.clientId = addressData != null ? addressData.clientId : '';
             ethereumDepositTransactions.txhash = tx.hash;
             ethereumDepositTransactions.block_number = Number(tx.blockNumber);
             ethereumDepositTransactions.from_address = tx.from;
@@ -330,7 +330,7 @@ export class EthereumDepositService implements OnModuleInit {
 
   // DB로부터 Address list 획득
   async getEthereumDBAddress() {
-    const addressListData = await this.CoinAddressRepository.find({ where: { client_code: Not(IsNull() || '') } });
+    const addressListData = await this.CoinAddressRepository.find({ where: { clientId: Not(IsNull() || '') } });
     this.addressList = [];
     this.addressPKList = new Map();
 
