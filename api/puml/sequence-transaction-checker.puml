@@ -1,0 +1,35 @@
+@startuml
+participant "Scheduler" as S
+participant "Blockchain Network" as B
+participant "Transaction Processor" as TP
+participant "Database" as DB
+
+== Initialization ==
+S -> S: Start Scheduler
+
+loop Scheduled Task
+    == Fetch Block ==
+    S -> B: Request latest block
+    B -> S: Return latest block
+
+    == Process Transactions ==
+    S -> TP: Extract transactions
+    loop each Transaction
+        TP -> TP: Check if transaction targets specific address
+        alt is target
+            TP -> TP: Check token transfer details
+            alt token transferred
+                TP -> DB: Log token receipt
+            else no token transfer
+                TP -> TP: Ignore transaction
+            end
+        else not target
+            TP -> TP: Ignore transaction
+        end
+    end
+
+    == Wait for Next Execution ==
+    S -> S: Wait for next schedule
+end
+
+@enduml

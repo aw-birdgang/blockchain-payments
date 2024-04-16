@@ -1,14 +1,16 @@
 
 
-# dart install
+# dart & fvm install 
 ````
 
 brew tap dart-lang/dart
 brew install dart
 
-
 dart pub global activate fvm
+
 export PATH="$PATH:/usr/local/opt/dart/libexec/bin”
+export PATH="$HOME/.pub-cache/bin:$PATH"
+
 source ~/.bashrc  # 또는 source ~/.bash_profile 또는 source ~/.zshrc
 
 dart --version
@@ -31,6 +33,10 @@ export PATH="$PATH":"$HOME/flutter/bin"
 export PATH="$PATH":"$HOME/bin/cache/dart-sdk/bin"
 export PATH="$PATH":"$HOME/.pub-cache/bin"
 
+
+fvm releases
+fvm use 3.19.5
+
 ````
 
 
@@ -38,9 +44,6 @@ export PATH="$PATH":"$HOME/.pub-cache/bin"
 
 # flutter run
 ````
-
-fvm releases
-fvm use 3.19.5
 
 
 fvm flutter config --enable-web

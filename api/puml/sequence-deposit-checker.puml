@@ -1,0 +1,52 @@
+@startuml
+participant "User" as U
+participant "Server" as S
+participant "HD Wallet" as HD
+participant "Whitelist Validator" as WV
+participant "Scheduler" as SCH
+participant "Blockchain Network" as B
+participant "Database" as DB
+participant "Notification System" as NS
+
+== User Requests Deposit Address ==
+U -> S: Request deposit address
+S -> WV: Check user's wallet in whitelist
+WV -> S: Verification result
+alt User wallet is verified
+    S -> HD: Allocate address from HD wallet
+    HD -> S: Provide an address
+    S -> U: Send deposit address
+else User wallet not verified
+    S -> U: Notify rejection due to whitelist
+end
+
+== User Deposits USDT ==
+U -> B: Deposit USDT to provided address
+
+== Scheduler Checks Blockchain ==
+loop Every N Minutes
+    SCH -> B: Request latest transactions
+    B -> SCH: Return latest transactions
+
+    SCH -> DB: Get list of allocated addresses
+    DB -> SCH: Provide addresses
+
+    SCH -> SCH: Filter transactions to allocated addresses
+    loop each Transaction
+        SCH -> SCH: Check if transaction targets any allocated address
+        alt Transaction found
+            SCH -> SCH: Verify USDT transfer amount
+            alt Sufficient USDT transferred
+                SCH -> NS: Notify user of successful deposit
+                NS -> U: Send success notification
+            else Insufficient USDT transferred
+                SCH -> NS: Notify user of insufficient deposit
+                NS -> U: Send failure notification
+            end
+        else No transaction for this address
+            SCH -> SCH: Continue monitoring
+        end
+    end
+end
+
+@enduml

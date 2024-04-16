@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+!theme plain
+
+participant user
+participant BackOffice
+entity "Server" as server
+database "Ethereum Blockchain" as Blockchain
+database "Database" as DB
+
+
+
+==  ==
+BackOffice -> server : 입금 주소 생성
+
+
+user -> server : 입금 신청
+server --> user : 미리 생성된 입금 주소 할당
+
+user --> user : 입금
+
+
+server --> Blockchain : 블록 트랜 잭션 확인
+Blockchain --> server :
+
+@enduml

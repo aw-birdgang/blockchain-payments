@@ -1,0 +1,27 @@
+@startuml
+start
+:Start Scheduler;
+
+repeat
+  :Fetch latest block;
+  :Extract transactions;
+
+  repeat :For each Transaction in block;
+    :Check if transaction\ntargets specific address;
+    if (Yes) then (yes)
+      :Check token transfer details;
+      if (Token transferred) then (yes)
+        :Log token receipt;
+      else (no)
+        :Ignore;
+      endif
+    else (no)
+      :Ignore;
+    endif
+  repeat while (Has more transactions)
+
+  :Wait for next schedule;
+repeat while (Scheduler is running)
+
+stop
+@enduml
