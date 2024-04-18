@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:e_angel_game_admin_flutter/shared/utils.dart';
+
+import 'utils.dart';
 
 class Responsive extends StatelessWidget {
   final Widget mobile;

@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+
+Widget defaultTextFormField(
+    {TextEditingController? controller,
+      required TextInputType inputType,
+      Function(String?)? onFieldSubmit,
+      VoidCallback? onTap,
+      String? Function(String?)? onValidate,
+      Function(String?)? onChange,
+      String? text,
+      Color? textColor,
+      Widget? prefixIcon,
+      Widget? suffixIcon,
+      bool obscure = false,
+      InputBorder? border,
+      String? hintText,
+      Color? hintColor,
+      Color? cursorColor,
+      int? maxLines,
+      bool? focus,
+      bool readonly = false}) =>
+    TextFormField(
+        controller: controller,
+        keyboardType: inputType,
+        onFieldSubmitted: onFieldSubmit,
+        onTap: onTap,
+        autofocus: focus ?? false,
+        maxLines: maxLines ?? 1,
+        readOnly: readonly,
+        obscureText: obscure,
+        onChanged: onChange,
+        //  cursorColor: cursorColor ?? defaultColor,
+        style: TextStyle(
+          color: textColor ?? Colors.white,
+          fontWeight: FontWeight.normal,
+        ),
+        decoration: InputDecoration(
+          labelText: text,
+          hintText: hintText ?? null,
+          hintStyle: TextStyle(color: hintColor ?? Colors.grey),
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon,
+          border: border ?? const OutlineInputBorder(),
+        ),
+        validator: onValidate);
