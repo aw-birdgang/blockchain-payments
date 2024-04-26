@@ -42,7 +42,7 @@ class RepositoryClient implements IrepositoryClient {
     // String api = dotenv.get('API_URL');
     HttpConfigurationProvider provider = HttpConfigurationProvider();
     String api = provider.getBaseApiUrl();
-    String url = '$api/v1/client/admin';
+    String url = '$api/v1/client';
     print('getClients > url :: $url');
     String apiKey = provider.getApiKey();
     print('registerClient > apiKey :: $apiKey');

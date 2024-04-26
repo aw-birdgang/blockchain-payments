@@ -5,7 +5,7 @@ import '../pages/client/client_page.dart';
 import '../screens/login/login_screen.dart';
 import 'auth_controller.dart';
 
-class MenuController extends ChangeNotifier {
+class SideMenuController extends ChangeNotifier {
   final AuthController? _authProvider;
 
   int currentSelectedIndex = 0;
@@ -41,7 +41,7 @@ class MenuController extends ChangeNotifier {
     }
   }
 
-  MenuController(this._authProvider) {
+  SideMenuController(this._authProvider) {
     buildMenu();
   }
 

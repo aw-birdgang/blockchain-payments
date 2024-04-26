@@ -21,7 +21,7 @@ class _ClientItemState extends State<ClientItem> {
     Size size = Utils.getscreensize(context);
     String name = widget.client.name!;
     String accessToken = widget.client.accessToken!;
-    String type = widget.client.type!;
+    String webhookUrl = widget.client.webhookUrl!;
     return Container(
       margin: EdgeInsets.only(bottom: 8.0),
       decoration: BoxDecoration(
@@ -89,7 +89,7 @@ class _ClientItemState extends State<ClientItem> {
   Widget contentView () {
     String name = widget.client.name!;
     String accessToken = widget.client.accessToken!;
-    String type = widget.client.type!;
+    String webhookUrl = widget.client.webhookUrl!;
     return Padding(
       padding: const EdgeInsets.all(defaultPadding),
       child: Column(
@@ -103,7 +103,7 @@ class _ClientItemState extends State<ClientItem> {
           const SizedBox(
             height: 5,
           ),
-          getTextInfoRow(context, "TYPE", type)
+          getTextInfoRow(context, "WEBHOOK URL", webhookUrl)
         ],
       ),
     );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/env.dart';
+import '../../../controllers/side_menu_controller.dart';
 import '../../../models/menu_model.dart';
 import '../../../shard/constants.dart';
 import '../../../shard/responsive.dart';
@@ -38,8 +38,8 @@ class SideMenu extends StatelessWidget {
               ),
             ),
           ),
-          Consumer<MenuController>(
-            builder: (context, menuController, child) => DrawerListTile(listOfModel: menuController.menuModelList),
+          Consumer<SideMenuController>(
+            builder: (context, sideMenuController, child) => DrawerListTile(listOfModel: sideMenuController.menuModelList),
           )
         ],
       ),
@@ -67,7 +67,7 @@ class DrawerListTile extends StatelessWidget {
             selected: true,
             selectedColor: Colors.grey.shade400,
             onTap: () async {
-              context.read<MenuController>().onChangeSelectedMenu(i);
+              context.read<SideMenuController>().onChangeSelectedMenu(i);
               if (Responsive.isMobile(context) ||
                   Responsive.isBigMobile(context) ||
                   Responsive.isTablet(context)) Navigator.pop(context);
@@ -84,11 +84,11 @@ class DrawerListTile extends StatelessWidget {
               // }
             },
             horizontalTitleGap: 0.0,
-            leading: SvgPicture.asset(
-              listOfModel[i].svgSrc!,
-              color: Colors.white54,
-              height: 16,
-            ),
+            // leading: SvgPicture.asset(
+            //   listOfModel[i].svgSrc!,
+            //   color: Colors.white54,
+            //   height: 16,
+            // ),
             title: Text(
               listOfModel[i].title!,
               style: const TextStyle(color: Colors.white54),

@@ -13,26 +13,28 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.5
-  google_fonts: ^3.0.1
-  flutter_svg: ^1.1.6
-  fl_chart: ^0.55.2
+  intl: ^0.19.0
+#  google_fonts: ^3.0.1
+#  flutter_svg: ^1.1.6
+  flutter_svg: ^2.0.10+1
+#  fl_chart: ^0.55.2
   provider: ^6.0.4
-  data_table_2: ^2.0.3
+#  data_table_2: ^2.0.3
   dio: ^4.0.6
-
-  syncfusion_flutter_charts: ^20.3.52
-
-  # utils
+#
+#  syncfusion_flutter_charts: ^20.3.52
+#
+#  # utils
   shared_preferences: 2.0.15
-  flutter_dotenv: ^5.0.2
+#  flutter_dotenv: ^5.0.2
   easy_rich_text: ^1.1.0
   flutter_switch: ^0.3.2
-  pull_to_refresh: ^2.0.0
-
+#  pull_to_refresh: ^2.0.0
+#
   #firebase
-  cloud_firestore: ^4.0.4
-  firebase_auth: ^4.1.1
-  firebase_core: ^2.1.1
+#  cloud_firestore: ^4.0.4
+  firebase_auth: ^4.19.2
+  firebase_core: ^2.30.0
 
 
 dev_dependencies:

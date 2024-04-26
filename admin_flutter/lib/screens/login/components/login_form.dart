@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../components/default_button.dart';
 import '../../../components/default_text_form.dart';
-import '../../../controllers/menu_controller.dart';
+import '../../../controllers/side_menu_controller.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../models/user_model.dart';
 import '../../../shard/helper/prefer_helper.dart';
@@ -80,8 +81,8 @@ class LoginForm extends StatelessWidget {
                     PreferHelper.setUserId(userModel.userId!);
                     PreferHelper.setEmail(email);
                     PreferHelper.setPassword(password);
-                    print("sign in successfully > userModel.userId : " + userModel.userId.toString());
-                    context.read<MenuController>().buildMenu();
+                    print("sign in successfully > userModel.userId : ${userModel.userId}");
+                    context.read<SideMenuController>().buildMenu();
                   }
                 }
               }),

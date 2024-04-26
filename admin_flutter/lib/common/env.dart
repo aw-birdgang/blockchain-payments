@@ -5,7 +5,7 @@ const IS_ENV = DEV;
 const DEV_VERSION = "v1.0.2";
 const PROD_VERSION = "v1.0.2";
 
-const DEV_API_URL = "";
+const DEV_API_URL = "http://localhost:3000";
 const PROD_API_URL = "";
 
 const DEV_API_KEY = "";

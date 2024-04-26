@@ -40,7 +40,7 @@ class PagingListView extends StatelessWidget {
                   return itemWidgetFunction(item);
                 }
             ),
-          ) : const Center(child: CircularProgressIndicator()),
+          ) : Container(),//const Center(child: CircularProgressIndicator()),
         )
       ],
     );

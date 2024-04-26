@@ -133,7 +133,7 @@ class _ClientAddState extends State<ClientAdd> {
           try {
             Client client = Client();
             client.name = nameController.text;
-            client.type = typeController.text;
+            client.webhookUrl = typeController.text;
             clientController.registerClient(client, response: (result) {
               if (isExists(result)) {
                 Navigator.pop(context);

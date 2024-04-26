@@ -24,7 +24,7 @@ class Api {
     print('## GET >> ${apiUrl}');
 
     Dio dio = Dio();
-    dio.options.headers["Authorization"] = 'Bearer $apiKey';
+    // dio.options.headers["Authorization"] = 'Bearer $apiKey';
     dio.interceptors.add(InterceptorsWrapper(
         onRequest:(options, handler) async {
           return handler.next(options); //continue

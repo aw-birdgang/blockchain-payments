@@ -4,7 +4,7 @@ class Client {
   String? id;
   String? name;
   String? accessToken;
-  String? type;
+  String? webhookUrl;
   String? createdAt;
   String? updatedAt;
 
@@ -12,7 +12,7 @@ class Client {
     this.id,
     this.name,
     this.accessToken,
-    this.type,
+    this.webhookUrl,
     this.createdAt,
     this.updatedAt,
   });
@@ -21,7 +21,7 @@ class Client {
     "id": id,
     "name": name,
     "accessToken": accessToken,
-    "type": type,
+    "webhookUrl": webhookUrl,
     "createdAt": createdAt,
     "updatedAt": updatedAt,
   };
@@ -30,7 +30,7 @@ class Client {
     id = getItemFromMapForStr(map, "id");
     name = getItemFromMapForStr(map, "name");
     accessToken = getItemFromMapForStr(map, "accessToken");
-    type = getItemFromMapForStr(map, "type");
+    webhookUrl = getItemFromMapForStr(map, "webhookUrl");
     createdAt = getItemFromMapForStr(map, "createdAt");
     updatedAt = getItemFromMapForStr(map, "updatedAt");
   }
