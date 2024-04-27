@@ -1,0 +1,11 @@
+@startuml
+[*] --> NotProcessed : Start
+NotProcessed : Waiting for whitelist check
+NotProcessed --> InWhitelist : Sender in Whitelist
+InWhitelist : Waiting for wallet list check
+InWhitelist --> NotInWalletList : Receiver not in Wallet List
+NotInWalletList --> NotProcessed : Skip to next transaction
+InWhitelist --> Stored : Receiver in Wallet List
+Stored : Transaction stored in DB
+Stored --> [*]
+@enduml

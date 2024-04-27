@@ -1,0 +1,21 @@
+@startuml
+actor Scheduler
+entity Checker
+database DB
+actor Client
+
+Scheduler -> Checker : Schedule according to block creation time
+loop Fetch and Update Transactions
+    Checker -> DB : Request list of high-priority transactions since last delivered
+    DB --> Checker : List of transactions
+    loop Each Transaction
+        Checker --> Checker : Check delivery status of the transaction
+        alt If not yet delivered
+            Checker -> Client : Deliver transaction
+            Checker -> DB : Update transaction status to 'processed'
+        else
+            Checker --> Checker : Skip to next transaction
+        end
+    end
+end
+@enduml

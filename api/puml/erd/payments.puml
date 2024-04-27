@@ -14,9 +14,188 @@ skinparam class {
     BorderColor #2688d4
 }
 
-title 'Blockchain Deposit Service ERD
+title 'Gangnam Blockchain Deposit Service ERD
 
+table( group ) {
+    primary_key( client_code ) : varchar(30)
+    column( group_name ): varchar(30)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
 
+table( member ) {
+    primary_key( member_id ) : varchar(30)
+    column( user_name ): varchar(30)
+    column( user_pass ): varchar(100)
+    column( email ): varchar(50)
+    column( client_code ): varchar(30)
+    column( member_type): varchar(1)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( member_login_log ) {
+    primary_key( id ) : bigint
+    foreign_key( member_id ): varchar(30)
+    column( c_ip ): varchar(300)
+    column( c_mobile ): varchar(1)
+    column( c_platform ): varchar(30)
+    column( c_device ): varchar(30)
+    column( created_at ) : datetime
+}
+
+table( member_login_fail ) {
+    primary_key( id ) : bigint
+    foreign_key( member_id ): varchar(30)
+    column( created_at ) : datetime
+}
+
+table( member_ban ) {
+    primary_key( id ) : bigint
+    foreign_key( member_id ): varchar(30)
+    column( ip_address ): varchar(44)
+    column( memo ): text
+    column( created_at ) : datetime
+}
+
+table( group_purse ) {
+    primary_key( coin ) : varchar(10)
+    foreign_key( client_code ): varchar(30)
+    column( coin_in_enable ): bigint
+    column( coin_in_disable ): bigint
+    column( coin_price_avg ) : float
+    column( updated_at ) : datetime
+}
+
+table( group_apikey ) {
+    primary_key( client_code ): varchar(30)
+    column( api_key ): varchar(50)
+    column( webhook_href ): varchar(60)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( group_master_wallet ) {
+    primary_key( client_code ): varchar(30)
+    column( network ) : varchar(10)
+    column( wallet_address ) : varchar(44)
+    column( wallet_private_key ) : varchar(140)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( member_access_token ) {
+    primary_key( member_id ): varchar(30)
+    column( access_token ): varchar(50)
+    column( token_expire ): datetime
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( admin_menu_code ) {
+    primary_key( menu_code ): varchar(20)
+    column( menu_lv ) : varchar(50)
+    column( menu_type ): varchar(50)
+    column( menu_name ): varchar(50)
+    column( menu_href ): varchar(50)
+    column( menu_icon ): varchar(50)
+    column( menu_align ): varchar(50)
+    column( use_tag ): varchar(5)
+}
+
+table( admin_menu_role ) {
+    primary_key( member_id ): varchar(20)
+    foreign_key( menu_code ) : varchar(20)
+    column( use_tag ): varchar(5)
+    column( created_at ) : datetime
+}
+
+table( admin_users ) {
+    primary_key( id ) : bigint
+    foreign_key( member_id ): varchar(20)
+    column( user_pass ) : varchar(100)
+    column( user_name ): varchar(30)
+    column( user_part ): varchar(20)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( admin_user_login_log ) {
+    primary_key( id ) : bigint
+    foreign_key( member_id ): varchar(30)
+    column( c_ip ): varchar(300)
+    column( c_mobile ): varchar(1)
+    column( c_platform ): varchar(30)
+    column( c_device ): varchar(30)
+    column( created_at ) : datetime
+}
+
+table( board_content ) {
+    primary_key( board_id ) : varchar(50)
+    primary_key( board_idx ): int
+    primary_key( board_subidx ): int
+    column( board_subject ): varchar(200)
+    column( board_contents ): text
+    column( notice ): varchar(10)
+    column( member_id ): varchar(30)
+    column( hit ) : int
+    column( file1 ): varchar(100)
+    column( file2 ): varchar(100)
+    column( file3 ): varchar(100)
+    column( file4 ): varchar(100)
+    column( file5 ): varchar(100)
+    column( wr1 ): varchar(200)
+    column( wr2 ): varchar(200)
+    column( wr3 ): varchar(200)
+    column( wr4 ): varchar(200)
+    column( wr5 ): varchar(200)
+    column( wr6 ): varchar(200)
+    column( wr7 ): varchar(200)
+    column( wr8 ): varchar(200)
+    column( wr9 ): varchar(200)
+    column( wr10 ): varchar(200)
+    column( created_at ) : datetime
+}
+
+table( board_list ) {
+    primary_key( board_id ) : varchar(50)
+    column( board_subject ): varchar(100)
+    column( board_contents ): text
+    column( read_level ): varchar(10)
+    column( write_level ): varchar(10)
+    column( list_level ) : varchar(10)
+    column( reply_level ): varchar(10)
+    column( upload_level ): varchar(10)
+    column( download_level ): varchar(10)
+    column( table_width ): varchar(10)
+    column( subject_len ): varchar(50)
+    column( page_rows ): varchar(10)
+    column( upload_count ): int
+    column( upload_size ): int
+    column( image_count ): int
+    column( image_width ): int
+    column( board_type_code ): varchar(10)
+    column( display_new ): varchar(10)
+    column( display_hot ): varchar(10)
+    column( created_at ) : datetime
+}
+
+table( board_reply ) {
+    foreign_key( board_id ) : varchar(50)
+    foreign_key( board_idx ): int
+    foreign_key( board_subidx ): int
+    column( reply_idx ): int
+    column( reply_subidx ): int
+    column( reply_contents ): text
+    column( member_id ): varchar(30)
+    column( created_at ) : datetime
+}
+
+table( board_type ) {
+    primary_key( board_type_code ) : varchar(50)
+    column( board_type_name ): varchar(50)
+    column( use_tag ): varchar(1)
+}
 
 table( coin_address ) {
     primary_key( network ) : varchar(10)
@@ -34,14 +213,6 @@ table( coin_address_register ) {
     foreign_key( address ) : varchar(44)
     foreign_key( client_code ): varchar(30)
     column( mapped_at ) : datetime
-}
-
-table( coin_trade_fee ) {
-    primary_key( transaction_no ) : bigint
-    primary_key( coin ) : varchar(10)
-    column( network ) : varchar(10)
-    column( fees ): bigint
-    column( created_at ) : datetime
 }
 
 table( common_code ) {
@@ -73,6 +244,23 @@ table( ethereum_deposit_transactions ) {
     column( updated_at ) : datetime
 }
 
+table( polygon_deposit_transactions ) {
+    primary_key( id ) : bigint
+    column( txhash ) : varchar(66)
+    column( from_address ) : varchar(42)
+    column( to_address ) : varchar(42)
+    column( block_number ) : int
+    column( coin ) : varchar(10)
+    column( amounts ) : decimal(16,8)
+    column( client_code ) : varchar(30)
+    column( blkhash ) : varchar(50)
+    column( is_sended ) : varchar(1)
+    column( usd_price ) : decimal(20,2)
+    column( krw_price ) : decimal(20,8)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
 table( ethereum_withdraw_transactions ) {
     primary_key( id ) : bigint
     column( txhash ) : varchar(66)
@@ -87,13 +275,31 @@ table( ethereum_withdraw_transactions ) {
     column( created_at ) : datetime
 }
 
+group::client_code ||--|| member::client_code
+member::member_id ||--|| member_login_log::member_id
+member::member_id ||--|| member_login_fail::member_id
+member::member_id ||--|| member_ban::member_id
+member::member_id ||--|| member_access_token::member_id
+member::member_id ||--|| board_content::member_id
+member::member_id ||--|| board_reply::member_id
 
 group::client_code||--|| group_purse::client_code
 group::client_code||--|| group_apikey::client_code
 group::client_code||--|| group_master_wallet::client_code
 group::client_code||--|| coin_address_register::client_code
 group::client_code||--|| ethereum_deposit_transactions::client_code
+group::client_code||--|| polygon_deposit_transactions::client_code
 group::client_code||--|| ethereum_withdraw_transactions::client_code
+
+admin_users::member_id ||--|| admin_menu_role::member_id
+admin_users::member_id ||--|| admin_user_login_log::member_id
+admin_menu_code::menu_code ||--|| admin_menu_role::menu_code
+
+board_list::board_id ||--|| board_content::board_id
+board_list::board_type_code ||--|| board_type::board_type_code
+board_content::board_id ||--|| board_reply::board_id
+board_content::board_idx ||--|| board_reply::board_idx
+board_content::board_subidx ||--|| board_reply::board_subidx
 
 coin_address::network ||--|| coin_address_register::network
 coin_address::address ||--|| coin_address_register::address

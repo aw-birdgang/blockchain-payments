@@ -1,0 +1,18 @@
+@startuml
+start
+:Schedule according to block creation time;
+partition Checker {
+    :Request list of high-priority transactions since last delivered from DB;
+    :Receive list of transactions;
+    repeat :Process each transaction;
+        :Check if the transaction has been delivered;
+        if (Not delivered) then (yes)
+            :Deliver transaction to client;
+            :Update transaction status in DB;
+        else
+            :Skip to next transaction;
+        endif
+    repeat while (Are there more transactions?)
+}
+stop
+@enduml

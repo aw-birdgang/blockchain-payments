@@ -1,0 +1,32 @@
+@startuml
+class Scheduler {
+}
+
+class Checker {
+    +checkWhitelist(address : String) : boolean
+    +checkWalletList(address : String) : boolean
+    +storeTransaction(transaction : Transaction) : void
+}
+
+class Chain {
+    +getBlockInfo() : Block
+}
+
+class DB {
+    +storeTransaction(transaction : Transaction) : void
+}
+
+class Whitelist {
+    +addresses : String[]
+}
+
+class WalletList {
+    +addresses : String[]
+}
+
+Scheduler --> Checker : schedules
+Checker --> Chain : retrieves info
+Checker --> Whitelist : checks sender
+Checker --> WalletList : checks receiver
+Checker --> DB : stores valid transactions
+@enduml

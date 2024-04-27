@@ -1,0 +1,22 @@
+@startuml
+start
+:Schedule according to block creation time;
+partition Checker {
+    :Get block information;
+    :Extract transactions from block;
+    repeat :Process each transaction;
+        :Retrieve whitelist;
+        :Check if sender's address is in the whitelist;
+        if (Sender's address is in the whitelist) then (yes)
+            :Elevate priority;
+        endif
+        :Retrieve wallet list;
+        if (Receiver's address is not in the wallet list) then (no)
+            :Skip to next transaction;
+        else
+            :Store transaction data in specified format in the database;
+        endif
+    repeat while (Are there more transactions?)
+}
+stop
+@enduml

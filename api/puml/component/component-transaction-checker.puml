@@ -1,0 +1,16 @@
+@startuml
+package "Transaction Processing System" {
+    [Scheduler]
+    [Checker]
+    [Chain]
+    [Database]
+    [Whitelist]
+    [WalletList]
+}
+
+[Scheduler] --> [Checker] : Uses
+[Checker] --> [Chain] : Retrieves Info
+[Checker] --> [Whitelist]
+[Checker] --> [WalletList]
+[Checker] --> [Database] : Stores transactions
+@enduml
