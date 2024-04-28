@@ -10,6 +10,7 @@ import {
     Post,
     Put,
     Query,
+    Request,
     Res
 } from '@nestjs/common';
 import {ClientService} from "./client.service";
@@ -19,7 +20,7 @@ import {
     ApiForbiddenResponse,
     ApiNoContentResponse,
     ApiOkResponse,
-    ApiOperation,
+    ApiOperation, ApiQuery,
     ApiTags,
     ApiUnauthorizedResponse
 } from "@nestjs/swagger";
@@ -27,8 +28,8 @@ import {Client} from "../../entities/client.entity";
 import {ClientRequestCreateDto} from "../../dto/client-request-create.dto";
 import {instanceToPlain} from "class-transformer";
 
-@Controller('client')
-@ApiTags('Client API')
+@Controller('v1/client')
+@ApiTags('CLIENT API')
 export class ClientController {
     constructor(
         private readonly clientService: ClientService,
@@ -49,13 +50,23 @@ export class ClientController {
 
 
     @Get()
-    @ApiOperation({ summary: '모든 클라이언트 을 조회 API' })
-    @ApiOkResponse({ description: '모든 클라이언트 을 조회 한다.', type: Client })
-    async findAll(@Res() res: Response) {
-        let clients = await this.clientService.findAll();
-        return res.status(HttpStatus.OK).json(clients);
+    @ApiOperation({ summary: '모든 클라이언트 조회 API' })
+    @ApiOkResponse({
+        description: '모든 클라이언트 를 조회 한다.',
+        type: Client,
+        isArray: true,
+    })
+    @ApiQuery({ name: 'take', required: false, type: Number, example: 10, description: 'Number of wallets to return at one time',})
+    @ApiQuery({ name: 'page', required: false, type: Number, example: 1, description: 'Page number of the wallets to retrieve',})
+    async findClients(
+        @Request() req,
+        @Query('take') take: number = 10,
+        @Query('page') page: number = 1,
+        @Res() res: Response
+    ) {
+        const tokens = await this.clientService.findClients({take, page});
+        return res.status(HttpStatus.OK).json(tokens);
     }
-
 
     @Get(':id')
     @ApiOperation({summary: '클라이언트 정보 조회 API'})

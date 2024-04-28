@@ -26,16 +26,11 @@ export class Wallet extends BaseEntity {
   @Column({ length: 140 })
   private_key: string;
 
-  @Transform((params) => params.value.trim())
-  @Column({ name: 'client_id', length: 50, nullable: true })
-  clientId: string;
-
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
-
 
   static of(params: Partial<Wallet>): Wallet {
     const wallet = new Wallet();

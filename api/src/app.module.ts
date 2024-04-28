@@ -20,7 +20,6 @@ import {WalletModule} from "./api/wallet/wallet.module";
     // DepositCheckerModule,
     ERC20Module,
     WebhookModule,
-
   ],
 })
 export class AppModule {}

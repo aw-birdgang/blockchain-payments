@@ -8,8 +8,9 @@ import {ResponseAccountDto} from './dto/response-account.dto';
 import {GetTransferGasPriceDto} from './dto/request-gettransfer-gasprice.dto';
 import {TransferAmountDto} from './dto/request-transfer-amount.dto';
 
-@ApiTags('Ethereum')
-@Controller('ether')
+
+@Controller('v1/ether')
+@ApiTags('ETHEREUM API')
 export class EtherController {
   constructor(private readonly etherService: EtherService) {}
   private readonly logger = new Logger(EtherController.name);

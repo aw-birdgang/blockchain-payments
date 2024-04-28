@@ -7,8 +7,9 @@ import {instanceToPlain} from "class-transformer";
 import {MasterWalletRequestCreateDto} from "../../dto/master-wallet-request-create.dto";
 import {Wallet} from "../../entities";
 
-@ApiTags('Wallet')
-@Controller('wallet')
+
+@Controller('v1/wallet')
+@ApiTags('WALLET API')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
   private readonly logger = new Logger(WalletController.name);

@@ -11,8 +11,8 @@ import { RequestContractAllowanceDto } from './dto/resquest-contract-allowance.d
 import { RequestContractApproveDto } from './dto/resquest-contract-approve.dto';
 import { RequestContractTransferFromDto } from './dto/resquest-contract-trasnfrom.dto';
 
-@ApiTags('Ethereum ERC20')
-@Controller('erc20')
+@Controller('v1/erc20')
+@ApiTags('ETHEREUM ERC20 API')
 export class ERC20Controller {
   constructor(private readonly erc20Service: ERC20Service) {}
   private readonly logger = new Logger(ERC20Controller.name);

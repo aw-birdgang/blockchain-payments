@@ -1,22 +1,23 @@
 import {Injectable, Logger, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
-import {Client} from "../../entities";
+import {ClientWallet} from "./entities/client_wallet.entity";
 import {ClientRequestCreateDto} from "../../dto/client-request-create.dto";
-import {isEmpty} from "../../common/util/is-empty";
+import {Client} from "../../entities";
 import {Pagination, PaginationOptions} from "../../pagiante";
+import {isEmpty} from "../../common/util/is-empty";
 
 @Injectable()
-export class ClientService {
+export class ClientWalletService {
     constructor(
-        @InjectRepository(Client)
-        private clientRepository: Repository<Client>,
+        @InjectRepository(ClientWallet)
+        private clientRepository: Repository<ClientWallet>,
     ) {}
 
-    private readonly logger = new Logger(ClientService.name);
+    private readonly logger = new Logger(ClientWalletService.name);
 
-    async createClient(requestDto: ClientRequestCreateDto): Promise<Client> {
-        const insertEntry = Client.of(requestDto);
+    async createClient(requestDto: ClientRequestCreateDto): Promise<ClientWallet> {
+        const insertEntry = ClientWallet.of(requestDto);
         const builder = await this.clientRepository.createQueryBuilder()
             .insert()
             .into(Client)

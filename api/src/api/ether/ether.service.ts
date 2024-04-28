@@ -19,7 +19,6 @@ export class EtherService {
     this.web3 = new Web3(new Web3.providers.HttpProvider(this.rpcUrl));
   }
 
-
   /* 계정(address)이 보유한 자산 조회 */
   async balanceOf(ownerAddress: string) {
     const balance = await this.web3.eth.getBalance(ownerAddress);
@@ -48,8 +47,8 @@ export class EtherService {
   }
 
   /* 트랜잭션 receipt 조회 */
-  async getTransactionReceipt(transactionHash: string) {
-    const receipt = await this.web3.eth.getTransactionReceipt(transactionHash);
+  async getTransactionReceipt(txHash: string) {
+    const receipt = await this.web3.eth.getTransactionReceipt(txHash);
     const customJson = JSON.stringify(receipt, (key, value) => {
       return typeof value === 'bigint' ? value.toString() : value;
     });
