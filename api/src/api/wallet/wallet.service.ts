@@ -26,7 +26,6 @@ export class WalletService {
     return this.walletRepository.find();
   }
 
-
   async findWallets(options: PaginationOptions,): Promise<Pagination<Wallet>> {
     const { take, page } = options;
     const builder = this.walletRepository.createQueryBuilder("wallet");
@@ -42,14 +41,10 @@ export class WalletService {
   }
 
 
-  async findById(id: number): Promise<Wallet> {
+  async findById(id: string): Promise<Wallet> {
     return this.walletRepository.findOneBy({ id });
   }
 
-
-  async findByClientId(clientId: string): Promise<Wallet> {
-    return this.walletRepository.findOneBy({ clientId });
-  }
 
   async findAllByClientId(clientId: string): Promise<Wallet[]> {
     const builder = this.walletRepository.createQueryBuilder("wallet")
@@ -70,7 +65,6 @@ export class WalletService {
 
     const account = await this.etherService.createAccount();
     const wallet = new Wallet();
-    wallet.clientId = clientId;
     wallet.network = network;
     wallet.address = account.address;
     wallet.private_key = this.commonService.encryptAES(account.privateKey);

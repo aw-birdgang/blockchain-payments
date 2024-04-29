@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpStatus, Logger, Param, Post, Query, Request, Res,} from '@nestjs/common';
+import {Body, Controller, Get, HttpStatus, Logger, Post, Query, Request, Res,} from '@nestjs/common';
 import {WalletService} from './wallet.service';
 
 import {ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags} from '@nestjs/swagger';
@@ -33,41 +33,6 @@ export class WalletController {
     const wallets = await this.walletService.findWallets({take, page});
     return res.status(HttpStatus.OK).json(wallets);
   }
-
-
-  @Get(':clientId')
-  @ApiOperation({ summary: '클라이언트 정보 조회 API' })
-  @ApiOkResponse({
-    description: 'Name 이 일치 하는 클라이언트 정보를 조회 한다.',
-    type: Wallet,
-  })
-  async findByClientId(
-      @Param('clientId') clientId: string,
-      @Res() res: Response,
-  ) {
-    this.logger.log("findByClientId > clientId : " + clientId);
-    const responseDto = await this.walletService.findByClientId(clientId);
-    return res.status(HttpStatus.OK).json(instanceToPlain(responseDto));
-  }
-
-
-  @Get('list/:clientId')
-  @ApiOperation({ summary: '클라이언트 정보 조회 API' })
-  @ApiOkResponse({
-    description: 'ID 가 일치 하는 클라이언트 목록 정보를 조회 한다.',
-    type: Wallet,
-    isArray: true,
-  })
-  async findAllByClientId(
-      @Param('clientId') clientId: string,
-      @Res() res: Response,
-  ) {
-    this.logger.log("findAllByClientId > clientId : " + clientId);
-    const responseDto = await this.walletService.findAllByClientId(clientId);
-    return res.status(HttpStatus.OK).json(instanceToPlain(responseDto));
-  }
-
-
 
   @Post()
   @ApiOperation({ summary: '클라이언트 컨테이너 를 생성 API', description: '클라이언트 컨테이너 를 생성 한다.' })

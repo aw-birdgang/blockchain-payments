@@ -2,7 +2,7 @@ import {Injectable, Logger, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Client} from "../../entities";
-import {ClientRequestCreateDto} from "../../dto/client-request-create.dto";
+import {ClientRequestCreateDto} from "./dto/client-request-create.dto";
 import {isEmpty} from "../../common/util/is-empty";
 import {Pagination, PaginationOptions} from "../../pagiante";
 
@@ -46,8 +46,7 @@ export class ClientService {
     }
 
     async findById(id: string): Promise<Client> {
-        const client = await this.findClientById(id);
-        return client;
+        return await this.findClientById(id);
     }
 
     async isExistClient(id: string): Promise<boolean> {

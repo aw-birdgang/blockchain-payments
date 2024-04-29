@@ -1,0 +1,50 @@
+@startuml
+!define primary_key(x) <b><color:red><&key> x</color></b>
+!define foreign_key(x) <color:blue><&key> x</color>
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+left to right direction
+skinparam roundcorner 5
+skinparam shadowing false
+skinparam handwritten false
+skinparam class {
+    BackgroundColor white
+    ArrowColor #2688d4
+    BorderColor #2688d4
+}
+
+title 'Crypto Payments Service ERD
+
+
+table( client ) {
+    primary_key( id ) : bigint
+    column( name ): varchar(30)
+    column( code ): varchar(30)
+    column( webhook_url ): varchar(100)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( client_member ) {
+    primary_key( id ) : bigint
+    column( name ): varchar(30)
+    column( pwd ): varchar(100)
+    column( email ): varchar(50)
+    column( client_code ): varchar(30)
+    column( type): varchar(1)
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+table( client_member_login_log ) {
+    primary_key( id ) : bigint
+    foreign_key( member_id ): varchar(30)
+    column( c_ip ): varchar(300)
+    column( c_mobile ): varchar(1)
+    column( c_platform ): varchar(30)
+    column( c_device ): varchar(30)
+    column( created_at ) : datetime
+}
+
+@enduml

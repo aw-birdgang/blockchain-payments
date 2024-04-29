@@ -14,7 +14,8 @@ skinparam class {
     BorderColor #2688d4
 }
 
-title 'Gangnam Blockchain Deposit Service ERD
+title 'Crypto Payments Service ERD
+
 
 table( transaction_receipt ) {
     primary_key( client_code ) : varchar(50)
@@ -30,25 +31,39 @@ table( transaction_receipt ) {
     column( updated_at ) : datetime
 }
 
-table( member ) {
+
+table( ethereum_deposit_transactions ) {
     primary_key( id ) : bigint
-    column( user_name ): varchar(30)
-    column( user_pass ): varchar(100)
-    column( email ): varchar(50)
-    column( client_code ): varchar(30)
-    column( member_type): varchar(1)
+    column( txhash ) : varchar(66)
+    column( from_address ) : varchar(42)
+    column( to_address ) : varchar(42)
+    column( block_number ) : int
+    column( coin ) : varchar(10)
+    column( amounts ) : decimal(16,8)
+    column( client_code ) : varchar(30)
+    column( blkhash ) : varchar(50)
+    column( is_sended ) : varchar(1)
+    column( usd_price ) : decimal(20,2)
+    column( krw_price ) : decimal(20,8)
     column( created_at ) : datetime
     column( updated_at ) : datetime
 }
 
-table( member_login_log ) {
+
+table( ethereum_withdraw_transactions ) {
     primary_key( id ) : bigint
-    foreign_key( member_id ): varchar(30)
-    column( c_ip ): varchar(300)
-    column( c_mobile ): varchar(1)
-    column( c_platform ): varchar(30)
-    column( c_device ): varchar(30)
+    column( txhash ) : varchar(66)
+    column( to_address ) : varchar(42)
+    column( speed ) : double(3,2)
+    column( coin ) : varchar(10)
+    column( amounts ) : decimal(16,8)
+    column( client_code ) : varchar(30)
+    column( blkhash ) : varchar(50)
+    column( usd_price ) : decimal(20,2)
+    column( fee ) : decimal(12,8)
     column( created_at ) : datetime
 }
+
+
 
 @enduml

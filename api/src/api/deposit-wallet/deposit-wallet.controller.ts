@@ -13,38 +13,40 @@ import {
     Request,
     Res
 } from '@nestjs/common';
-import {ClientService} from "./client.service";
-import {Response} from 'express';
 import {
     ApiCreatedResponse,
     ApiForbiddenResponse,
     ApiNoContentResponse,
     ApiOkResponse,
-    ApiOperation, ApiQuery,
+    ApiOperation,
+    ApiQuery,
     ApiTags,
     ApiUnauthorizedResponse
 } from "@nestjs/swagger";
-import {Client} from "./entities/client.entity";
-import {ClientRequestCreateDto} from "./dto/client-request-create.dto";
+import {Response} from "express";
 import {instanceToPlain} from "class-transformer";
+import {DepositWalletService} from "./deposit-wallet.service";
+import {ClientWalletRequestCreateDto} from "./dto/client-wallet-request-create.dto";
+import {DepositWallet} from "./entities/deposit-wallet.entity";
 
-@Controller('v1/client')
-@ApiTags('CLIENT API')
-export class ClientController {
+
+@Controller('v1/client-wallet')
+@ApiTags('CLIENT WALLET API')
+export class DepositWalletController {
     constructor(
-        private readonly clientService: ClientService,
+        private readonly clientWalletService: DepositWalletService,
     ) {}
 
-    private readonly logger = new Logger(ClientController.name);
+    private readonly logger = new Logger(DepositWalletController.name);
 
     @Post()
-    @ApiOperation({ summary: '클라이언트 를 생성 API', description: '클라이언트 를 생성 한다.' })
-    @ApiCreatedResponse({ description: '클라이언트 를 생성 한다.', type: Client })
+    @ApiOperation({ summary: '클라이언트 지갑 생성 API', description: '클라이언트 지갑을 생성 한다.' })
+    @ApiCreatedResponse({ description: '클라이언트 를 생성 한다.', type: DepositWallet })
     async create(
-        @Body() clientRequestCreateDto: ClientRequestCreateDto,
+        @Body() clientRequestCreateDto: ClientWalletRequestCreateDto,
         @Res() res: Response,
     ) {
-        const response = await this.clientService.createClient(clientRequestCreateDto);
+        const response = await this.clientWalletService.createClientWallet(clientRequestCreateDto);
         return res.status(HttpStatus.OK).json(instanceToPlain(response));
     }
 
@@ -53,7 +55,7 @@ export class ClientController {
     @ApiOperation({ summary: '모든 클라이언트 조회 API' })
     @ApiOkResponse({
         description: '모든 클라이언트 를 조회 한다.',
-        type: Client,
+        type: DepositWallet,
         isArray: true,
     })
     @ApiQuery({ name: 'take', required: false, type: Number, example: 10, description: 'Number of wallets to return at one time',})
@@ -64,7 +66,7 @@ export class ClientController {
         @Query('page') page: number = 1,
         @Res() res: Response
     ) {
-        const tokens = await this.clientService.findClients({take, page});
+        const tokens = await this.clientWalletService.findClients({take, page});
         return res.status(HttpStatus.OK).json(tokens);
     }
 
@@ -73,7 +75,7 @@ export class ClientController {
     @ApiUnauthorizedResponse({description: '401. UnauthorizedException.'})
     @ApiForbiddenResponse({description: '403. ForbiddenException.'})
     @ApiOkResponse({
-        type: [Client],
+        type: [DepositWallet],
         description: '200. Success. Returns a client info',
     })
     @HttpCode(HttpStatus.OK)
@@ -81,28 +83,8 @@ export class ClientController {
         @Param('id') id: string,
         @Res() res: Response,
     ) {
-        const responseDto = await this.clientService.findById(id);
+        const responseDto = await this.clientWalletService.findById(id);
         return res.status(HttpStatus.OK).json(instanceToPlain(responseDto));
-    }
-
-
-    @Put('webhookUrl/:webhookUrl')
-    @ApiOperation({
-        summary: '클라이언트 콜백 주소 정보 수정 API',
-        description: '입금 정보 지불 정보 수정 합니다.',
-    })
-    @ApiOkResponse({
-        description: '입금 정보 지불 정보 수정 합니다.',
-        type: Client,
-    })
-    async updateWebhookUrl(
-        @Param('id') id: string,
-        @Query('webhookUrl') webhookUrl: string,
-        @Res() res: Response,
-    ) {
-        this.logger.log('updateWebhookUrl ');
-        const client = await this.clientService.updateWebhookUrl(id, webhookUrl);
-        return res.status(HttpStatus.OK).json(instanceToPlain(client));
     }
 
 
@@ -113,8 +95,9 @@ export class ClientController {
         @Param('id') id: string,
         @Res() res: Response,
     ) {
-        const cat = await this.clientService.deleteClient(id);
+        const cat = await this.clientWalletService.deleteClientWallet(id);
         return res.status(HttpStatus.OK).json(cat);
     }
 
 }
+
