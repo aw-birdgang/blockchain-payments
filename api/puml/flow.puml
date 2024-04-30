@@ -1,17 +1,11 @@
 @startuml
-participant "Scheduler" as S
-database "Database" as D
-entity "Blockchain" as B
-participant "Client" as C
+entity "User" as user
+entity "NestJS Backend" as backend
+entity "LotteryTicketContract" as lottery
+entity "PaymasterContract" as paymaster
 
-S -> D : Fetch last checked block number (SBN)
-S -> B : Get current block number (CBN) using web3.eth.getBlockNumber()
-alt if CBN < SBN
-    S -> S : Update SBN to CBN
-end
-loop from SBN to CBN
-    S -> B : Fetch block using web3.eth.getBlock()
-    S -> S : Filter transactions where tx.to is in Client's deposit addresses
-    S -> D : Save successful transactions
-end
+user -> backend : request(ticketDetails)
+backend -> paymaster : payForTransaction(operation)
+paymaster -> lottery : buyTicket(operation, ticketDetails)
+lottery -> user : TicketPurchased event
 @enduml
