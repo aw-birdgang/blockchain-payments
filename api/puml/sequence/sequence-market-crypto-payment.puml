@@ -1,0 +1,12 @@
+@startuml
+actor Consumer
+actor Online_Mall
+actor Cryptocurrency_Wallet
+entity "Blockchain Network" as Blockchain
+
+Consumer -> Cryptocurrency_Wallet : 결제 시작
+Cryptocurrency_Wallet -> Blockchain : 거래 정보 전송
+Blockchain -> Cryptocurrency_Wallet : 거래 확인
+Cryptocurrency_Wallet -> Online_Mall : 결제 확인
+Online_Mall -> Consumer : 상품/서비스 제공
+@enduml

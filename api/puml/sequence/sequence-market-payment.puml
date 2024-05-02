@@ -8,12 +8,12 @@ actor IT_Service_Provider
 actor Affiliate_Partners
 
 Consumer -> Online_Mall : 상품/서비스 선택 및 결제 정보 제공
-Online_Mall -> PG : 결제 정보 전송
-PG -> VAN : 결제 정보 중계
-VAN -> Card_Company : 결제 정보 승인 요청
-Card_Company -> VAN : 승인 응답
-VAN -> PG : 승인 결과 전송
-PG -> Online_Mall : 결제 결과 통지
+Online_Mall -> PG : 결제 정보 전송 \n+ 결제금액: $Amount
+PG -> VAN : 결제 정보 중계 \n+ 수수료: $Fee_PG
+VAN -> Card_Company : 결제 정보 승인 요청 \n+ 수수료: $Fee_VAN
+Card_Company -> VAN : 승인 응답 \n+ 승인 금액: $Amount_Approved
+VAN -> PG : 승인 결과 전송 \n+ 최종 승인 금액: $Amount_Approved
+PG -> Online_Mall : 결제 결과 통지 \n+ 최종 결제 금액: $Amount_Approved
 Online_Mall -> Consumer : 상품/서비스 제공
 Online_Mall -> IT_Service_Provider : 시스템 유지보수 요청
 IT_Service_Provider -> Online_Mall : 기술 지원
