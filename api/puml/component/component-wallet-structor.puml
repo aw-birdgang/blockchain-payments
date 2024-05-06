@@ -1,0 +1,17 @@
+@startuml
+package "Custody Wallet Service" {
+    [Master Wallet] as MW
+    [Deposit Address 1] as DA1
+    [Deposit Address 2] as DA2
+    [Deposit Address 3] as DA3
+    [Fee Wallet] as FW
+    [External Wallet] as EW
+
+    MW <-- DA1 : collection
+    MW <-- DA2 : collection
+    MW <-- DA3 : collection
+
+    DA3 <-- EW : deposit
+    MW --> EW : withdraw
+}
+@enduml

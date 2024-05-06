@@ -1,0 +1,22 @@
+@startuml
+participant "Client Server" as Client
+participant "Solution API Proxy" as Proxy
+participant "Solution API" as API
+participant "Solution NETWORK" as S_NETWORK
+participant "NETWORK" as NETWORK
+
+group Customer Infrastructure
+    Client -> Proxy : Calls API to create a transaction\n(e.g., withdrawal request)
+    Proxy -> Proxy : Signs the transaction with the\nclient's account key
+end
+
+Proxy -> API : Forwards the transaction with the first signature
+
+group Solution Infrastructure
+    API -> API : Signs it secondarily with the Solution Key
+    API -> S_NETWORK : Signs it secondarily with the Solution Key
+end
+
+S_NETWORK -> NETWORK : Propagates the secondarily signed transaction
+
+@enduml

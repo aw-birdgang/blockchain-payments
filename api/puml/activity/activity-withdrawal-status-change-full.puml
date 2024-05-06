@@ -1,0 +1,57 @@
+@startuml
+
+start
+
+:Account Verification;
+
+if (Is it a Withdrawal Capable Account?) then (yes)
+    :Withdraw;
+    if (Is the withdrawal limit exceeded?) then (yes)
+        :Waiting for Approval;
+        if (Has the admin approved the withdrawal?) then (yes)
+            :Transmitting;
+        else (no)
+            :Rejected;
+            stop
+        endif
+    else (no)
+        :Transmitting;
+    endif
+else (no)
+    if (Is it an Administrator Account?) then (yes)
+        :Transmitting;
+    else (no)
+        :Invalid Account Type;
+        stop
+    endif
+endif
+
+:Processing Transaction;
+if (Has the transaction been successfully initiated?) then (yes)
+    :Mining Wait;
+    if (Has mining been successful?) then (yes)
+        :Mined;
+        if (Is there another transaction with the same nonce in the block?) then (yes)
+            :Cancelled;
+            stop
+        else (no)
+            :Completed;
+            stop
+        endif
+    else (no)
+        :Failed;
+        stop
+    endif
+else (no)
+    :Transmission Failed;
+    if (Has retry been successful?) then (yes)
+        :Mining Wait;
+    else (no)
+        :Transmission Failed;
+        stop
+    endif
+endif
+
+stop
+
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+package "Withdrawal Process" {
+    [Master Wallet] as MW
+    [External Wallet 1] as EW_1
+    [External Wallet 2] as EW_2
+    [External Wallet 3] as EW_3
+
+    MW --> EW_1 : withdrawal
+    MW --> EW_2 : withdrawal
+    MW --> EW_3 : withdrawal
+}
+@enduml

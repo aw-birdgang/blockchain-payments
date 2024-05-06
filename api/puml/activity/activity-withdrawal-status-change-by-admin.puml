@@ -1,0 +1,35 @@
+@startuml
+
+start
+
+:관리자 권한 계정;
+:전송중;
+
+if (트랜잭션 발생에 성공하였는가?) then (yes)
+    :채굴 대기;
+    if (채굴에 성공하였는가?) then (yes)
+        :채굴됨;
+        if (같은 논스의 다른 트랜잭션이 블록에 있다면?) then (yes)
+            :취소됨;
+            stop
+        else (no)
+            :완료;
+            stop
+        endif
+    else (no)
+        :실패;
+        stop
+    endif
+else (no)
+    :전송 실패;
+    if (재시도를 성공하였는가?) then (yes)
+        :채굴 대기;
+    else (no)
+        :전송 실패;
+        stop
+    endif
+endif
+
+stop
+
+@enduml
