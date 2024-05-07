@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpStatus, Logger, Post, Query, Request, Res,} from '@nestjs/common';
+import {Body, Controller, Get, HttpStatus, Logger, Param, Post, Put, Query, Request, Res,} from '@nestjs/common';
 import {WalletService} from './wallet.service';
 
 import {ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags} from '@nestjs/swagger';
@@ -43,6 +43,26 @@ export class WalletController {
   ) {
     const response = await this.walletService.createWallet(masterWalletRequestCreateDto.clientId,);
     return res.status(HttpStatus.OK).json(instanceToPlain(response));
+  }
+
+
+
+  @Put(':name')
+  @ApiOperation({
+    summary: '지갑 이름 정보 수정 API',
+    description: '지갑 이름 정보 수정 합니다.',
+  })
+  @ApiOkResponse({
+    description: '지갑 이름 정보 수정 합니다.',
+    type: Wallet,
+  })
+  async updateName(
+      @Param('id') id: string,
+      @Query('name') name: string,
+      @Res() res: Response,
+  ) {
+    const client = await this.walletService.updateName(id, name);
+    return res.status(HttpStatus.OK).json(instanceToPlain(client));
   }
 
 }

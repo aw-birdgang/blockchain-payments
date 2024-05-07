@@ -7,6 +7,7 @@ import {WebhookModule} from './webhook/webhook.module';
 import {ClientModule} from './api/client/client.module';
 import {EtherModule} from "./api/ether/ether.module";
 import {WalletModule} from "./api/wallet/wallet.module";
+import {TransfersModule} from './api/transfers/transfers.module';
 
 @Module({
   imports: [

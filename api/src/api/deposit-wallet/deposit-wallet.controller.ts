@@ -46,7 +46,7 @@ export class DepositWalletController {
         @Body() clientRequestCreateDto: ClientWalletRequestCreateDto,
         @Res() res: Response,
     ) {
-        const response = await this.clientWalletService.createClientWallet(clientRequestCreateDto);
+        const response = await this.clientWalletService.createDepositWallet(clientRequestCreateDto);
         return res.status(HttpStatus.OK).json(instanceToPlain(response));
     }
 
