@@ -46,7 +46,6 @@ export class WalletController {
   }
 
 
-
   @Put(':name')
   @ApiOperation({
     summary: '지갑 이름 정보 수정 API',
@@ -64,5 +63,4 @@ export class WalletController {
     const client = await this.walletService.updateName(id, name);
     return res.status(HttpStatus.OK).json(instanceToPlain(client));
   }
-
 }

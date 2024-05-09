@@ -9,12 +9,15 @@ import {Pagination, PaginationOptions} from "../../pagiante";
 import {ClientService} from "../client/client.service";
 import {isEmpty} from "../../common/util/is-empty";
 import {Balance} from "../../entities/balance.entity";
+import {DepositAddress} from "../../entities/deposit-address.entity";
 
 @Injectable()
 export class WalletService {
   constructor(
     @InjectRepository(Wallet)
     private walletRepository: Repository<Wallet>,
+    @InjectRepository(DepositAddress)
+    private depositAddressRepository: Repository<DepositAddress>,
     @InjectRepository(Balance)
     private balanceRepository: Repository<Balance>,
     private readonly etherService: EtherService,
@@ -102,5 +105,31 @@ export class WalletService {
   async findAllBalance(): Promise<Balance[]> {
     return this.balanceRepository.find();
   }
+
+
+  /**
+   *
+   */
+  async findDepositAddressByWalletId(walletId: string,) {
+    const builder = this.walletRepository.createQueryBuilder("depositAddress")
+    const results = await builder
+        .where("deposit_address.walletId = :walletId", { walletId: walletId })
+        .orderBy('created_at', 'DESC')
+        .getMany();
+    return results;
+  }
+
+
+  async findDepositAddressByWalletIdAndDepositAddressId(walletId: string, depositAddressId: string,) {
+    const builder = this.walletRepository.createQueryBuilder("depositAddress")
+    const results = await builder
+        .where("deposit_address.walletId = :walletId", { walletId: walletId })
+        .where("deposit_address.depositAddressId = :depositAddressId", { depositAddressId: depositAddressId })
+        .orderBy('created_at', 'DESC')
+        .getMany();
+    return results;
+  }
+
+
 
 }

@@ -1,0 +1,20 @@
+@startuml
+
+entity "Wemix Chain" as ON_CHAIN
+entity "Batch Server" as BATCH
+entity "Laos Lotto Global DB" as LAOS_GLOBAL_DB
+entity "Laos Lotto Local DB" as LAOS_LOCAL_DB
+entity "Crypto Payment" as CRYPTO_PAYMENT
+
+
+
+
+loop 5 sec
+    BATCH <--> LAOS_LOCAL_DB: 티켓 구매 정보를 가져 와서 적재 한다.
+end
+
+loop 5 sec
+    BATCH <--> ON_CHAIN: 적재 한 데이타 트랜잭션 을 생성 한다.
+end
+
+@enduml

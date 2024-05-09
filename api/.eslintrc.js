@@ -7,8 +7,11 @@ module.exports = {
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended', // TypeScript 권장 규칙
+    'plugin:@typescript-eslint/eslint-recommended'
+    // 'plugin:@typescript-eslint/recommended',
+    // 'plugin:prettier/recommended',
   ],
   root: true,
   env: {
@@ -17,9 +20,12 @@ module.exports = {
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
-    '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
+    // '@typescript-eslint/interface-name-prefix': 'off',
+    // '@typescript-eslint/explicit-function-return-type': 'off',
+    // '@typescript-eslint/explicit-module-boundary-types': 'off',
+    // '@typescript-eslint/no-explicit-any': 'off',
+    // 사용자 정의 규칙
+    'quotes': ['error', 'single'],
+    'semi': ['error', 'always'],
   },
 };
