@@ -7,5 +7,4 @@ export class MasterWalletRequestCreateDto {
     @Length(1, 50)
     @ApiProperty({ description: '클라이언트 아이디' })
     clientId: string;
-
 }
