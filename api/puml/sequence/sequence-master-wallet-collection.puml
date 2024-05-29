@@ -1,0 +1,59 @@
+@startuml
+skinparam monochrome true
+
+actor "Owner" as Owner
+
+participant "Master Wallet Contract" as MW
+participant "ERC20 Token Contract" as ERC20
+
+Owner -> MW: Deploy contract\n(tokenAddress, masterWallet)
+activate MW
+MW -> Owner: Contract Deployed
+deactivate MW
+
+== Add Deposit Wallet ==
+Owner -> MW: addDepositWallet(depositWallet)
+activate MW
+MW -> MW: Add deposit wallet to list
+MW -> Owner: Deposit Wallet Added
+deactivate MW
+
+== Remove Deposit Wallet ==
+Owner -> MW: removeDepositWallet(depositWallet)
+activate MW
+MW -> MW: Remove deposit wallet from list
+MW -> Owner: Deposit Wallet Removed
+deactivate MW
+
+== Transfer All to Master Wallet ==
+Owner -> MW: transferAllToMasterWallet(amount)
+activate MW
+loop For each deposit wallet
+    alt If sufficient balance
+        MW -> ERC20: transferFrom(depositWallet, masterWallet, amount)
+        activate ERC20
+        ERC20 -> ERC20: Transfer tokens
+        ERC20 -> MW: Transfer successful
+        deactivate ERC20
+    else If insufficient balance
+        MW -> MW: Skip this wallet
+    end
+end
+MW -> Owner: All Transfers Completed
+deactivate MW
+
+== Transfer from Specific Deposit Wallet ==
+Owner -> MW: transferFromDepositWallet(depositWallet, amount)
+activate MW
+alt If deposit wallet is registered and has sufficient balance
+    MW -> ERC20: transferFrom(depositWallet, masterWallet, amount)
+    activate ERC20
+    ERC20 -> ERC20: Transfer tokens
+    ERC20 -> MW: Transfer successful
+    deactivate ERC20
+else If not registered or insufficient balance
+    MW -> Owner: Transfer failed
+end
+deactivate MW
+
+@enduml

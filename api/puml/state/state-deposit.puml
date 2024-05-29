@@ -1,0 +1,40 @@
+@startuml
+[*] --> DepositRequest : Deposit Request
+
+state DepositRequest {
+    [*] --> CheckWhitelist
+}
+
+state CheckWhitelist {
+    CheckWhitelist : Check Whitelist
+    CheckWhitelist --> RegisterWhitelist : Not on whitelist
+    CheckWhitelist --> GenerateDepositAddress : On whitelist
+}
+
+state RegisterWhitelist {
+    RegisterWhitelist : Register Whitelist
+    RegisterWhitelist --> GenerateDepositAddress : Registration Complete
+}
+
+state GenerateDepositAddress {
+    GenerateDepositAddress : Generate Deposit Address
+    GenerateDepositAddress --> AwaitingDeposit : Address Provided
+}
+
+state AwaitingDeposit {
+    AwaitingDeposit : Awaiting Deposit
+    AwaitingDeposit --> ConfirmingDeposit : Cryptocurrency Sent
+}
+
+state ConfirmingDeposit {
+    ConfirmingDeposit : Confirming Deposit
+    ConfirmingDeposit --> DepositComplete : Network Confirmations Complete
+}
+
+state DepositComplete {
+    DepositComplete : Deposit Complete
+}
+
+DepositComplete --> [*] : Deposit Completion Notification
+
+@enduml

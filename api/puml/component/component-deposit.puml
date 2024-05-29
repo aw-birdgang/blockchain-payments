@@ -1,0 +1,21 @@
+@startuml
+package "User Interface" {
+    [User]
+    [LottoPlatform]
+}
+
+package "Payment Processing" {
+    [PaymentSystem]
+    [Blockchain]
+}
+
+User ---> LottoPlatform : Deposit Request
+LottoPlatform --> PaymentSystem : Request deposit address
+PaymentSystem --> User : Display deposit address
+User --> PaymentSystem : Deposit USDT
+PaymentSystem --> Blockchain : Check transactions
+Blockchain --> PaymentSystem : Return transaction info
+PaymentSystem --> LottoPlatform : Notify deposit info
+LottoPlatform --> LottoPlatform : Verify deposit requester and update cash/points
+
+@enduml

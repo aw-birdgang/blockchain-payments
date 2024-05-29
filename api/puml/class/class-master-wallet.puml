@@ -1,0 +1,25 @@
+@startuml
+!define RECTANGLE class
+
+class IERC20 {
+    +transferFrom(sender: address, recipient: address, amount: uint256): bool
+    +balanceOf(account: address): uint256
+}
+
+class MasterWalletContract {
+    - masterWallet: address
+    - owner: address
+    - token: IERC20
+    - depositWalletsList: address[]
+
+    + addDepositWallet(_depositWallet: address)
+    + removeDepositWallet(_depositWallet: address)
+    + transferAllToMasterWallet(amount: uint256)
+    + transferFromDepositWallet(_depositWallet: address, amount: uint256)
+
+    + MasterWalletContract(_tokenAddress: address, _masterWallet: address)
+}
+
+MasterWalletContract *-- IERC20 : token
+
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+class User {
+}
+
+class LottoPlatform {
+    +checkWhitelist(address: String): Boolean
+    +requestDepositAddress(): String
+    +displayDepositAddress(address: String)
+    +verifyDeposit(depositInfo: TransactionInfo)
+    +updateCashOrPoints(user: User, amount: Float)
+}
+
+class PaymentSystem {
+    +provideDepositAddress(): String
+    +checkTransactions()
+    +analyzeTransactionInfo(info: TransactionInfo): Boolean
+    +notifyDeposit(lottoPlatform: LottoPlatform, depositInfo: TransactionInfo)
+}
+
+
+class TransactionInfo {
+    -transactionId: String
+    -from: String
+    -to: String
+    -amount: Float
+    -confirm: int
+}
+
+LottoPlatform --> PaymentSystem : requestDepositAddress()
+PaymentSystem --> LottoPlatform : provideDepositAddress()
+LottoPlatform --> User : displayDepositAddress()
+PaymentSystem --> LottoPlatform : notifyDeposit()
+LottoPlatform --> User : notifyDepositStatus()
+LottoPlatform --> LottoPlatform : verifyDeposit()
+LottoPlatform --> User : updateCashOrPoints()
+
+@enduml
