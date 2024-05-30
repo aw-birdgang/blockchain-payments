@@ -12,10 +12,16 @@ export class DepositTransactions {
   @ApiProperty({ description: 'amounts', default: 0 })
   amounts: number;
 
-  @ApiProperty({ description: 'txhash', default: '0x00000000000000000000000000000000000000000000000000' })
+  @ApiProperty({
+    description: 'txhash',
+    default: '0x00000000000000000000000000000000000000000000000000',
+  })
   txhash: string;
 
-  @ApiProperty({ description: 'from_address', default: '0x0000000000000000000000000000000000000000' })
+  @ApiProperty({
+    description: 'from_address',
+    default: '0x0000000000000000000000000000000000000000',
+  })
   from_address: string;
 
   @ApiProperty({ description: 'to_address', default: '0x0000000000000000000000000000000000000000' })

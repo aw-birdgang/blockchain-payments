@@ -1,0 +1,56 @@
+@startuml
+!define RECTANGLE class
+
+title Git Flow for Feature Development
+
+RECTANGLE prod {
+  :Stable production code;
+}
+
+RECTANGLE dev {
+  :Latest development code;
+  :Preparing for next release;
+}
+
+RECTANGLE feature {
+  :Developing new feature;
+}
+
+RECTANGLE release {
+  :Final testing before release;
+  :Bug fixes;
+}
+
+RECTANGLE hotfix {
+  :Emergency bug fixes;
+}
+
+dev --> prod : Merge
+feature --> dev : Merge
+dev --> release : Create
+release --> prod : Merge
+release --> dev : Merge
+hotfix --> prod : Merge
+hotfix --> dev : Merge
+
+note right of dev
+  Development branch where latest code is prepared for the next release.
+end note
+
+note right of prod
+  Production branch with stable, deployable code.
+end note
+
+note right of feature
+  Feature branch where new functionalities are developed.
+end note
+
+note right of release
+  Release branch for final testing and bug fixes before deployment.
+end note
+
+note right of hotfix
+  Hotfix branch for urgent bug fixes in the deployed version.
+end note
+
+@enduml

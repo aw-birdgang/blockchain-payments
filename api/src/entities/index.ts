@@ -1,4 +1,4 @@
-export * from '../api/client/entities/client.entity';
+export * from '../modules/client/entities/client.entity';
 export * from './wallet.entity';
 export * from './common_code.entity';
 export * from './market_ticker.entity';

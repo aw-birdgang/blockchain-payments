@@ -12,7 +12,11 @@ import { EthereumDepositModule } from './scheduler/ethereum-deposit/ethereum_dep
   imports: [
     ConfigModule.forRoot({
       envFilePath:
-        process.env.NODE_ENV === 'production' ? '.prod.env' : process.env.NODE_ENV === 'stage' ? '.stage.env' : '.dev.env',
+        process.env.NODE_ENV === 'production'
+          ? '.prod.env'
+          : process.env.NODE_ENV === 'stage'
+            ? '.stage.env'
+            : '.dev.env',
       isGlobal: true,
     }),
     ScheduleModule.forRoot(),
@@ -34,7 +38,10 @@ export class MainEthereumCheckerModule {}
 
 async function bootstrap() {
   const app = await NestFactory.create(MainEthereumCheckerModule, {
-    logger: process.env.NODE_ENV === 'production' ? ['error', 'warn', 'log'] : ['error', 'warn', 'log', 'verbose', 'debug'],
+    logger:
+      process.env.NODE_ENV === 'production'
+        ? ['error', 'warn', 'log']
+        : ['error', 'warn', 'log', 'verbose', 'debug'],
   });
 
   // 유효성 검사

@@ -5,7 +5,7 @@ import {
   Entity,
   PrimaryColumn,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -47,5 +47,4 @@ export class Wallet extends BaseEntity {
     Object.assign(wallet, params);
     return wallet;
   }
-
 }

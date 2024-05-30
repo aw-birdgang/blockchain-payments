@@ -34,6 +34,19 @@ table( client_manager ) {
     column( updated_at ) : datetime
 }
 
+
+table( client_wallet_deposit ) {
+    primary_key( id ) : varchar(10)
+    foreign_key( client_wallet_id ) : varchar(44)
+    column( address ) : varchar(44)
+    column( name ) : varchar(20)
+    column( network ) : varchar(10)
+    column( enable ) : bigint
+    column( created_at ) : datetime
+    column( updated_at ) : datetime
+}
+
+
 table( client_wallet ) {
     primary_key( coin ) : varchar(10)
     foreign_key( client_code ): varchar(30)
@@ -59,7 +72,6 @@ table( client_apikey ) {
     column( created_at ) : datetime
     column( updated_at ) : datetime
 }
-
 
 
 table( coin_address ) {
@@ -88,19 +100,18 @@ table( coin_trade_fee ) {
     column( created_at ) : datetime
 }
 
-table( ethereum_deposit_transactions ) {
+table( deposit_transactions ) {
     primary_key( id ) : bigint
-    column( txhash ) : varchar(66)
-    column( from_address ) : varchar(42)
-    column( to_address ) : varchar(42)
-    column( block_number ) : int
-    column( coin ) : varchar(10)
+    column( from ) : varchar(42)
+    column( to ) : varchar(42)
     column( amounts ) : decimal(16,8)
-    column( client_code ) : varchar(30)
-    column( blkhash ) : varchar(50)
-    column( is_sended ) : varchar(1)
-    column( usd_price ) : decimal(20,2)
-    column( krw_price ) : decimal(20,8)
+    column( status ) : varchar(10)
+    column( decimals ) : int
+    column( client_wallet_id ) : varchar(42)
+    column( ticker ) : varchar(10)
+    column( transferType ) : varchar(10)
+    column( txId ) : varchar(42)
+    column( txhash ) : varchar(66)
     column( created_at ) : datetime
     column( updated_at ) : datetime
 }
@@ -110,7 +121,7 @@ client::client_code ||--|| client_wallet::client_code
 client::client_code ||--|| client_apikey::client_code
 client::client_code ||--|| client_master_wallet::client_code
 client::client_code ||--|| coin_address_register::client_code
-client::client_code ||--|| ethereum_deposit_transactions::client_code
+client::client_code ||--|| deposit_transactions::client_code
 
 coin_address::network ||--|| coin_address_register::network
 coin_address::address ||--|| coin_address_register::address

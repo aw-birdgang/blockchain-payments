@@ -1,0 +1,29 @@
+@startuml
+title Git Flow for Feature Development
+
+start
+
+:Create feature branch from dev;
+:Develop new feature;
+
+if (Feature complete?) then (yes)
+  :Merge feature branch into dev;
+else (no)
+  :Continue developing;
+endif
+
+:Create release branch from dev;
+:Test and fix bugs;
+
+if (Testing complete?) then (yes)
+  :Merge release branch into prod;
+  :Merge release branch into dev;
+else (no)
+  :Continue testing and fixing bugs;
+endif
+
+:Deploy to production;
+
+stop
+
+@enduml

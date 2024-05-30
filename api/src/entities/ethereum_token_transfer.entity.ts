@@ -2,21 +2,21 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class EthereumTokenTransfer {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    from: string;
+  @Column()
+  from: string;
 
-    @Column()
-    to: string;
+  @Column()
+  to: string;
 
-    @Column('bigint')
-    value: string;
+  @Column('bigint')
+  value: string;
 
-    @Column()
-    tokenAddress: string;
+  @Column()
+  tokenAddress: string;
 
-    @Column()
-    blockNumber: number;
+  @Column()
+  blockNumber: number;
 }

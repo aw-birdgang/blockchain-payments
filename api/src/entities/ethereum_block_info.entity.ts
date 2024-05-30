@@ -20,7 +20,7 @@
 // ],
 //     "uncles": []
 
-import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 //
 // @Entity()
 // export class BlockInfo extends BaseEntity {
@@ -60,28 +60,28 @@ import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn} fr
 
 @Entity()
 export class BlockInfo extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    number: number;
+  @Column()
+  number: number;
 
-    // @Column('text')
-    // @ApiProperty({ description: '해시' })
-    // hash: string;
-    //
-    // @Column('bigint')
-    // @ApiProperty({ description: '블록 생성 시간' })
-    // timestamp: number;
-    //
-    // @Column()
-    // @ApiProperty({ description: '트랜 잭션 수' })
-    // transactionCount: number;
-    //
-    // @Column('jsonb', { nullable: true })
-    // @ApiProperty({ description: '트랜 잭션' })
-    // transactions: string[]; // Optional, stores an array of transaction hashes
+  // @Column('text')
+  // @ApiProperty({ description: '해시' })
+  // hash: string;
+  //
+  // @Column('bigint')
+  // @ApiProperty({ description: '블록 생성 시간' })
+  // timestamp: number;
+  //
+  // @Column()
+  // @ApiProperty({ description: '트랜 잭션 수' })
+  // transactionCount: number;
+  //
+  // @Column('jsonb', { nullable: true })
+  // @ApiProperty({ description: '트랜 잭션' })
+  // transactions: string[]; // Optional, stores an array of transaction hashes
 
-    @CreateDateColumn()
-    checkedAt: Date;
+  @CreateDateColumn()
+  checkedAt: Date;
 }

@@ -1,24 +1,25 @@
-import {BadRequestException, Injectable, InternalServerErrorException, Logger} from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager, DataSource } from 'typeorm';
 import * as crypto from 'crypto';
 
 // Entities
-import {
-  Client,
-  Common_Code,
-} from '../entities';
-import {ConfigService} from "../config";
+import { Client, Common_Code } from '../entities';
+import { ConfigService } from '../config';
 
 @Injectable()
 export class CommonService {
-
   private readonly logger = new Logger(CommonService.name);
 
   constructor(
     @InjectEntityManager() private readonly entityManager: EntityManager,
     private readonly dataSource: DataSource,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   // === Encrypt ===
@@ -70,24 +71,25 @@ export class CommonService {
       .where('data.client_code = :client_code', { client_code: client_code })
       .getRawMany();
 
-    if (groupData.length == 0) throw new BadRequestException('Group code is invalid. [' + client_code + ']');
+    if (groupData.length == 0)
+      throw new BadRequestException('Group code is invalid. [' + client_code + ']');
 
     return groupData;
   }
-
 
   // ===== ERC20 =====
 
   // Ethereum ERC20 Token List
   getEthereumTokens() {
-    const usdtContract = this.configService.get("USDT_ETHEREUM_TOKEN_CONTRACT");
-    const usdcContract = this.configService.get("USDC_ETHEREUM_TOKEN_CONTRACT");
-    this.logger.log("usdtContract : " + usdtContract);
-    this.logger.log("usdcContract : " + usdcContract);
+    const usdtContract = this.configService.get('USDT_ETHEREUM_TOKEN_CONTRACT');
+    const usdcContract = this.configService.get('USDC_ETHEREUM_TOKEN_CONTRACT');
+    this.logger.log('usdtContract : ' + usdtContract);
+    this.logger.log('usdcContract : ' + usdcContract);
 
     return [
       {
-        symbol: 'USDT',usdtContract,
+        symbol: 'USDT',
+        usdtContract,
         decimals: 6,
         balance: 0,
       },

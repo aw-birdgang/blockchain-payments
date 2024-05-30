@@ -1,13 +1,13 @@
-import {Module} from '@nestjs/common';
-import {MySQLModule} from "./database/mysql.module";
-import {ConfigModule} from "./config";
-import {ERC20Module} from "./api/erc20/erc20.module";
-import {CommonModule} from "./common/common.module";
-import {WebhookModule} from './webhook/webhook.module';
-import {ClientModule} from './api/client/client.module';
-import {EtherModule} from "./api/ether/ether.module";
-import {WalletModule} from "./api/wallet/wallet.module";
-import {TransfersModule} from './api/transfers/transfers.module';
+import { Module } from '@nestjs/common';
+import { MySQLModule } from './modules/database/mysql.module';
+import { ConfigModule } from './config';
+import { ERC20Module } from './modules/erc20/erc20.module';
+import { CommonModule } from './common/common.module';
+import { WebhookModule } from './modules/webhook/webhook.module';
+import { ClientModule } from './modules/client/client.module';
+import { EtherModule } from './modules/ether/ether.module';
+import { WalletModule } from './modules/wallet/wallet.module';
+import { TransfersModule } from './modules/transfers/transfers.module';
 
 @Module({
   imports: [
