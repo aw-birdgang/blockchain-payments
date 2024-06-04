@@ -34,13 +34,15 @@
     "@nestjs/typeorm": "^10.0.1",
     "axios": "^1.6.3",
     "bcrypt": "^5.1.1",
+    "bip32": "^3.0.1",
+    "bip39": "^3.0.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
-    "crypto": "^1.0.1",
     "date-fns": "^2.30.0",
-    "ethereumjs-tx": "^2.1.2",
-    "ethers": "^6.8.1",
-    "fs": "^0.0.1-security",
+    "ethereumjs-wallet": "^1.0.2",
+    "ethers": "^6.12.2",
+    "ethereumjs-util": "^7.1.5",
+    "hdkey": "^2.1.0",
     "mysql2": "^3.5.2",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
@@ -76,7 +78,8 @@
     "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "4.2.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "nestjs-ethers": "^1.0.2"
   },
   "jest": {
     "moduleFileExtensions": [

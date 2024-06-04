@@ -209,3 +209,19 @@ var receipt = web3.eth.getTransactionReceipt('0x9fc76417374aa880d4449a1f7f31ec59
 }
 
 ````
+
+
+
+
+#
+````
+>> Principles of Gas Relayers
+
+1. User signs a transaction and sends it to the gas relayer service provider.
+2. Gas relayer provider receives the signed transaction and broadcasts it to the network on behalf of the user.
+Gas relayer provider pays the gas for the transaction on behalf of the user.
+The user compensates the gas relayer provider, either through a fee or other means (e.g., paying in different tokens).
+
+
+
+````
