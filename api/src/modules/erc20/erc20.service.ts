@@ -3,7 +3,7 @@ import { Web3 } from 'web3';
 import { ethers } from 'ethers';
 import { readFileSync } from 'fs';
 import { CommonService } from 'src/common/common.service';
-import { ConfigService } from '../../config';
+import { ConfigService } from '../config';
 
 @Injectable()
 export class ERC20Service {

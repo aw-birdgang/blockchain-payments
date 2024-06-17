@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '../../config';
+import { ConfigService } from '../config';
 import { Web3Service } from './web3.service';
 import { CommonService } from '../../common/common.service';
 

@@ -3,7 +3,7 @@ import { CommonModule } from '../../common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EtherService } from '../ether/ether.service';
 import { CommonService } from '../../common/common.service';
-import { ConfigService } from '../../config';
+import { ConfigService } from '../config';
 import { Transfer } from './entities/transfer.entity';
 import { TransfersController } from './transfers.controller';
 import { TransfersService } from './transfers.service';

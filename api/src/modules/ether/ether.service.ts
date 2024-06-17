@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Web3 } from 'web3';
-import { ConfigService } from '../../config';
+import { ConfigService } from '../config';
 
 @Injectable()
 export class EtherService {

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 
 // Entities
-import { ConfigService } from '../../config';
+import { ConfigService } from '../config';
 import { Web3 } from 'web3/lib/types';
 
 @Injectable()

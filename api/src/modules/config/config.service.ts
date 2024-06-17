@@ -1,24 +1,23 @@
 import * as dotenv from 'dotenv';
-import * as fs from 'fs';
 import { Logger } from '@nestjs/common';
 
 export class ConfigService {
   private readonly envConfig: { [key: string]: string };
-
   private readonly logger = new Logger(ConfigService.name);
 
   constructor() {
-    const envFile =
-      process.env.NODE_ENV === 'prod'
-        ? '.env.prod'
-        : process.env.NODE_ENV === 'dev'
-          ? '.env.dev'
-          : '.env';
+    const envMapping: { [key: string]: string } = {
+      prod: '.env.prod',
+      dev: '.env.dev',
+    };
 
-    this.logger.log('envFile > process.env.NODE_ENV :: ' + process.env.NODE_ENV);
-    this.logger.log('envFile > envFile.toString() :: ' + envFile.toString());
+    const envFile = envMapping[process.env.NODE_ENV] || '.env';
 
-    this.envConfig = dotenv.parse(fs.readFileSync(envFile));
+    this.logger.log(`Loading environment variables from ${envFile} for environment: ${process.env.NODE_ENV || 'default'}`);
+
+    dotenv.config({ path: envFile });
+
+    this.envConfig = process.env;
   }
 
   get(key: string): string {
