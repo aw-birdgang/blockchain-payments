@@ -1,0 +1,46 @@
+@startuml
+!define RECTANGLE component
+
+package "Treasury Management" {
+    component TreasuryWallet {
+        component ColdWallet
+        note left of ColdWallet
+            - Air-gapped
+            - Manual private key signing
+            - Examples: Ledger Nano, Trezor
+        end note
+
+        component DepositWallet
+        note left of DepositWallet
+            - Hot wallet
+            - Used by players for LLG ticket payments
+        end note
+    }
+
+    component PaymentModule {
+        component Monetis
+    }
+
+    component KPX
+
+    component DLPE
+
+    component GasWallet
+    note left of GasWallet
+        - Refills
+    end note
+
+    component CLevelMembers
+    note right of CLevelMembers
+        - CCW signing keys
+    end note
+}
+
+TreasuryWallet --> ColdWallet : stores, manages, transfers, settles, aggregates
+TreasuryWallet --> DepositWallet : receives crypto assets from lottery ticket payments
+ColdWallet -- CLevelMembers : signing keys
+PaymentModule --> KPX : end of day settlement
+DLPE --> KPX : end of day settlement
+GasWallet --> KPX : refills
+
+@enduml

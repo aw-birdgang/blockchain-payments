@@ -1,0 +1,48 @@
+@startuml
+
+title Management Wallet and Wallet Functions
+
+skinparam classAttributeIconSize 0
+
+class Company {
+    +coldWallet : ManagementWallet
+}
+
+class ManagementWallet {
+    +address : String
+    +balance : float
+    +withdraw(amount: float) : void
+    +addAddress(address: String) : void
+    +deleteAddress(address: String) : void
+    +viewAddresses() : List<String>
+}
+
+class Administrator {
+    +transferToManagementWallet(amount: float) : void
+    +transferToWithdrawalWallet(amount: float) : void
+}
+
+class TreasuryWallet {
+    +balance : float
+}
+
+class WithdrawalWallet {
+    +balance : float
+}
+
+Company "1" -- "1" ManagementWallet
+Administrator "1" -- "*" ManagementWallet
+Administrator "1" -- "1" TreasuryWallet
+Administrator "1" -- "1" WithdrawalWallet
+
+ManagementWallet : -addressList : List<String>
+ManagementWallet : -balance : float
+ManagementWallet : +withdraw(amount: float) : void
+ManagementWallet : +addAddress(address: String) : void
+ManagementWallet : +deleteAddress(address: String) : void
+ManagementWallet : +viewAddresses() : List<String>
+
+Administrator : +transferToManagementWallet(amount: float) : void
+Administrator : +transferToWithdrawalWallet(amount: float) : void
+
+@enduml

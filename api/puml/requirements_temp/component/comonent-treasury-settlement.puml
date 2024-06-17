@@ -1,0 +1,14 @@
+@startuml
+
+package "Wallet System" {
+
+  [HotWallet] -down-> [ATA (Automatic Transfer Amount)]
+  [ATA (Automatic Transfer Amount)] -down-> [Company Cold Wallet (CCW)]
+  [HotWallet] -left-> [Company Gas Wallet (CGW)]
+
+  [HotWallet] -down-> [Threshold Check]
+  [Threshold Check] -right-> [ATA (Automatic Transfer Amount)]
+
+}
+
+@enduml

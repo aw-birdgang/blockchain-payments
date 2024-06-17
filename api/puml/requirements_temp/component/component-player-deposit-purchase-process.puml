@@ -1,0 +1,67 @@
+@startuml
+package "Player Interaction" {
+    [Purchase HappyPoints Button] --> [Network Selection Page]
+    [Network Selection Page] --> [Waiting for Payment Page]
+    [Waiting for Payment Page] --> [Processing Payment Page]
+    [Processing Payment Page] --> [Payment Successful Page]
+}
+
+package "Network Selection Page" {
+    [Network Selection Dropdown]
+    [Estimated USDT Purchase Amount]
+    [Purchase Order Details]
+    [Payment ID]
+    [Order ID]
+    [Email Submission Field]
+}
+
+package "Waiting for Payment Page" {
+    [QR Code Generator]
+    [Total Purchase Amount]
+    [Copy Amount Button]
+    [Deposit Address]
+    [Copy Address Button]
+    [Network Icon]
+    [Countdown Timer]
+}
+
+package "Processing Payment Page" {
+    [Transaction Hash Link]
+    [Estimated Processing Time]
+}
+
+package "Payment Successful Page" {
+    [Confetti Icon]
+    [Purchase Order Details]
+    [Payment ID]
+    [Order ID]
+}
+
+package "Backend" {
+    [Admin UI]
+    [Database]
+}
+
+[Player] --> [Purchase HappyPoints Button]
+[Purchase HappyPoints Button] --> [Network Selection Page]
+[Network Selection Page] --> [Email Submission Field]
+[Network Selection Page] --> [Waiting for Payment Page]
+[Waiting for Payment Page] --> [QR Code Generator]
+[QR Code Generator] --> [QR Code Image]
+[QR Code Image] --> [Player : Scans QR code]
+[Player] --> [Wallet App]
+[Wallet App] --> [Waiting for Payment Page : Makes payment]
+[Waiting for Payment Page] --> [Processing Payment Page]
+[Processing Payment Page] --> [Transaction Hash Link]
+[Processing Payment Page] --> [Estimated Processing Time]
+[Processing Payment Page] --> [Payment Successful Page]
+[Payment Successful Page] --> [Confetti Icon]
+[Payment Successful Page] --> [Purchase Order Details]
+[Payment Successful Page] --> [Payment ID]
+[Payment Successful Page] --> [Order ID]
+
+[Admin UI] --> [Backend]
+[Backend] --> [Database]
+[Database] --> [Player UI : Reflect deposit amount as "HappyPoints"]
+
+@enduml

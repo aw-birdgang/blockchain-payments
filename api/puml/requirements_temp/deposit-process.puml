@@ -1,0 +1,25 @@
+@startuml
+title Confirm Deposit Sequence Diagram
+
+actor Player
+participant Blockchain
+participant LLG_System as LLG_System
+
+Player -> Blockchain : deposit_USDT
+activate Blockchain
+Blockchain -> Player : return tx hash
+Player -> LLG_System : notify tx hash
+deactivate Blockchain
+
+LLG_System -> Blockchain : subscribe to events
+activate LLG_System
+loop check confirmations
+  Blockchain -> LLG_System : emit event (tx hash)
+  LLG_System -> Blockchain : check block confirmations
+  Blockchain -> LLG_System : return confirmations ( < required)
+end
+
+Blockchain -> LLG_System : return confirmations (≥ required)
+LLG_System -> LLG_System : update payment status (pending to confirmed)
+deactivate LLG_System
+@enduml

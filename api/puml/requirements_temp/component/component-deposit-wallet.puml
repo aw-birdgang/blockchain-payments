@@ -1,0 +1,47 @@
+@startuml
+
+title KPX LLG Platform Wallet Components
+
+package "KPX LLG Platform" {
+    [Deposit Wallet] -down-> [HappyPoints] : Purchases
+    [Deposit Wallet] -down-> [Hot Wallet] : Interchangeably Referred as
+    [Hot Wallet] -down-> [Cold Wallet] : Transfers Funds to
+    [HappyPoints] -down-> [Happy545 Lottery Tickets] : Exchange for
+}
+
+component "Deposit Wallet" {
+    note right of [Deposit Wallet]
+      A hot wallet address that LLG players
+      deposit (send) cryptocurrency payments
+      to purchase LLG HappyPoints.
+    end note
+}
+
+component "HappyPoints" {
+    note right of [HappyPoints]
+      Virtual points players use as a virtual
+      currency to exchange (e.g., "purchase")
+      Happy545 lottery tickets.
+    end note
+}
+
+component "Hot Wallet" {
+    note right of [Hot Wallet]
+      A cryptocurrency wallet that is connected
+      to the internet, typically used for LLG players
+      to deposit cryptocurrency to purchase
+      virtual points on the LLG platform.
+    end note
+}
+
+component "Cold Wallet" {
+    note right of [Cold Wallet]
+      A cryptocurrency wallet that is not connected
+      to the internet (air-gapped), used for secure
+      cryptocurrency management and requires manual,
+      private key signing for any outbound transfers
+      (e.g., Ledger Nano, Trezor, etc).
+    end note
+}
+
+@enduml

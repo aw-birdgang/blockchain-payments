@@ -1,0 +1,57 @@
+@startuml
+actor User
+participant "FeeManagerService" as FMS
+participant "Relayer" as R
+participant "Web3 Provider" as Web3
+participant "Smart Contract" as SC
+
+User -> FMS: createAndSendRelayedTransaction(index, to, value, data)
+activate FMS
+
+FMS -> FMS: getHDWalletAccount(index)
+activate FMS
+FMS -> bip39: validateMnemonic(mnemonic)
+alt valid mnemonic
+    FMS -> bip39: mnemonicToSeed(mnemonic)
+    FMS -> hdkey: fromMasterSeed(seed)
+    FMS -> hdkey: derivePath(`m/44'/60'/0'/0/${index}`)
+    FMS -> Wallet: getWallet()
+    deactivate FMS
+else invalid mnemonic
+    FMS -> User: throw NotFoundException('INVALID_KEY')
+    deactivate FMS
+    return
+end
+
+FMS -> Wallet: getAddressString()
+FMS -> Wallet: getPrivateKeyString()
+deactivate FMS
+
+FMS -> Web3: signTransaction(txData, hdAccount.getPrivateKeyString())
+activate Web3
+Web3 -> Web3: signedTransaction
+deactivate Web3
+
+FMS -> R: relayTransaction(signedTx.rawTransaction, from, to, value, data)
+activate R
+
+R -> Web3: getTransactionCount(relayerWallet, 'pending')
+activate Web3
+Web3 -> Web3: nonce
+deactivate Web3
+
+R -> Web3: sendSignedTransaction(relayedTx)
+activate Web3
+Web3 -> SC: executeTransaction(from, to, value, data, signature)
+activate SC
+SC -> Web3: TransactionReceipt
+deactivate SC
+Web3 -> R: TransactionReceipt
+deactivate Web3
+
+R -> FMS: TransactionReceipt
+deactivate R
+
+FMS -> User: TransactionReceipt
+deactivate FMS
+@enduml

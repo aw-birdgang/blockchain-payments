@@ -1,0 +1,47 @@
+@startuml
+component "Treasury System" {
+
+    component "ATA Management" as ATA {
+        note right of ATA
+            Automatic Transfer Amount Features
+        end note
+    }
+
+    component "Role Management" as RoleMgmt {
+        note right of RoleMgmt
+            Role Definitions and Access Control
+        end note
+    }
+
+    component "Super Admin" as SuperAdmin {
+        note left of SuperAdmin
+            FULL ACCESS
+            - Modifies ATA amounts
+        end note
+    }
+
+    component "Admin" as Admin {
+        note left of Admin
+            LIMITED ACCESS: Admin
+            - READ-ONLY access to ATA
+        end note
+    }
+
+    component "Operator" as Operator {
+        note left of Operator
+            LIMITED ACCESS: Operator
+            - READ-ONLY access to ATA
+            - READ-ONLY to certain features (TBD)
+        end note
+    }
+
+    SuperAdmin ---> ATA : Modify
+    Admin --> ATA : Read-Only
+    Operator ---> ATA : Read-Only
+
+    SuperAdmin ----> RoleMgmt : Full Access
+    Admin ----> RoleMgmt : Limited Access
+    Operator --> RoleMgmt : Limited Access
+}
+
+@enduml

@@ -1,0 +1,63 @@
+```puml
+@startuml
+
+package "Global Back Office" {
+
+  abstract class User {
+    +username: String
+    +password: String
+    +changePassword()
+  }
+
+  class SuperAdmin extends User {
+    +delegateAdminRoles()
+    +enableSpecificRoleAccess()
+    +editAccount()
+    +createAccount()
+    +disableAccount()
+    +enableAccount()
+    +deleteAccount()
+  }
+
+  class Admin extends User {
+    +manageAssets()
+    +manageOperators()
+    +systemAdministration()
+    +editAccount()
+    +createAccount()
+    +disableAccount()
+    +enableAccount()
+    +deleteAccount()
+  }
+
+  class Operator extends User {
+    +manageOperations()
+    +editAccount()
+    +createAccount()
+    +disableAccount()
+    +enableAccount()
+    +deleteAccount()
+  }
+
+  User <|-- SuperAdmin
+  User <|-- Admin
+  User <|-- Operator
+
+  SuperAdmin -down-|> Admin : delegates role to
+  SuperAdmin -down-|> Operator : delegates role to
+  Admin -down-|> Operator : manages
+
+  SuperAdmin : - edit, create, disable, enable, and delete accounts
+  SuperAdmin : - delegate roles
+  SuperAdmin : - enable specific role access
+  Admin : - manage assets
+  Admin : - manage operators
+  Admin : - system administration
+  Admin : - edit, create, disable, enable, and delete operator/user accounts
+  Operator : - manage operations
+  Operator : - edit, create, disable, enable, and delete user accounts
+
+}
+
+@enduml
+```

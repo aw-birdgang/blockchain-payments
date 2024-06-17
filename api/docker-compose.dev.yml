@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  app:
+    image: node:16-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=rootpassword
+      - MYSQL_DATABASE=your_database_name
+    command: sh -c "npm install && npm run start:dev"
+    depends_on:
+      - redis
+      - mysql
+
+  redis:
+    image: "redis:alpine"
+    platform: linux/amd64
+    ports:
+      - "6379:6379"
+
+  mysql:
+    image: "mysql:5.7"
+    platform: linux/amd64
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: your_database_name

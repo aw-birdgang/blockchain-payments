@@ -1,0 +1,33 @@
+@startuml
+
+title KPX LLG Platform Sequence Diagram
+
+actor Player
+
+Player -> DepositWallet: Deposit Cryptocurrency
+activate DepositWallet
+DepositWallet -> HotWallet: Forward Deposit
+activate HotWallet
+HotWallet -> DepositWallet: Confirm Deposit
+deactivate HotWallet
+
+DepositWallet -> HappyPoints: Purchase HappyPoints
+activate HappyPoints
+HappyPoints -> DepositWallet: Confirm HappyPoints Purchase
+deactivate DepositWallet
+
+Player -> HappyPoints: Exchange HappyPoints
+activate HappyPoints
+HappyPoints -> Happy545: Exchange for Lottery Tickets
+activate Happy545
+Happy545 -> HappyPoints: Confirm Exchange
+deactivate Happy545
+deactivate HappyPoints
+
+HotWallet -> ColdWallet: Transfer Funds for Security
+activate ColdWallet
+ColdWallet -> HotWallet: Confirm Transfer
+deactivate HotWallet
+deactivate ColdWallet
+
+@enduml

@@ -1,0 +1,44 @@
+@startuml
+!define RECTANGLE class
+
+RECTANGLE SuperAdmin {
+    + selectWallets()
+    + viewTreasuryWalletBalances()
+    + viewDepositWalletBalances()
+    + setCompanyColdWallets()
+    + whitelistCompanyColdWallets()
+}
+
+RECTANGLE Admin {
+    + viewDepositWalletBalances()
+    + withdrawHotWalletBalances()
+}
+
+RECTANGLE Operator {
+    + viewDepositWalletBalances()
+    + requestWithdrawals()
+}
+
+RECTANGLE Wallet {
+    + show()
+    + hide()
+}
+
+RECTANGLE CompanyColdWallet {
+    + name
+    + label
+}
+
+RECTANGLE HotWallet {
+    + balance
+}
+
+SuperAdmin --|> Wallet : manages >
+SuperAdmin --|> CompanyColdWallet : whitelists >
+Admin --|> HotWallet : withdraws to >
+Operator --|> HotWallet : requests withdrawals to >
+
+Wallet "1" -right- "*" CompanyColdWallet : whitelists
+Wallet "1" -left- "*" HotWallet : contains
+
+@enduml

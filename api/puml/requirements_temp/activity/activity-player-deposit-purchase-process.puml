@@ -1,0 +1,34 @@
+@startuml
+start
+
+:Player clicks Purchase HappyPoints button;
+:Redirect to Network Selection Page;
+
+:Select Network (e.g., ETH, BSC, POLYGON);
+:Enter Estimated USDT purchase amount;
+:Enter Payment ID, Order ID;
+:Submit Email;
+:Redirect to Waiting for Payment Page;
+
+:Generate QR Code with deposit address and amount;
+:Display QR Code;
+:Show total purchase amount (copy amount button);
+:Show deposit address (copy address button);
+:Show Network icon;
+:Start countdown timer (20 minutes);
+
+:Player scans QR Code;
+:Copy total amount and deposit address into Wallet App;
+:Make payment;
+:Redirect to Processing Payment Page;
+
+:Display transaction hash link;
+:Display estimated processing time;
+
+:Redirect to Payment Successful Page;
+:Show Payment successful message with confetti;
+:Display Purchase order details (Payment ID, Order ID);
+:Reflect deposit amount as HappyPoints;
+
+stop
+@enduml

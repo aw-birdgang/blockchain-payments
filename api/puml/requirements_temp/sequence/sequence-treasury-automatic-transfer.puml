@@ -1,0 +1,28 @@
+@startuml
+actor SuperAdmin
+actor Admin
+actor Operator
+
+SuperAdmin -> Wallet: selectWallets()
+Wallet -> Wallet: show() / hide()
+SuperAdmin -> TreasuryWallet: viewTreasuryWalletBalances()
+SuperAdmin -> DepositWallet: viewDepositWalletBalances()
+SuperAdmin -> CompanyColdWallet: setCompanyColdWallets()
+SuperAdmin -> CompanyColdWallet: whitelistCompanyColdWallets()
+SuperAdmin -> LotteryRound: allocateCCWs()
+
+Admin -> DepositWallet: viewDepositWalletBalances()
+Admin -> TreasuryWallet: withdrawHotWalletBalances()
+
+Operator -> DepositWallet: viewDepositWalletBalances()
+Operator -> Admin: requestWithdrawals()
+
+group Example Scenario
+    SuperAdmin -> CompanyColdWallet: whitelist CCW1 for Round 164
+    SuperAdmin -> CompanyColdWallet: whitelist CCW2 for Round 165
+    SuperAdmin -> CompanyColdWallet: whitelist CCW3 for Round 166
+    Admin -> TreasuryWallet: approveWithdrawal(CCW1)
+    Operator -> Admin: requestWithdrawal(CCW1)
+end
+
+@enduml

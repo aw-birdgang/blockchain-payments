@@ -1,0 +1,45 @@
+@startuml
+!define RECTANGLE class
+
+RECTANGLE TreasuryWallet {
+  + Cold Wallet
+  + Deposit Wallet
+}
+
+RECTANGLE ColdWallet {
+  - Air-gapped
+  - Manual private key signing
+  examples: Ledger Nano, Trezor
+}
+
+RECTANGLE DepositWallet {
+  + Hot wallet
+  + Used by players for LLG ticket payments
+}
+
+RECTANGLE PaymentModule {
+  + Monetis
+}
+
+RECTANGLE KPX {
+}
+
+RECTANGLE DLPE {
+}
+
+RECTANGLE GasWallet {
+  + Refills
+}
+
+class CLevelMembers {
+  - CCW signing keys
+}
+
+TreasuryWallet --> ColdWallet : stores, manages, transfers, settles, aggregates
+TreasuryWallet --> DepositWallet : receives crypto assets from lottery ticket payments
+ColdWallet -- CLevelMembers : signing keys
+PaymentModule -- KPX : end of day settlement
+DLPE -- KPX : end of day settlement
+GasWallet -- KPX : refills
+
+@enduml

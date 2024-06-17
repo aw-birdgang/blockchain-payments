@@ -1,0 +1,36 @@
+@startuml
+actor Player
+
+Player -> "Purchase HappyPoints" : Clicks button
+Player -> "Network Selection Page" : Redirect to
+"Network Selection Page" -> Player : Show page
+
+Player -> "Network Selection Page" : Select Network (e.g., ETH, BSC, POLYGON)
+Player -> "Network Selection Page" : Enter Estimated USDT purchase amount
+Player -> "Network Selection Page" : Enter Order details (Payment ID, Order ID)
+Player -> "Network Selection Page" : Enter Email
+Player -> "Waiting for payment Page" : Submit details
+
+"Waiting for payment Page" -> Player : Show QR code
+"Waiting for payment Page" -> Player : Display total purchase amount (copy amount button)
+"Waiting for payment Page" -> Player : Display deposit address (copy address button)
+"Waiting for payment Page" -> Player : Show Network icon
+"Waiting for payment Page" -> Player : Show Countdown timer (20 minutes)
+
+Player -> "Wallet App" : Scan QR code
+"Wallet App" -> Player : Copy total amount and deposit address automatically
+Player -> "Waiting for payment Page" : Make payment
+
+Player -> "Processing payment Page" : Redirect to
+"Processing payment Page" -> Player : Show transaction hash link
+"Processing payment Page" -> Player : Display estimated processing time
+
+Player -> "Payment successful Page" : Redirect to
+"Payment successful Page" -> Player : Show Payment successful with confetti
+"Payment successful Page" -> Player : Display Purchase order details (Payment ID, Order ID)
+"Payment successful Page" -> Player : Reflect deposit amount as "HappyPoints"
+
+Admin_UI -> "Backend" : Confirm deposit
+"Backend" -> Player_UI : Update with HappyPoints
+
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+title KPX Fees - Player purchases HappyPoints
+
+actor Player
+participant "KPX System" as KPX
+participant "Monetis" as Monetis
+participant "DLPE" as DLPE
+
+== Scenario 1: Flat fees included when player purchases HappyPoints ==
+Player -> KPX: Purchase 100 HappyPoints (100 USDT)
+KPX -> Monetis: Process payment (100 USDT)
+Monetis -> KPX: Processing Fee (10 USDT)
+KPX -> KPX: Deduct Flat Fee (5 USDT)
+KPX -> Player: Confirm purchase and deduct total (115 USDT)
+note right of Player: Player must have enough gas to pay for the USDT transaction
+
+== Scenario 2: Fees included into the POINT COST of each ticket ==
+Player -> KPX: Purchase 100 HappyPoints (100 USDT)
+KPX -> Monetis: Process payment (100 USDT)
+Monetis -> KPX: Processing Fee (10 USDT)
+KPX -> Player: Confirm purchase and credit 100 HappyPoints
+
+Player -> KPX: Purchase 10 lottery tickets for Happy 545 Round 170
+KPX -> DLPE: Check ticket price for Happy 545 Round 170
+DLPE -> KPX: Confirm ticket price (1 point per ticket)
+KPX -> Player: Deduct total HappyPoints (12 points)
+note right of Player: Ticket Cost Breakdown: 1 point + 10% VAT + 10% Processing Fee = 1.2 points per ticket
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+package "Treasury - Role Access" {
+    !define FULL_ACCESS Super_Admin
+    !define LIMITED_ACCESS_ADMIN Admin
+    !define LIMITED_ACCESS_OPERATOR Operator
+
+    ' Role definitions
+    class FULL_ACCESS {
+        + "FULL ACCESS"
+        + "Scope of FULL ACCESS"
+    }
+
+    class LIMITED_ACCESS_ADMIN {
+        + "LIMITED ACCESS: Admin"
+        + "READ-ONLY access to ATA"
+        + "Scope of LIMITED ACCESS - Admin"
+    }
+
+    class LIMITED_ACCESS_OPERATOR {
+        + "LIMITED ACCESS: Operator"
+        + "READ-ONLY access to ATA"
+        + "Scope of LIMITED ACCESS - Operator"
+        + "READ-ONLY to certain features (TBD)"
+    }
+
+    ' Relationship to ATA modification
+    FULL_ACCESS -> "Modifies ATA amounts" : only
+    LIMITED_ACCESS_ADMIN --> "READ-ONLY access to ATA"
+    LIMITED_ACCESS_OPERATOR --> "READ-ONLY access to ATA"
+}
+
+@enduml

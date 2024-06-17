@@ -1,0 +1,94 @@
+@startuml
+class PurchaseHappyPointsButton {
+}
+
+class NetworkSelectionPage {
+    +selectNetwork(network: String)
+    +enterUSDTAmount(amount: Float)
+    +enterOrderDetails(paymentID: String, orderID: String)
+    +submitEmail(email: String)
+}
+
+class WaitingForPaymentPage {
+    +generateQRCode()
+    +displayPurchaseAmount()
+    +copyAmount()
+    +displayDepositAddress()
+    +copyAddress()
+    +showNetworkIcon()
+    +startCountdownTimer(duration: Int)
+}
+
+class ProcessingPaymentPage {
+    +displayTransactionHashLink(hash: String)
+    +displayEstimatedProcessingTime(time: String)
+}
+
+class PaymentSuccessfulPage {
+    +displayConfettiIcon()
+    +displayOrderDetails(paymentID: String, orderID: String)
+    +reflectHappyPoints(amount: Float)
+}
+
+class QRCodeGenerator {
+    +generate(address: String, amount: Float): QRCode
+}
+
+class WalletApp {
+    +scanQRCode(qrCode: QRCode)
+    +makePayment(amount: Float, address: String)
+}
+
+class AdminUI {
+    +confirmDeposit(paymentID: String)
+}
+
+class Backend {
+    +updateHappyPoints(userID: String, amount: Float)
+}
+
+class Database {
+    +storeTransaction(transaction: Transaction)
+    +updateUserBalance(userID: String, amount: Float)
+}
+
+class Player {
+    +clickPurchaseButton()
+    +selectNetwork()
+    +enterUSDTAmount()
+    +enterOrderDetails()
+    +submitEmail()
+    +scanQRCode()
+    +makePayment()
+}
+
+class QRCode {
+    +address: String
+    +amount: Float
+    +image: Image
+}
+
+class Transaction {
+    +transactionID: String
+    +userID: String
+    +amount: Float
+    +status: String
+}
+
+PurchaseHappyPointsButton --> NetworkSelectionPage
+NetworkSelectionPage --> WaitingForPaymentPage
+WaitingForPaymentPage --> ProcessingPaymentPage
+ProcessingPaymentPage --> PaymentSuccessfulPage
+
+WaitingForPaymentPage --> QRCodeGenerator : uses
+QRCodeGenerator --> QRCode : generates
+QRCode --> Player : scans
+Player --> WalletApp : uses
+WalletApp --> WaitingForPaymentPage : makes payment
+ProcessingPaymentPage --> PaymentSuccessfulPage : redirects
+
+AdminUI --> Backend : confirms deposit
+Backend --> Database : updates balance
+Database --> Player : reflects HappyPoints
+
+@enduml

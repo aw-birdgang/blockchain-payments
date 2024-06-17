@@ -1,0 +1,30 @@
+@startuml
+
+actor Player
+
+Player -> "HappyPoints System" : Buy HappyPoints with USDT
+"HappyPoints System" -> Player : Issue HappyPoints
+Player -> "Lottery System" : Purchase Lottery Tickets with HappyPoints
+Player -> "Lottery System" : Win
+Player -> "Lottery System" : Click "Claim Reward Points (RP)"
+
+alt Player Claims USDT
+    Player -> "RP System" : CLAIM USDT
+    "RP System" -> Player : Deduct equivalent RP from RP balance
+    "RP System" -> Player : Transfer USDT
+else Player Buys Lottery Tickets with RP
+    Player -> "Lottery System" : Buy Lottery Tickets with RP
+end
+
+alt Player Claims USDT
+    Player -> "RP System" : Swap for USDT
+    "RP System" -> Player : Transfer USDT
+else Player Redeems for USDT
+    Player -> "RP System" : Redeem for USDT
+    "RP System" -> Player : Transfer USDT
+else Player Exchanges for USDT
+    Player -> "RP System" : Exchange for USDT
+    "RP System" -> Player : Transfer USDT
+end
+
+@enduml

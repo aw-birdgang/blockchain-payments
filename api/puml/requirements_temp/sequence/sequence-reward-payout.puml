@@ -1,0 +1,31 @@
+@startuml
+participant Player
+participant "DLPE Email" as Email
+participant "KPX Backoffice System" as KPX
+
+== 1st Place Reward Process ==
+Player -> Email: Book a flight ticket to Laos
+Email -> Player: Reward notification/claim process email
+Player -> Email: Confirm flight booking
+Email -> Player: Official invite to collect 1st place reward in Laos
+KPX -> Player: Deducts Reward Points from account
+
+== 2nd Place Reward Process ==
+Player -> Email: Designate USDT wallet
+Email -> Player: Reward notification email
+KPX -> Player: Credits Reward Points to account
+KPX -> Player: Sends USDT to designated USDT wallet
+KPX -> Player: Deducts Reward Points from account upon confirmation
+
+== 3rd Place Reward Process ==
+Player -> Email: Designate reward preference (Lotto ticket/Points)
+Email -> Player: Reward notification email
+KPX -> Player: Credits Reward Points to account
+alt Lotto Ticket
+    KPX -> Player: Sends Lotto Ticket Coupons
+else Points
+    KPX -> Player: Sends Points
+end
+KPX -> Player: Deducts Reward Points from account upon confirmation
+
+@enduml

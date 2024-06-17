@@ -1,0 +1,77 @@
+@startuml
+actor User
+participant FeeManagerService
+participant Web3
+participant Contract
+participant Wallet
+
+User -> FeeManagerService: createAndExecuteTransaction(index, to, value, data)
+activate FeeManagerService
+
+FeeManagerService -> FeeManagerService: getHDWalletAccount(index)
+activate FeeManagerService
+FeeManagerService -> bip39: validateMnemonic(mnemonic)
+alt valid mnemonic
+    FeeManagerService -> bip39: mnemonicToSeed(mnemonic)
+    FeeManagerService -> hdkey: fromMasterSeed(seed)
+    FeeManagerService -> hdkey: derivePath(`m/44'/60'/0'/0/${index}`)
+    FeeManagerService -> Wallet: getWallet()
+    deactivate FeeManagerService
+else invalid mnemonic
+    FeeManagerService -> FeeManagerService: throw NotFoundException('INVALID_KEY')
+    deactivate FeeManagerService
+    return
+end
+
+FeeManagerService -> Wallet: getAddressString()
+FeeManagerService -> Wallet: getPrivateKeyString()
+deactivate FeeManagerService
+
+FeeManagerService -> Web3: signTransaction(txData, hdAccount.getPrivateKeyString())
+activate Web3
+Web3 -> Web3: signedTransaction
+deactivate Web3
+
+FeeManagerService -> FeeManagerService: executeTransaction(from, to, value, data, signedTx.rawTransaction)
+activate FeeManagerService
+
+FeeManagerService -> Web3: getTransactionCount(centralWallet, 'pending')
+activate Web3
+Web3 -> Web3: nonce
+deactivate Web3
+
+FeeManagerService -> Web3: soliditySha3({type: 'address', value: from}, {type: 'address', value: to}, {type: 'uint256', value: value}, {type: 'bytes', value: data})
+activate Web3
+Web3 -> Web3: txHash
+deactivate Web3
+
+FeeManagerService -> FeeManagerService: parseSignature(signature)
+activate FeeManagerService
+FeeManagerService -> FeeManagerService: {r, s, v}
+deactivate FeeManagerService
+
+FeeManagerService -> Web3: accounts.recover({messageHash: txHash, v, r, s})
+activate Web3
+alt valid signature
+    Web3 -> FeeManagerService: signer
+    deactivate Web3
+    FeeManagerService -> FeeManagerService: if (signer.toLowerCase() !== from.toLowerCase()) throw Error('Invalid signature')
+else invalid signature
+    Web3 -> FeeManagerService: throw Error('Failed to recover signer from signature')
+    deactivate Web3
+    return
+end
+
+FeeManagerService -> Web3: eth.accounts.signTransaction(tx, centralWalletPrivateKey)
+activate Web3
+Web3 -> Web3: signedTx
+deactivate Web3
+
+FeeManagerService -> Web3: eth.sendSignedTransaction(signedTx.rawTransaction)
+activate Web3
+Web3 -> FeeManagerService: TransactionReceipt
+deactivate Web3
+
+deactivate FeeManagerService
+FeeManagerService -> User: TransactionReceipt
+@enduml
