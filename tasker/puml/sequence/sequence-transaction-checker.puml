@@ -1,0 +1,26 @@
+@startuml
+actor Scheduler
+entity Checker
+entity Chain
+database DB
+collections Whitelist as "Whitelist\nAddresses"
+collections WalletList as "Wallet\nAddresses"
+
+Scheduler -> Checker : Schedule according to block creation time
+loop Each Block
+    Checker -> Chain : Retrieve block information
+    Checker --> Checker : Extract transactions from block
+    loop Each Transaction
+        Checker -> Whitelist : Retrieve whitelist
+        Whitelist --> Checker : Whitelist addresses
+        Checker -> Checker : Check if sender's address is in whitelist and elevate priority
+        Checker -> WalletList : Retrieve wallet list
+        WalletList --> Checker : Wallet addresses
+        alt If receiver's address is not in the wallet list
+            Checker --> Checker : Skip to next transaction
+        else
+            Checker -> DB : Store transaction data in specified format
+        end
+    end
+end
+@enduml

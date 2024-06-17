@@ -1,0 +1,26 @@
+@startuml
+actor User
+actor LottoPlatform
+actor PaymentSystem
+database Blockchain
+
+User -> LottoPlatform: Deposit Request
+LottoPlatform -> User: Check wallet address whitelist
+alt Registered in whitelist
+    LottoPlatform -> PaymentSystem: Request deposit address
+    PaymentSystem -> LottoPlatform: Provide deposit address
+    LottoPlatform -> User: Display deposit address
+    User -> User: Deposit USDT from whitelisted wallet to deposit address
+    loop At regular intervals
+        PaymentSystem -> Blockchain: Check transactions
+        Blockchain -> PaymentSystem: Return transaction info
+    end
+    PaymentSystem -> PaymentSystem: Analyze transaction info
+    alt Whitelisted address deposited to provided address
+        PaymentSystem -> LottoPlatform: Notify deposit info
+        LottoPlatform -> LottoPlatform: Verify deposit requester and update cash/points
+    end
+else
+    LottoPlatform -> User: Notify not registered in whitelist
+end
+@enduml
