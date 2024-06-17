@@ -1,0 +1,26 @@
+@startuml
+actor Developer
+
+rectangle "AWS CodeArtifact" {
+    usecase "Create Repository" as A
+    usecase "Get Auth Token" as B
+    usecase "Store Packages" as C
+}
+
+rectangle "Local Environment" {
+    usecase "Configure npm" as D
+    usecase "Authenticate npm" as E
+    usecase "Install Packages" as F
+}
+
+Developer --> A : "AWS CLI / Console"
+A --> C : "Repository Created"
+Developer --> B : "AWS CLI"
+B --> Developer : "Auth Token"
+Developer --> D : "npm CLI"
+Developer --> E : "npm CLI with Auth Token"
+E --> D : "Authentication Done"
+Developer --> F : "npm install"
+F --> C : "Download Packages"
+
+@enduml
