@@ -1,0 +1,12 @@
+@startuml
+package "Withdrawal Process" {
+    [Info@gpex.io] as INFO
+    [system@kpxdx.com] as SYSTEM
+    [website@kpxdx.com] as WEBSITE
+    [billing@kpxdx.com] as BILLING
+    [owen@kpxdx.com] as OWEN
+
+    BILLING --> SOMEONE : dist
+
+}
+@enduml

@@ -1,10 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Client } from '../../entities';
 import { ClientRequestCreateDto } from './dto/client-request-create.dto';
 import { isEmpty } from '../../common/util/is-empty';
 import { Pagination, PaginationOptions } from '../../common/pagiante';
+import { Client } from 'entities/src/entities/client.entity';
 
 @Injectable()
 export class ClientService {

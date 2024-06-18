@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
-import { BlockInfo } from '../../entities/ethereum_block_info.entity';
-import { EthereumTransactionDelivery } from '../../entities/ethereum_transaction_delivery.entity';
 import { ConfigService } from '../../config';
-import { TransactionService } from '../../modules/transaction';
+import { BlockInfo } from 'entities/src/entities/ethereum-block-info.entity';
+import { EthereumTransactionDelivery } from 'entities/src/entities/ethereum-transaction-delivery.entity';
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([BlockInfo, EthereumTransactionDelivery]),
   ],
-  providers: [ConfigService, TransactionService],
+  providers: [ConfigService],
 })
 export class DeliveryCheckerModule {}

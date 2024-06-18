@@ -13,7 +13,9 @@ export class ConfigService {
 
     const envFile = envMapping[process.env.NODE_ENV] || '.env';
 
-    this.logger.log(`Loading environment variables from ${envFile} for environment: ${process.env.NODE_ENV || 'default'}`);
+    this.logger.log(
+      `Loading environment variables from ${envFile} for environment: ${process.env.NODE_ENV || 'default'}`,
+    );
 
     dotenv.config({ path: envFile });
 

@@ -1,5 +1,4 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { CommonService } from 'src/common/common.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Not, Repository } from 'typeorm';
 import { readFileSync } from 'fs';
@@ -7,10 +6,12 @@ import * as crypto from 'crypto';
 import Web3 from 'web3';
 
 // Entities
-import { Wallet, Common_Code, EthereumDepositTransactions } from '../../entities';
 import { ConfigService } from '../../config';
 import { Interval } from '@nestjs/schedule';
-import { weiToEth } from '../../common/util/utils';
+import { Wallet } from 'ethers';
+import { CommonService } from '../../../common/services/common.service';
+import { weiToEth } from '../../../common/util/utils';
+import { EthereumDepositTransactions } from 'entities/src/entities';
 
 /**
  * 이더리움 블록체인내에서 Ether 및 ERC20 토큰 입금 트랙잭션 읽어서 등록 하도록 한다.
@@ -40,8 +41,6 @@ export class EthereumDepositService implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
     private readonly commonService: CommonService,
-    @InjectRepository(Common_Code)
-    private CommonCodeRepository: Repository<Common_Code>,
     @InjectRepository(Wallet)
     private CoinAddressRepository: Repository<Wallet>,
     @InjectRepository(EthereumDepositTransactions)
