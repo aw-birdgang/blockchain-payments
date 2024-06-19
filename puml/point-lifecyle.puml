@@ -1,0 +1,147 @@
+@startuml
+!define RECTANGLE_CLASS
+!define RECTANGLE_BLUE Class<<BLUE>>
+
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #0000FF
+skinparam activity {
+    BackgroundColor<<BLUE>> #ADD8E6
+    BorderColor<<BLUE>> #00008B
+    FontColor<<BLUE>> #00008B
+    FontSize 12
+}
+skinparam class {
+    BackgroundColor #FEFECE
+    BorderColor #B8860B
+    ArrowColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam usecase {
+    BackgroundColor #FFFFA3
+    BorderColor #FFA500
+    FontSize 12
+    FontName Arial
+}
+skinparam package {
+    BackgroundColor #FFFFFF
+    BorderColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam participant {
+    BackgroundColor #B0E0E6
+    BorderColor #4682B4
+    FontSize 12
+    FontName Arial
+}
+
+actor User
+entity Web
+entity BackOffice
+entity LottoModule
+entity PaymentModule
+database Database
+database Blockchain
+
+
+
+== Register Wallet ==
+
+BackOffice -> LottoModule : activate hd wallet by mnemonic
+activate LottoModule
+LottoModule --> Database : Encrypt and store the seed for the hd wallet.
+LottoModule --> LottoModule: When a user requests a deposit, \nthe deposit address is automatically added.
+LottoModule --> BackOffice: hd wallet activate!
+deactivate LottoModule
+
+BackOffice -> LottoModule : register callback url
+activate LottoModule
+LottoModule --> Database : save a callback url \nto receive transaction info
+LottoModule --> BackOffice: done!
+deactivate LottoModule
+
+
+
+== Deposit ==
+
+User -[#0000FF]> Web: Deposit Request
+Web -[#0000FF]> LottoModule: Request deposit address
+activate LottoModule
+LottoModule <-> Database : get seed
+LottoModule --[#0000FF]> LottoModule : generate deposit address
+LottoModule --[#0000FF]> Database: save deposit address
+LottoModule --[#0000FF]> Web: display deposit address
+deactivate LottoModule
+
+User --> User: Buy ticket points with usdt.\nTransfer USDT to deposit address.
+
+loop At regular intervals
+    PaymentModule <-- Database: get deposit addresses
+    activate PaymentModule
+    PaymentModule -[#0000FF]> Blockchain: check transactions
+    Blockchain --[#0000FF]> PaymentModule : Return transaction info
+    PaymentModule --[#0000FF]> PaymentModule: analyze transaction info
+    PaymentModule <-- Database: get callback url
+    PaymentModule --> LottoModule: provide transaction info \nthrough callback url
+    deactivate PaymentModule
+    alt
+        LottoModule --> LottoModule: transaction info verification
+        LottoModule --[#0000FF]> Database: point update
+    end
+end
+
+LottoModule --> Web: display ticket point
+LottoModule --> User: provide ticket point
+
+
+== TicketPoint ==
+
+User -> Web: request to purchase a ticket
+Web --> User: display page to purchase tickets
+
+User -[#0000FF]> LottoModule: purchase tickets using ticket points.
+
+alt
+    activate LottoModule
+    LottoModule --[#0000FF]> LottoModule: verifies the user's ticket points.
+    LottoModule --[#0000FF]> LottoModule: issue tickets.
+    LottoModule --> Database: update ticket points and ticket information.
+end
+LottoModule --> User: provide ticket
+deactivate LottoModule
+
+
+
+== Round Ended! ==
+
+User -[#0000FF]> LottoModule : claim ticket (if won)
+LottoModule --[#0000FF]> LottoModule : Validate and process winning ticket
+LottoModule --> Database: update reward & ticket points.
+LottoModule --> User : reward points
+
+
+
+== RewardPoint to USDT ==
+
+User -[#0000FF]> Web : Exchange Reward Points to USDT
+
+
+
+== RewardPoint to TicketPoint ==
+
+User -> Web: Request to exchange reward points to ticket points
+Web --> User: Point exchange page
+
+User -[#0000FF]> Web : exchange
+Web -[#0000FF]> LottoModule: exchange
+
+alt
+    LottoModule --[#0000FF]> LottoModule: reward point verification
+    LottoModule -[#0000FF]> Database: point update
+end
+
+LottoModule --> User: provide ticket point
+
+@enduml
