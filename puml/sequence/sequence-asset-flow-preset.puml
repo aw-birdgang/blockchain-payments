@@ -1,0 +1,73 @@
+@startuml
+!define RECTANGLE_CLASS
+!define RECTANGLE_BLUE Class<<BLUE>>
+
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #0000FF
+skinparam activity {
+    BackgroundColor<<BLUE>> #ADD8E6
+    BorderColor<<BLUE>> #00008B
+    FontColor<<BLUE>> #00008B
+    FontSize 12
+}
+skinparam class {
+    BackgroundColor #FEFECE
+    BorderColor #B8860B
+    ArrowColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam usecase {
+    BackgroundColor #FFFFA3
+    BorderColor #FFA500
+    FontSize 12
+    FontName Arial
+}
+skinparam package {
+    BackgroundColor #FFFFFF
+    BorderColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam participant {
+    BackgroundColor #B0E0E6
+    BorderColor #4682B4
+    FontSize 12
+    FontName Arial
+}
+
+actor Manager
+entity BackOffice
+entity LottoModule
+database Database
+
+
+
+== Pre Setting ==
+
+Manager -> BackOffice : request to create hd wallet \nusing mnemonic or seed
+note top : includes bip and chain. \n& mnemonic input.
+
+
+BackOffice -> LottoModule : activate hd wallet
+activate LottoModule
+LottoModule --> Database : Encrypt and store the mnemonic or seed \nfor the hd wallet.
+LottoModule --> LottoModule: When a user requests a deposit, \nthe deposit address is automatically added.
+note bottom : m / 44' / ?' / 0' / 0 / ?
+
+LottoModule --> BackOffice: hd wallet activate!
+deactivate LottoModule
+
+
+Manager -> BackOffice : request to register a callback URL.
+note bottom : to receive transaction information \nfrom the payment module.
+
+BackOffice -> LottoModule : register callback url
+activate LottoModule
+LottoModule --> Database : save a callback url \nto receive transaction info
+LottoModule --> BackOffice: done!
+deactivate LottoModule
+
+
+@enduml

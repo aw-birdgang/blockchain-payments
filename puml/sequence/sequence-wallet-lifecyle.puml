@@ -1,0 +1,29 @@
+@startuml
+
+actor User
+actor Company
+
+User -> HotWallet: 입금 요청
+
+HotWallet -> HDWallet: child address 할당
+HDWallet -> User: child address 제공
+
+User -> child_address: USDT 입금
+
+alt USDT가 특정 갯수 이상
+    child_address -> MasterWallet: USDT 자동 전송
+else
+    User -> HotWallet: 수동 전송 요청
+    HotWallet -> child_address : USDT 확인
+    child_address -> MasterWallet: USDT 수동 전송
+end
+
+MasterWallet -> FeeWallet: 수수료 필요시 FeeWallet 사용
+
+alt USDT를 ColdWallet으로 전송
+    MasterWallet -> Company: 수동 전송 요청
+    Company -> MasterWallet: 승인
+    MasterWallet -> ColdWallet: USDT 수동 전송
+end
+
+@enduml

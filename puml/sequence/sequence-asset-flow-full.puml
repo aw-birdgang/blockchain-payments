@@ -47,7 +47,7 @@ database Blockchain
 
 
 
-== Register Wallet ==
+== Pre Setting ==
 
 BackOffice -> LottoModule : activate hd wallet by mnemonic
 activate LottoModule
@@ -64,7 +64,7 @@ deactivate LottoModule
 
 
 
-== Deposit ==
+== Buy ticket points with USDT ==
 
 User -[#0000FF]> Web: Deposit Request
 Web -[#0000FF]> LottoModule: Request deposit address
@@ -96,7 +96,7 @@ LottoModule --> Web: display ticket point
 LottoModule --> User: provide ticket point
 
 
-== TicketPoint ==
+== Purchase tickets with ticket points ==
 
 User -> Web: request to purchase a ticket
 Web --> User: display page to purchase tickets
@@ -114,7 +114,7 @@ deactivate LottoModule
 
 
 
-== Round Ended! ==
+== Round Ended ==
 
 User -[#0000FF]> LottoModule : claim ticket (if won)
 LottoModule --[#0000FF]> LottoModule : Validate and process winning ticket
@@ -123,13 +123,24 @@ LottoModule --> User : reward points
 
 
 
-== RewardPoint to USDT ==
+== Exchange USDT with reward points ==
 
-User -[#0000FF]> Web : Exchange Reward Points to USDT
+User -[#0000FF]> Web : request payout for reward points in usdt.
+Web --> User: display page
+User -[#0000FF]> Web : exchange
+Web -[#0000FF]> LottoModule: exchange
+
+activate LottoModule
+LottoModule --[#0000FF]> LottoModule : verifies the user's reward points.
+LottoModule --[#0000FF]> LottoModule : waiting for approval for payout & notify
+BackOffice --[#0000FF]> LottoModule : approve
+LottoModule --> Database : update the user's reward point.
+LottoModule --> User : transfer usdt to user.
+
+deactivate LottoModule
 
 
-
-== RewardPoint to TicketPoint ==
+== Exchange ticket points for reward points ==
 
 User -> Web: Request to exchange reward points to ticket points
 Web --> User: Point exchange page
@@ -137,11 +148,13 @@ Web --> User: Point exchange page
 User -[#0000FF]> Web : exchange
 Web -[#0000FF]> LottoModule: exchange
 
+activate LottoModule
 alt
-    LottoModule --[#0000FF]> LottoModule: reward point verification
-    LottoModule -[#0000FF]> Database: point update
+    LottoModule --[#0000FF]> LottoModule: verifies the user's reward points.
+    LottoModule --> Database : update the user's reward & ticket point.
 end
 
-LottoModule --> User: provide ticket point
+LottoModule --> User: ticket point
+deactivate LottoModule
 
 @enduml

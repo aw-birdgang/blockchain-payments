@@ -1,15 +1,26 @@
-```puml
 @startuml
+skinparam backgroundColor #F8F9FA
+skinparam classAttributeIconSize 0
+
+' Define styles for different classes
+skinparam class {
+  BackgroundColor<<User>> #D3E5FF
+  BackgroundColor<<SuperAdmin>> #FFD3D3
+  BackgroundColor<<Admin>> #FFF5C3
+  BackgroundColor<<Operator>> #C3FFD3
+  BorderColor #000000
+  ArrowColor #000000
+  FontSize 12
+}
 
 package "Global Back Office" {
-
-  abstract class User {
+  abstract class User <<User>> {
     +username: String
     +password: String
     +changePassword()
   }
 
-  class SuperAdmin extends User {
+  class SuperAdmin <<SuperAdmin>> {
     +delegateAdminRoles()
     +enableSpecificRoleAccess()
     +editAccount()
@@ -19,7 +30,7 @@ package "Global Back Office" {
     +deleteAccount()
   }
 
-  class Admin extends User {
+  class Admin <<Admin>> {
     +manageAssets()
     +manageOperators()
     +systemAdministration()
@@ -30,7 +41,7 @@ package "Global Back Office" {
     +deleteAccount()
   }
 
-  class Operator extends User {
+  class Operator <<Operator>> {
     +manageOperations()
     +editAccount()
     +createAccount()
@@ -47,6 +58,7 @@ package "Global Back Office" {
   SuperAdmin -down-|> Operator : delegates role to
   Admin -down-|> Operator : manages
 
+  ' Add comments to specify responsibilities
   SuperAdmin : - edit, create, disable, enable, and delete accounts
   SuperAdmin : - delegate roles
   SuperAdmin : - enable specific role access
@@ -56,8 +68,6 @@ package "Global Back Office" {
   Admin : - edit, create, disable, enable, and delete operator/user accounts
   Operator : - manage operations
   Operator : - edit, create, disable, enable, and delete user accounts
-
 }
 
 @enduml
-```

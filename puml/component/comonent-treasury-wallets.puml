@@ -1,0 +1,31 @@
+@startuml
+
+package "Hot Wallet" {
+    [Master Wallet] as MW
+    [Deposit Address 1] as DA1
+    [Deposit Address 2] as DA2
+    [Deposit Address 3] as DA3
+
+    [Fee Wallet] as FW
+
+    MW <-- DA1 : collection
+    MW <-- DA2 : collection
+    MW <-- DA3 : collection
+}
+
+
+package "Cold Wallet" {
+    [Company Wallet (CCW)] as CCW
+}
+
+[External Wallet] as EW
+
+CCW <-- MW : transfer
+
+DA3 <-- EW : deposit
+CCW --> EW : withdraw
+
+FW ..> MW : fee
+FW ..> CCW : fee
+
+@enduml

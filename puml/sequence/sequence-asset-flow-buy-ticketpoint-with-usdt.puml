@@ -1,0 +1,82 @@
+@startuml
+!define RECTANGLE_CLASS
+!define RECTANGLE_BLUE Class<<BLUE>>
+
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #0000FF
+skinparam activity {
+    BackgroundColor<<BLUE>> #ADD8E6
+    BorderColor<<BLUE>> #00008B
+    FontColor<<BLUE>> #00008B
+    FontSize 12
+}
+skinparam class {
+    BackgroundColor #FEFECE
+    BorderColor #B8860B
+    ArrowColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam usecase {
+    BackgroundColor #FFFFA3
+    BorderColor #FFA500
+    FontSize 12
+    FontName Arial
+}
+skinparam package {
+    BackgroundColor #FFFFFF
+    BorderColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam participant {
+    BackgroundColor #B0E0E6
+    BorderColor #4682B4
+    FontSize 12
+    FontName Arial
+}
+
+actor User
+entity Web
+entity LottoModule
+entity PaymentModule
+database Database
+database Blockchain
+
+
+== Buy ticket points with USDT ==
+
+User -[#0000FF]> Web: deposit request
+Web -[#0000FF]> LottoModule: Request deposit address
+activate LottoModule
+LottoModule <-- Database : get seed or mnemonic value.
+LottoModule --> LottoModule : activate deposit address with seed
+LottoModule --[#0000FF]> Database: save the deposit address to include \nin the check address list.
+LottoModule --> Web: display deposit address
+deactivate LottoModule
+
+User --> User: buy ticket points with usdt.\ntransfer usdt to deposit address.
+note right : currently, only ticket points can be bought with usdt.
+
+
+loop At regular intervals
+    PaymentModule <-- Database: get deposit addresses & callback url
+    activate PaymentModule
+    PaymentModule <-[#0000FF]-> Blockchain: get block info
+    note right: get the block information and check whether \nit is included in the check deposit address.
+
+    PaymentModule --> PaymentModule: analyze transaction information \nwithin the deposit address.
+    PaymentModule --> PaymentModule: delivers transaction info \nto the callback url.
+    deactivate PaymentModule
+
+    alt
+        LottoModule --> LottoModule: verifies transaction info received \nthrough webhook.
+        LottoModule --[#0000FF]> Database: update transaction, status info, \nand ticket point.
+    end
+
+end
+
+LottoModule --> Web: display ticket point
+
+@enduml

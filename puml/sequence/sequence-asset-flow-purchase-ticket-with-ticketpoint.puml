@@ -1,0 +1,64 @@
+@startuml
+!define RECTANGLE_CLASS
+!define RECTANGLE_BLUE Class<<BLUE>>
+
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #0000FF
+skinparam activity {
+    BackgroundColor<<BLUE>> #ADD8E6
+    BorderColor<<BLUE>> #00008B
+    FontColor<<BLUE>> #00008B
+    FontSize 12
+}
+skinparam class {
+    BackgroundColor #FEFECE
+    BorderColor #B8860B
+    ArrowColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam usecase {
+    BackgroundColor #FFFFA3
+    BorderColor #FFA500
+    FontSize 12
+    FontName Arial
+}
+skinparam package {
+    BackgroundColor #FFFFFF
+    BorderColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam participant {
+    BackgroundColor #B0E0E6
+    BorderColor #4682B4
+    FontSize 12
+    FontName Arial
+}
+
+actor User
+entity Web
+entity LottoModule
+database Database
+
+
+
+== Purchase tickets with ticket points ==
+
+User -> Web: request to purchase a ticket
+Web --> User: display page to purchase tickets
+
+User -[#0000FF]> LottoModule: purchase tickets using ticket points.
+
+alt
+    activate LottoModule
+    LottoModule --> LottoModule: verifies the user's ticket points.
+    LottoModule --> LottoModule: issue tickets.
+    LottoModule -[#0000FF]-> Database: update ticket points and ticket information.
+end
+LottoModule --> User: provide ticket
+deactivate LottoModule
+
+
+@enduml
