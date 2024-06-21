@@ -39,27 +39,26 @@ skinparam participant {
 
 actor User
 entity Web
-entity BackOffice
 entity LottoModule
 database Database
 
 
+== Exchange ticket point with reward points ==
 
-== Exchange ticket points for reward points ==
-
-User -> Web: Request to exchange reward points to ticket points
-Web --> User: Point exchange page
-
+User -[#0000FF]> Web : request to exchange reward points \nfor ticket point.
+Web --> User: point exchange page is exposed.
 User -[#0000FF]> Web : exchange
 Web -[#0000FF]> LottoModule: exchange
 
 activate LottoModule
-alt
-    LottoModule --[#0000FF]> LottoModule: verifies the user's reward points.
-    LottoModule --> Database : update the user's reward & ticket point.
-end
+LottoModule --[#0000FF]> LottoModule : verifies the user's reward points.
 
-LottoModule --> User: ticket point
+
+LottoModule -[#0000FF]-> LottoModule : exchange.
+note left: exchange points according to the ratio \nof reward points and ticket points.
+LottoModule --> Database : updates the status of the user's reward points \nand transactions.
+
 deactivate LottoModule
+
 
 @enduml

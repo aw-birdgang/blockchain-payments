@@ -38,6 +38,7 @@ skinparam participant {
 }
 
 actor User
+actor Manager
 entity Web
 entity BackOffice
 entity LottoModule
@@ -45,21 +46,22 @@ database Database
 
 
 
-== Exchange ticket points for reward points ==
+== Round Ended ==
 
-User -> Web: Request to exchange reward points to ticket points
-Web --> User: Point exchange page
 
-User -[#0000FF]> Web : exchange
-Web -[#0000FF]> LottoModule: exchange
+Manager -[#0000FF]> BackOffice : enter the winning number.
+BackOffice -[#0000FF]> LottoModule : winning numbers.
+LottoModule -[#0000FF]-> LottoModule : check the winning numbers & \nget winners.
+note left : when the round ends, \nthe manager enters the winning number \nand updates the winner list.
+LottoModule --[#0000FF]> Database : update winning number.
 
-activate LottoModule
-alt
-    LottoModule --[#0000FF]> LottoModule: verifies the user's reward points.
-    LottoModule --> Database : update the user's reward & ticket point.
-end
+User -[#0000FF]> Web : claim ticket (if won)
+Web -[#0000FF]> LottoModule : claim
 
-LottoModule --> User: ticket point
-deactivate LottoModule
+LottoModule --[#0000FF]> LottoModule : verify the claim ticket.
+LottoModule --> Database: update claim ticket status and reward points.
+note left : updates reward payment status for the claim ticket \nand provides reward points to the user.
+LottoModule --> User : reward points
+
 
 @enduml

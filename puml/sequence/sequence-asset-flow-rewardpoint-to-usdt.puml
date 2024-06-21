@@ -38,6 +38,7 @@ skinparam participant {
 }
 
 actor User
+actor Manager
 entity Web
 entity BackOffice
 entity LottoModule
@@ -45,21 +46,27 @@ database Database
 
 
 
-== Exchange ticket points for reward points ==
+== Exchange USDT with reward points ==
 
-User -> Web: Request to exchange reward points to ticket points
-Web --> User: Point exchange page
+User -[#0000FF]> Web : request to exchange reward points for USDT.
+Web --> User: point exchange page is exposed.
+note right : point exchange page must include a function \nto enter the address to receive USDT.
 
-User -[#0000FF]> Web : exchange
+User -[#0000FF]> Web : request to exchange reward points for usdt.
 Web -[#0000FF]> LottoModule: exchange
 
 activate LottoModule
-alt
-    LottoModule --[#0000FF]> LottoModule: verifies the user's reward points.
-    LottoModule --> Database : update the user's reward & ticket point.
-end
+LottoModule --[#0000FF]> LottoModule : verifies the user's reward points.
+LottoModule --[#0000FF]> LottoModule : wait for approval for exchange. & notify
+Manager --[#0000FF]> BackOffice : approve
+BackOffice --[#0000FF]> LottoModule : approve
 
-LottoModule --> User: ticket point
+
+LottoModule --> LottoModule : transfer usdt to the user's wallet address.
+note left: transfer the equivalent amount of reward points \nin USDT to the user's wallet address.
+LottoModule --> Database : updates the status of the user's reward points \nand transactions.
+
 deactivate LottoModule
+
 
 @enduml
