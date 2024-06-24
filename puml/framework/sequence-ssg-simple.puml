@@ -1,0 +1,16 @@
+@startuml
+actor User
+entity "Next.js Client" as Client
+boundary "Next.js API Route" as ApiRoute
+database "Database" as DB
+
+User -> Client : Trigger event (e.g., form submit)
+Client -> Client : Capture event with JavaScript
+Client -> ApiRoute : Send fetch request
+ApiRoute -> ApiRoute : Process request
+ApiRoute -> DB : Perform database operation (e.g., update record)
+DB --> ApiRoute : Return result
+ApiRoute --> Client : Send response
+Client -> User : Display success/failure message
+
+@enduml

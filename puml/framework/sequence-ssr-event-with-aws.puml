@@ -1,0 +1,90 @@
+@startuml
+!define RECTANGLE_CLASS
+!define RECTANGLE_BLUE Class<<BLUE>>
+
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #0000FF
+skinparam activity {
+    BackgroundColor<<BLUE>> #ADD8E6
+    BorderColor<<BLUE>> #00008B
+    FontColor<<BLUE>> #00008B
+    FontSize 12
+}
+skinparam class {
+    BackgroundColor #FEFECE
+    BorderColor #B8860B
+    ArrowColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam usecase {
+    BackgroundColor #FFFFA3
+    BorderColor #FFA500
+    FontSize 12
+    FontName Arial
+}
+skinparam package {
+    BackgroundColor #FFFFFF
+    BorderColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam participant {
+    BackgroundColor #B0E0E6
+    BorderColor #4682B4
+    FontSize 12
+    FontName Arial
+}
+
+actor User
+
+participant "Next.js Application\n(SSR)" as NextJS
+participant "API Server\n(EC2)" as API
+participant "Database\n(DB)" as DB
+
+' Initial Page Load
+User -> NextJS: Requests Page
+activate NextJS
+
+' Next.js fetches initial data from the API server
+NextJS -> API: Fetch Initial Data (e.g., GET /initial-data)
+activate API
+
+' API server queries the database for the initial data
+API -> DB: Query Initial Data
+activate DB
+DB -> API: Returns Initial Data
+deactivate DB
+
+' API server sends the initial data back to the Next.js application
+API -> NextJS: Sends Initial Data
+deactivate API
+
+' Next.js renders the initial page with the data it received
+NextJS -> User: Renders Initial Page with Data
+deactivate NextJS
+
+' User Event
+User -> NextJS: Triggers Event (e.g., button click)
+activate NextJS
+
+' Next.js sends an API request to the server to update data
+NextJS -> API: Sends API Request (e.g., POST /update-data)
+activate API
+
+' API server updates the database with the new data
+API -> DB: Updates Database
+activate DB
+DB -> API: Returns Update Result
+deactivate DB
+
+' API server sends the updated data back to the Next.js application
+API -> NextJS: Sends Response with Updated Data
+deactivate API
+
+' Next.js renders the updated page with the new data it received
+NextJS -> User: Renders Updated Page with New Data
+deactivate NextJS
+
+@enduml

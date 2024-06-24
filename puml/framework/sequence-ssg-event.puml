@@ -1,0 +1,22 @@
+@startuml
+actor User
+entity "Next.js Application" as App
+entity "API Server" as API
+entity "Database" as DB
+
+User -> App: Open Page
+App -> API: Fetch Data
+API -> DB: Query Data
+DB --> API: Return Data
+API --> App: Return Data
+App -> App: Generate Static HTML
+App --> User: Serve Static HTML
+
+User -> App: Trigger Event (e.g., Button Click)
+App -> API: API Request (POST /api/update)
+API -> DB: Update Data
+DB --> API: Return Success
+API --> App: Return Response
+App -> User: Update UI with Response
+
+@enduml

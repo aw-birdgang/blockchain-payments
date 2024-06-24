@@ -1,0 +1,70 @@
+@startuml
+!define RECTANGLE_CLASS
+!define RECTANGLE_BLUE Class<<BLUE>>
+
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #0000FF
+skinparam activity {
+    BackgroundColor<<BLUE>> #ADD8E6
+    BorderColor<<BLUE>> #00008B
+    FontColor<<BLUE>> #00008B
+    FontSize 12
+}
+skinparam class {
+    BackgroundColor #FEFECE
+    BorderColor #B8860B
+    ArrowColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam usecase {
+    BackgroundColor #FFFFA3
+    BorderColor #FFA500
+    FontSize 12
+    FontName Arial
+}
+skinparam package {
+    BackgroundColor #FFFFFF
+    BorderColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+skinparam participant {
+    BackgroundColor #B0E0E6
+    BorderColor #4682B4
+    FontSize 12
+    FontName Arial
+}
+
+actor User
+boundary "Next.js Application" as NextJS
+control "EC2 API Server" as EC2Server
+database "Database" as DB
+database "S3 Bucket" as S3
+control "Build Server" as BuildServer
+
+User -> NextJS: Requests Page
+NextJS -> S3: Fetch Static Content
+S3 --> NextJS: Return Static Content
+NextJS --> User: Render Page
+
+== User triggers update event ==
+User -> NextJS: Event Trigger
+NextJS -> EC2Server: Send API Request
+EC2Server -> DB: Update Database
+DB --> EC2Server: Confirmation
+EC2Server --> NextJS: API Response
+NextJS --> User: Confirmation Message
+
+== ISR revalidation ==
+NextJS -> DB: Check for Updates
+DB --> NextJS: Return Updated Data
+NextJS -> BuildServer: Trigger Rebuild
+BuildServer -> NextJS: Generate Updated Static Content
+NextJS -> S3: Upload Updated Content
+S3 --> NextJS: Confirmation
+NextJS -> CDN: Update Cache
+NextJS --> User: Serve Updated Page
+
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+actor User
+participant Browser
+participant Server
+participant Database
+
+User -> Browser: Request Page
+Browser -> Server: HTTP Request
+Server -> Database: Fetch Data
+Database -> Server: Return Data
+Server -> Server: Render React Components
+Server -> Browser: Send HTML
+Browser -> User: Display HTML
+Browser -> Browser: Hydration Process (React)
+
+note over Browser: React attaches event listeners \nand makes the page interactive.
+@enduml
