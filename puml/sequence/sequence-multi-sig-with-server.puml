@@ -1,0 +1,39 @@
+@startuml
+
+actor User1 as U1
+actor User2 as U2
+database Server as S
+entity Contract as C
+
+U1 -> S : Generate Key Pair
+note right of S : Generates Public and Private Key
+S -> S : Store Private Key (Encrypted) in DB
+S -> C : Register Public Key
+
+U2 -> S : Generate Key Pair
+note right of S : Generates Public and Private Key
+U2 -> U2 : Store Private Key Securely
+U2 -> C : Register Public Key
+
+U1 -> U1 : Generate Personal Key Pair
+note right of U1 : Generates Public and Private Key
+U1 -> U1 : Store Private Key Securely
+U1 -> C : Register Public Key
+
+group MultiSig Wallet Creation
+    S -> C : Generate MultiSig Address
+end
+
+U1 -> S : Create Transaction
+S -> U2 : Request Signature
+U2 -> S : Provide Signature
+S -> U1 : Request Signature
+U1 -> S : Provide Signature
+
+alt Required Signatures Met
+    S -> Blockchain : Broadcast Transaction
+else Not Enough Signatures
+    S -> U1 : Transaction Rejected
+end
+
+@enduml

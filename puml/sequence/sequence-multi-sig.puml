@@ -1,0 +1,28 @@
+@startuml
+
+actor User1 as U1
+actor User2 as U2
+actor User3 as U3
+database MultiSigWallet as MSW
+
+U1 -> MSW : Create Wallet
+U2 -> MSW : Add Public Key
+U3 -> MSW : Add Public Key
+
+group Create MultiSig Wallet
+    MSW -> MSW : Generate MultiSig Address
+end
+
+U1 -> MSW : Create Transaction
+MSW -> U2 : Request Signature
+U2 -> MSW : Provide Signature
+MSW -> U3 : Request Signature
+U3 -> MSW : Provide Signature
+
+alt Required Signatures Met
+    MSW -> Blockchain : Broadcast Transaction
+else Not Enough Signatures
+    MSW -> U1 : Transaction Rejected
+end
+
+@enduml

@@ -1,0 +1,157 @@
+@startgantt
+
+<style>
+ganttDiagram {
+  task {
+    BackGroundColor GreenYellow
+    LineColor Green
+    unstated {
+      BackGroundColor Fuchsia
+      LineColor FireBrick
+    }
+  }
+}
+</style>
+
+
+projectscale monthly zoom 4
+
+Project starts 2024-04-01
+
+
+[plan 1.0] is colored in Yellow/LightBlue
+[plan 1.0] starts 2023-05-01
+[plan 1.0] lasts 70 days
+
+
+[plan web ui/ux (player)] is colored in Yellow/LightBlue
+[plan web ui/ux (player)] starts 2023-07-16
+[plan web ui/ux (player)] lasts 40 days
+
+[design web guide (player)] is colored in GreenYellow/Green
+[design web guide (player)] starts 2023-08-7
+[design web guide (player)] lasts 40 days
+
+[dev web guide (player)] is colored in Lavender/Green
+[dev web guide (player)] starts 2023-09-01
+[dev web guide (player)] lasts 50 days
+
+[test web guide (player)] is colored in Fuchsia/FireBrick
+[test web guide (player)] starts 2023-09-30
+[test web guide (player)] lasts 35 days
+
+[dev web ui/ux (player)] is colored in Lavender/Green
+[dev web ui/ux (player)] starts 2023-08-12
+[dev web ui/ux (player)] lasts 60 days
+
+[test web ui/ux (player)] is colored in Fuchsia/FireBrick
+[test web ui/ux (player)] starts 2023-09-12
+[test web ui/ux (player)] lasts 40 days
+
+
+
+
+[plan admin ui/ux] is colored in Yellow/LightBlue
+[plan admin ui/ux] starts 2023-07-20
+[plan admin ui/ux] lasts 40 days
+
+[design admin guide] is colored in GreenYellow/Green
+[design admin guide] starts 2023-08-12
+[design admin guide] lasts 40 days
+
+[dev admin guide] is colored in Lavender/Coral
+[dev admin guide] starts 2023-09-01
+[dev admin guide] lasts 40 days
+
+[test admin guide] is colored in Fuchsia/FireBrick
+[test admin guide] starts 2023-09-30
+[test admin guide] lasts 30 days
+
+[dev admin ui/ux] is colored in Lavender/Coral
+[dev admin ui/ux] starts 2023-08-12
+[dev admin ui/ux] lasts 90 days
+
+[test admin ui/ux] is colored in Fuchsia/FireBrick
+[test admin ui/ux] starts 2023-09-12
+[test admin ui/ux] lasts 30 days
+
+
+
+
+[dev back-end structural design] is colored in Lavender/LightBlue
+[dev back-end structural design] starts 2023-06-12
+[dev back-end structural design] lasts 60 days
+
+
+[dev back-end api] is colored in Lavender/LightBlue
+[dev back-end api] starts 2023-06-12
+[dev back-end api] lasts 90 days
+
+[test back-end api] is colored in Fuchsia/FireBrick
+[test back-end api] starts 2023-08-12
+[test back-end api] lasts 50 days
+
+
+[dev web structural design (player)] is colored in Lavender/Green
+[dev web structural design (player)] starts 2023-06-12
+[dev web structural design (player)] lasts 50 days
+
+
+[dev web structural design (seller)] is colored in Lavender/Green
+[dev web structural design (seller)] starts 2023-06-12
+[dev web structural design (seller)] lasts 50 days
+
+
+[dev admin structural design] is colored in Lavender/Coral
+[dev admin structural design] starts 2023-06-12
+[dev admin structural design] lasts 60 days
+
+
+[dev previous] is colored in Lavender/LightBlue
+[dev previous] starts 2023-06-12
+[dev previous] lasts 30 days
+
+[dev infra & ci/cd] is colored in Lavender/LightBlue
+[dev infra & ci/cd] starts 2023-06-20
+[dev infra & ci/cd] lasts 90 days
+
+
+
+
+[plan 1.0] -> [plan web ui/ux (player)]
+[plan web ui/ux (player)] -> [design web guide (player)]
+[plan web ui/ux (player)] -> [dev web ui/ux (player)]
+[design web guide (player)] -> [dev web guide (player)]
+[dev web guide (player)] -> [test web guide (player)]
+[dev web ui/ux (player)] -> [test web ui/ux (player)]
+
+
+[plan 1.0] -> [plan web ui/ux (seller)]
+[plan web ui/ux (seller)] -> [design web guide (seller)]
+[plan web ui/ux (seller)]  -> [dev web ui/ux (seller)]
+[design web guide (seller)] -> [dev web guide (seller)]
+[dev web guide (seller)] -> [test web guide (seller)]
+[dev web ui/ux (seller)] -> [test web ui/ux (seller)]
+
+
+[plan 1.0] -> [plan admin ui/ux]
+[plan admin ui/ux]  -> [design admin guide]
+[plan admin ui/ux] -> [dev admin ui/ux]
+[design admin guide] -> [dev admin guide]
+[dev admin ui/ux] -> [test admin ui/ux]
+[dev admin guide] -> [test admin guide]
+
+
+[plan 1.0] -> [dev back-end structural design]
+[plan 1.0] -> [dev back-end api]
+[dev back-end api] -> [test back-end api]
+
+
+
+[plan 1.0] -> [dev web structural design (player)]
+[plan 1.0] -> [dev web structural design (seller)]
+[plan 1.0] -> [dev admin structural design]
+
+2023-05-01 to 2024-02-28 are named [End's committee]
+
+@endgantt

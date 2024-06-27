@@ -1,0 +1,19 @@
+@startuml
+actor ExternalWallet as EW
+participant "Deposit Address 1" as DA1
+participant "Master Wallet" as MW
+participant "Fee Wallet" as FW
+participant "Company Wallet (CCW)" as CW
+
+EW -> DA1 : 입금
+
+DA1 -> FW : 수수료 요청
+FW -> DA1 : 수수료 대납
+
+DA1 -> MW : 자금 수집
+
+MW -> CW : 자금 이체
+
+CW -> EW : 출금
+
+@enduml

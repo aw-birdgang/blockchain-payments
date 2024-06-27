@@ -1,4 +1,34 @@
 @startuml
+!define RECTANGLE_CLASS
+!define RECTANGLE_BLUE Class<<BLUE>>
+
+skinparam shadowing false
+
+skinparam interface {
+  backgroundColor RosyBrown
+  borderColor orange
+}
+
+skinparam component {
+  FontSize 13
+  FontName Courier
+  BorderColor black
+  backgroundColor #FFFFFF
+  ArrowColor #FF6655
+  ArrowFontColor #777777
+}
+
+skinparam package {
+    BackgroundColor #FFFFFF
+    BorderColor #B8860B
+    FontSize 12
+    FontName Arial
+}
+
+
+() "External Wallet 1" as EW1
+() "External Wallet 2" as EW2
+() "External Wallet 3" as EW3
 
 package "Hot Wallet" {
     [Master Wallet] as MW
@@ -8,22 +38,23 @@ package "Hot Wallet" {
 
     [Fee Wallet] as FW
 
-    MW <-- DA1 : collection
-    MW <-- DA2 : collection
-    MW <-- DA3 : collection
+    MW <-[#0000FF]- DA1 : collection
+    MW <-[#0000FF]- DA2 : collection
+    MW <-[#0000FF]- DA3 : collection
 }
-
 
 package "Cold Wallet" {
     [Company Wallet (CCW)] as CCW
+'    [DLPE Company Wallet (DCCW)] as DCCW
 }
 
-[External Wallet] as EW
 
-CCW <-- MW : transfer
+CCW <-[#0000FF]- MW : transfer
 
-DA3 <-- EW : deposit
-CCW --> EW : withdraw
+DA1 <-[#0000FF]- EW1 : deposit
+DA2 <-[#0000FF]- EW2 : deposit
+DA3 <-[#0000FF]- EW3 : deposit
+'CCW --> EW : withdraw ?
 
 FW ..> MW : fee
 FW ..> CCW : fee

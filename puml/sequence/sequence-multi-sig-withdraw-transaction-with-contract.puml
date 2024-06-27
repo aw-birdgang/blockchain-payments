@@ -1,0 +1,46 @@
+@startuml
+!define RECTANGLE_CLASS
+!define RECTANGLE_BLUE Class<<BLUE>>
+
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #0000FF
+
+skinparam participant {
+    BackgroundColor #B0E0E6
+    BorderColor #4682B4
+    FontSize 12
+    FontName Arial
+}
+
+actor User1 as U1
+actor User2 as U2
+database Server as S
+entity MultiSigWallet as MSW
+actor Blockchain as BC
+
+== 출금 요청 및 트랜잭션 생성 ==
+U1 -> S : Create Withdrawal Request
+S -> MSW : Submit Transaction(to: 0xRecipient, value: 1 ether, data: 0xData)
+MSW --> MSW : Create Transaction Entry
+
+== 서명 요청 및 서명 완료 ==
+S -> S : Request Signature(txIndex: 0)
+S -> MSW : Confirm Transaction(txIndex: 0)
+MSW --> MSW : Increment Confirmation Count
+
+S -> U1 : Request Signature(txIndex: 0)
+U1 -> MSW : Confirm Transaction(txIndex: 0)
+MSW --> MSW : Increment Confirmation Count
+
+== 트랜잭션 실행 ==
+alt Required Signatures Met
+    S -> MSW : Execute Transaction(txIndex: 0)
+    MSW -> BC : Broadcast Transaction
+    BC --> MSW : Confirm Execution
+    MSW --> U1 : Notify Withdrawal Success
+else Not Enough Signatures
+    MSW --> U1 : Notify Withdrawal Failure
+end
+
+@enduml

@@ -1,0 +1,111 @@
+@startuml
+[*] --> Broadcast : 트랜잭션 생성 및 브로드캐스트
+
+
+state Broadcast {
+  note right: 트랜잭션이 생성되고 네트워크에 브로드캐스트됨;
+}
+
+Broadcast --> Mempool : Mempool에 추가
+
+state Mempool {
+    note right:트랜잭션이 각 노드의 메모리 풀에 추가됨;
+  [*] --> ValidityCheck : 유효성 검증
+  ValidityCheck --> DoubleSpendingCheck : 더블 스펜딩 체크
+  DoubleSpendingCheck --> BalanceCheck : 잔고 확인
+  BalanceCheck --> PriorityAssignment : 트랜잭션 순위 지정
+  PriorityAssignment --> ReadyForBlock : 블록 생성 준비 완료
+}
+
+
+Mempool --> CreateBlockTemplate : 블록 템플릿 생성
+CreateBlockTemplate --> SelectTransactions : 트랜잭션 선택
+SelectTransactions --> CreateMerkleTree : 머클 트리 생성
+CreateMerkleTree --> ConstructBlockHeader : 블록 헤더 구성
+ConstructBlockHeader --> FindNonce : Nonce 찾기
+FindNonce --> BlockCreated : 블록 생성 완료
+BlockCreated --> BlockValidation : 블록 검증
+
+state BlockCreation {
+    note right: 채굴자 또는 검증자가 유효한 트랜잭션으로 블록 생성;
+    CreateBlockTemplate : 채굴자가 블록 템플릿을 생성함;
+    SelectTransactions : Mempool에서 유효한 트랜잭션을 선택함;
+    CreateMerkleTree : 선택된 트랜잭션으로 머클 트리를 생성하고 머클 루트 해시를 구함;
+    ConstructBlockHeader : 블록 헤더를 구성함 (머클 루트 해시, 이전 블록의 해시 등);
+    FindNonce : 작업 증명을 위해 유효한 Nonce 값을 찾음;
+    BlockCreated : 유효한 Nonce 값을 찾으면 블록 생성이 완료됨;
+}
+
+
+BlockCreation --> ValidateBlockStructure : 블록 구조 검증
+ValidateBlockStructure --> ValidateBlockHeader : 블록 헤더 검증
+ValidateBlockHeader --> VerifyProofOfWork : 작업 증명 검증
+VerifyProofOfWork --> ValidateTransactions : 트랜잭션 검증
+ValidateTransactions --> CheckDoubleSpending : 더블 스펜딩 체크
+CheckDoubleSpending --> ValidateMerkleRoot : 머클 루트 검증
+ValidateMerkleRoot --> VerifyBlockHash : 블록 해시 검증
+VerifyBlockHash --> BlockValidationComplete : 블록 검증 완료
+BlockValidationComplete --> BlockPropagation : 블록 전파
+
+state BlockValidation {
+    note right:생성된 블록이 네트워크에서 검증됨;
+  ValidateBlockStructure : 블록의 형식과 구조가 올바른지 확인함;
+  ValidateBlockHeader : 블록 헤더의 내용이 올바른지 검증함 (이전 블록 해시, 타임스탬프 등);
+  VerifyProofOfWork : 블록의 해시 값이 목표 난이도 이하인지 확인함;
+  ValidateTransactions : 블록에 포함된 각 트랜잭션의 유효성을 검증함;
+  CheckDoubleSpending : 블록 내의 트랜잭션이 더블 스펜딩을 방지하도록 확인함;
+  ValidateMerkleRoot : 트랜잭션으로부터 생성된 머클 루트 해시가 블록 헤더의 머클 루트와 일치하는지 확인함;
+  VerifyBlockHash : 블록 해시가 올바른지 확인함;
+  BlockValidationComplete : 모든 검증을 통과하면 블록 검증이 완료됨;
+}
+
+BlockValidation --> PrepareBlockBroadcast : 블록 브로드캐스트 준비
+PrepareBlockBroadcast --> SendToFirstPeer : 첫 번째 피어에게 전송
+SendToFirstPeer --> FirstPeerValidation : 피어 검증
+FirstPeerValidation --> PropagateToOtherPeers : 다른 피어에게 전파
+PropagateToOtherPeers --> OtherPeersValidation : 다른 피어 검증
+OtherPeersValidation --> PropagationComplete : 모든 피어에게 전파 완료
+PropagationComplete --> Blockchain : 블록체인에 블록 추가
+
+state BlockPropagation {
+  PrepareBlockBroadcast : 검증된 블록을 네트워크에 전파할 준비를 함;
+  SendToFirstPeer : 블록을 첫 번째 피어에게 전송함;
+  FirstPeerValidation : 피어가 블록을 받아서 검증함;
+  PropagateToOtherPeers : 첫 번째 피어가 블록을 검증한 후 다른 피어에게 전파함;
+  OtherPeersValidation : 다른 피어들도 블록을 받아서 검증함;
+  PropagationComplete : 네트워크의 모든 피어에게 블록이 전파됨;
+}
+
+
+BlockPropagation --> CheckChainConsistency : 체인 일관성 확인
+CheckChainConsistency --> UpdateBlockHeader : 블록 헤더 업데이트
+UpdateBlockHeader --> ApplyTransactions : 트랜잭션 적용
+ApplyTransactions --> UpdateChainLength : 체인 길이 업데이트
+UpdateChainLength --> HandleForks : 포크 처리
+HandleForks --> ChainUpdateComplete : 체인 검증 완료
+ChainUpdateComplete --> Confirmed : 트랜잭션 확정
+
+state Blockchain {
+  CheckChainConsistency : 블록을 추가하기 전에 블록체인 일관성을 확인함;
+  UpdateBlockHeader : 새 블록의 헤더를 블록체인에 추가함;
+  ApplyTransactions : 블록 내의 트랜잭션을 적용하여 상태를 업데이트함;
+  UpdateChainLength : 블록체인의 길이를 업데이트함;
+  HandleForks : 블록체인이 포크된 경우, 적절한 체인을 선택함;
+  ChainUpdateComplete : 모든 검증이 완료되면 블록이 블록체인에 추가됨;
+}
+
+Blockchain --> FirstBlockConfirmation : 첫 번째 블록 확인
+FirstBlockConfirmation --> AdditionalBlocks : 추가 블록 생성
+AdditionalBlocks --> IncreaseConfirmations : 확인 횟수 증가
+IncreaseConfirmations --> ConfirmationThresholdMet : 확인 기준 충족
+ConfirmationThresholdMet --> FinalConfirmation : 트랜잭션 확정
+FinalConfirmation --> [*] : 트랜잭션 완료
+
+state Confirmed {
+  FirstBlockConfirmation : 트랜잭션이 포함된 블록이 블록체인에 추가됨;
+  AdditionalBlocks : 네트워크에서 새로운 블록들이 생성됨;
+  IncreaseConfirmations : 각 새로운 블록이 트랜잭션을 포함한 블록 위에 쌓이면서 확인 횟수가 증가함;
+  ConfirmationThresholdMet : 일정 횟수 이상의 블록이 쌓이면 확인 기준이 충족됨;
+  FinalConfirmation : 트랜잭션이 최종적으로 확정됨;
+}
+@enduml

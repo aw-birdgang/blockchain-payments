@@ -1,0 +1,62 @@
+@startuml
+!define RECTANGLE_CLASS
+!define RECTANGLE_BLUE Class<<BLUE>>
+
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #B8860B
+
+actor Manager as MANAGER
+actor CEO as CEO
+actor COO as COO
+entity Server as SERVER
+entity Contract as CONTRACT
+entity MultiSigWallet as MSW
+database Blockchain as BC
+
+== Key Generation and Public Key Registration & Private Key Storage ==
+
+MANAGER -[#0000FF]> SERVER : Generate Key Pair
+note right of SERVER : Generates Public and Private Key
+SERVER --> SERVER : Store Private Key (Encrypted) in DB
+SERVER -[#0000FF]> CONTRACT : Register Public Key
+
+CEO --> CEO : Generate Key Pair
+note right of CEO : Generates Public and Private Key
+CEO -[#0000FF]> CONTRACT : Register Public Key
+CEO --> CEO : Store Private Key Securely
+
+COO --> COO : Generate Key Pair
+note right of COO : Generates Public and Private Key
+COO -[#0000FF]> CONTRACT : Register Public Key
+COO --> COO : Store Private Key Securely
+
+group MultiSig Wallet Creation
+    CONTRACT <--> BC : Deploy Contract & Get MultiSig Address
+end
+
+== Withdrawal Request and Transaction Creation ==
+CEO -[#0000FF]> SERVER : Create Withdrawal Request
+SERVER -[#0000FF]> MSW : Submit Transaction
+MSW --> MSW : Create Transaction
+
+== Signature Request and Completion ==
+SERVER --> SERVER : Request Signature
+SERVER --> MSW : Confirm Transaction
+MSW --> MSW : Increment Confirmation Count
+
+SERVER -[#0000FF]> CEO : Request Signature
+CEO --> MSW : Confirm Transaction
+MSW --> MSW : Increment Confirmation Count
+
+== Transaction Execution ==
+alt Required Signatures Met
+    SERVER -> MSW : Execute Transaction
+    MSW -> BC : Broadcast Transaction
+    BC --> MSW : Confirm Execution
+    MSW --> CEO : Notify Withdrawal Success
+else Not Enough Signatures
+    MSW --> CEO : Notify Withdrawal Failure
+end
+
+@enduml
