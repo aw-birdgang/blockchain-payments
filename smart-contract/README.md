@@ -330,3 +330,56 @@ Input Data :
 결론, 3 회차 번호 [4, 7, 11, 22, 33, 41]
 
 ````
+
+
+
+# multi sig description
+````
+상태 변수:
+- owners : 지갑 소유자의 주소 배열.
+- isOwner : 주소가 소유자인지 여부를 확인하는 매핑.
+- required: 트랜잭션 실행에 필요한 최소 승인 수.
+- transactions: 트랜잭션 구조체의 배열.
+- isConfirmed: 특정 트랜잭션에 대한 주소의 서명 여부를 확인하는 매핑.
+
+
+트랜잭션 구조체:
+to: 자금 수신자 주소.
+value: 송금할 금액.
+data: 트랜잭션에 포함될 데이터.
+executed: 트랜잭션 실행 여부.
+numConfirmations: 트랜잭션에 대한 서명 수.
+
+
+이벤트:
+Deposit: 입금 이벤트.
+SubmitTransaction: 트랜잭션 제출 이벤트.
+ConfirmTransaction: 트랜잭션 서명 이벤트.
+RevokeConfirmation: 트랜잭션 서명 철회 이벤트.
+ExecuteTransaction: 트랜잭션 실행 이벤트.
+
+
+수정자:
+onlyOwner: 호출자가 소유자인지 확인.
+txExists: 트랜잭션이 존재하는지 확인.
+notExecuted: 트랜잭션이 실행되지 않았는지 확인.
+notConfirmed: 트랜잭션이 서명되지 않았는지 확인.
+
+
+컨트랙트 생성자:
+소유자 주소 배열과 필요한 승인 수를 받아 초기화.
+
+
+트랜잭션 관련 함수:
+submitTransaction: 트랜잭션 제출.
+confirmTransaction: 트랜잭션 서명.
+executeTransaction: 서명된 트랜잭션 실행.
+revokeConfirmation: 서명 철회.
+
+
+조회 함수:
+getOwners: 소유자 목록 조회.
+getTransactionCount: 트랜잭션 수 조회.
+getTransaction: 특정 트랜잭션 정보 조회.
+
+````
