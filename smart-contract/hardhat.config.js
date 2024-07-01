@@ -47,10 +47,6 @@ module.exports = {
       accounts: [`0x${DEPLOYER_PRIVATE_KEY}`]
       // gasPrice: 101000000000
     }
-    // gpextest: {
-    //   url: `https://testnet.rpc.gb.gpexdev.com`,
-    //   accounts: [`${DEPLOYER_PRIVATE_KEY}`]
-    // },
   },
   etherscan: {
     apiKey: {
