@@ -1,9 +1,16 @@
 @startuml
+!define RECTANGLE_CLASS
+!define RECTANGLE_BLUE Class<<BLUE>>
+
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #B8860B
 
 actor User1 as U1
 actor User2 as U2
 actor User3 as U3
-database MultiSigWallet as MSW
+entity MultiSigWallet as MSW
+database Blockchain as BC
 
 U1 -> MSW : Create Wallet
 U2 -> MSW : Add Public Key
@@ -20,7 +27,7 @@ MSW -> U3 : Request Signature
 U3 -> MSW : Provide Signature
 
 alt Required Signatures Met
-    MSW -> Blockchain : Broadcast Transaction
+    MSW -> BC : Broadcast Transaction
 else Not Enough Signatures
     MSW -> U1 : Transaction Rejected
 end

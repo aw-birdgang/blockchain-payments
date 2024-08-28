@@ -7,8 +7,8 @@ skinparam backgroundColor #FFFFFF
 skinparam ArrowColor #B8860B
 
 actor Manager as MANAGER
-actor CEO as CEO
-actor COO as COO
+actor Alice as CEO
+actor Bob as COO
 entity Server as SERVER
 entity Contract as CONTRACT
 entity MultiSigWallet as MSW

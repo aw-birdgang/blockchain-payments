@@ -1,50 +1,32 @@
-@startuml Kanban_Board
-
-title Software Development Kanban Workflow
-
-[*] --> Backlog : Issue creation\nProduct PM creates, assigned by Dev PM
-Backlog --> TO_DO : Assign owner\nAutomatically moves to TO DO
-TO_DO --> IN_PROGRESS : Start work\nMoves to IN PROGRESS when work starts
-IN_PROGRESS --> DONE : Complete work\nMoves to DONE when work is completed
-DONE --> IN_STAGING : Review completed\nMoves to staging deployment
-IN_STAGING --> READY_FOR_RELEASE : CPO approval\nMoves to READY FOR RELEASE
-READY_FOR_RELEASE --> [*] : CTO approval\nRelease completed
-IN_STAGING -down-> TO_DO : CPO disapproval\nRequires modifications
-READY_FOR_RELEASE -down-> TO_DO : CTO disapproval\nRequires modifications
-
-state Backlog {
-  [*] --> Created
-  Created : Issue created\nBy Product PM
-  Created --> Assigned : Assigned by Dev PM
-  Assigned : Dev PM selects and assigns\ndevelopment targets and additional tasks
+@startuml
+!define RECTANGLE class
+skinparam class {
+    BackgroundColor<<Branch>> Gold
+    BackgroundColor<<Extension>> LightGreen
+    BackgroundColor<<Leaf>> LightBlue
 }
 
-state TO_DO {
-  [*] --> Assigned
-  Assigned : Assigned to the issue owner\nDetermines the start time for the work
+RECTANGLE BranchNode <<Branch>> {
+  0-9a-f : [Child Nodes]
+  Value : null
 }
 
-state IN_PROGRESS {
-  [*] --> Working
-  Working : Development, planning, design tasks are performed
+RECTANGLE ExtensionNode <<Extension>> {
+  Path : "doge"
+  Next : LeafNode
 }
 
-state DONE {
-  [*] --> Reviewed
-  Reviewed : Dev PM completes code review\nPrepares for staging deployment
-  Reviewed --> Deployed : Deployed on staging server
-  Deployed : Review completed and deployed
+RECTANGLE LeafNode <<Leaf>> {
+  Path : "coin"
+  Value : "crypto"
 }
 
-state IN_STAGING {
-  [*] --> QA
-  QA : QA and product review performed\nBy Product Team
-  QA --> Approved : Final approval by CPO
-}
-
-state READY_FOR_RELEASE {
-  [*] --> Prepared
-  Prepared : Final approval by CTO pending\nPreparation for release
-}
+BranchNode : "Root"
+'BranchNode -[hidden]-> ExtensionNode
+'BranchNode -[hidden]-> LeafNode
+'ExtensionNode -[hidden]-> LeafNode
+BranchNode --> ExtensionNode
+BranchNode --> LeafNode
+ExtensionNode --> LeafNode
 
 @enduml

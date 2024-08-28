@@ -1,0 +1,16 @@
+@startuml
+title EVM에서 스마트 컨트랙트 실행 과정
+
+participant "User" as user
+participant "EVM" as evm
+
+user -> evm : Contract Call (add(3, 5))
+evm -> evm : Push 3 to Stack
+evm -> evm : Push 5 to Stack
+evm -> evm : Pop 3 and 5 from Stack
+evm -> evm : Add 3 and 5
+evm -> evm : Push result (8) to Stack
+evm -> evm : Pop result (8) from Stack
+evm -> user : Return result (8)
+
+@enduml
