@@ -31,32 +31,38 @@ skinparam package {
 () "External Wallet 3" as EW3
 
 package "Hot Wallet" {
-    [Master Wallet] as MW
+    [Treasury Wallet] as TW
+    [Withdrawal Wallet] as WW
     [Deposit Address 1] as DA1
     [Deposit Address 2] as DA2
     [Deposit Address 3] as DA3
 
     [Fee Wallet] as FW
 
-    MW <-[#0000FF]- DA1 : collection
-    MW <-[#0000FF]- DA2 : collection
-    MW <-[#0000FF]- DA3 : collection
+    TW <-[#0000FF]- DA1 : collection
+    TW <-[#0000FF]- DA2 : collection
+    TW <-[#0000FF]- DA3 : collection
 }
 
-package "Cold Wallet" {
+package "Cold Wallet" as CW {
     [Company Wallet (CCW)] as CCW
-'    [DLPE Company Wallet (DCCW)] as DCCW
+    [DLPE Company Wallet (DCCW)] as DCCW
 }
 
 
-CCW <-[#0000FF]- MW : transfer
+CW <-[#0000FF]-- TW : transfer
 
 DA1 <-[#0000FF]- EW1 : deposit
 DA2 <-[#0000FF]- EW2 : deposit
-DA3 <-[#0000FF]- EW3 : deposit
-'CCW --> EW : withdraw ?
+DA3 <-[#0000FF] EW3 : deposit
 
-FW ..> MW : fee
-FW ..> CCW : fee
+WW ..> EW1 : withdraw
+
+
+CW -[#0000FF]-> WW : transfer
+
+FW ..> TW : fee
+FW ..> CW : fee
+FW .> WW : fee
 
 @enduml

@@ -18,15 +18,13 @@ projectscale monthly zoom 4
 
 Project starts 2024-04-01
 
+[Ideation 1.0] is colored in Yellow/LightBlue
+[Ideation 1.0] starts 2023-05-01
+[Ideation 1.0] lasts 70 days
 
-[plan 1.0] is colored in Yellow/LightBlue
-[plan 1.0] starts 2023-05-01
-[plan 1.0] lasts 70 days
-
-
-[plan web ui/ux (player)] is colored in Yellow/LightBlue
-[plan web ui/ux (player)] starts 2023-07-16
-[plan web ui/ux (player)] lasts 40 days
+[proposal web ui/ux (player)] is colored in Yellow/LightBlue
+[proposal web ui/ux (player)] starts 2023-07-30
+[proposal web ui/ux (player)] lasts 50 days
 
 [design web guide (player)] is colored in GreenYellow/Green
 [design web guide (player)] starts 2023-08-7
@@ -51,9 +49,9 @@ Project starts 2024-04-01
 
 
 
-[plan admin ui/ux] is colored in Yellow/LightBlue
-[plan admin ui/ux] starts 2023-07-20
-[plan admin ui/ux] lasts 40 days
+[proposal admin ui/ux] is colored in Yellow/LightBlue
+[proposal admin ui/ux] starts 2023-07-20
+[proposal admin ui/ux] lasts 40 days
 
 [design admin guide] is colored in GreenYellow/Green
 [design admin guide] starts 2023-08-12
@@ -118,39 +116,31 @@ Project starts 2024-04-01
 
 
 
-[plan 1.0] -> [plan web ui/ux (player)]
-[plan web ui/ux (player)] -> [design web guide (player)]
-[plan web ui/ux (player)] -> [dev web ui/ux (player)]
+[Ideation 1.0] -> [proposal web ui/ux (player)]
+[proposal web ui/ux (player)] -> [design web guide (player)]
+[proposal web ui/ux (player)] -> [dev web ui/ux (player)]
 [design web guide (player)] -> [dev web guide (player)]
 [dev web guide (player)] -> [test web guide (player)]
 [dev web ui/ux (player)] -> [test web ui/ux (player)]
 
 
-[plan 1.0] -> [plan web ui/ux (seller)]
-[plan web ui/ux (seller)] -> [design web guide (seller)]
-[plan web ui/ux (seller)]  -> [dev web ui/ux (seller)]
-[design web guide (seller)] -> [dev web guide (seller)]
-[dev web guide (seller)] -> [test web guide (seller)]
-[dev web ui/ux (seller)] -> [test web ui/ux (seller)]
-
-
-[plan 1.0] -> [plan admin ui/ux]
-[plan admin ui/ux]  -> [design admin guide]
-[plan admin ui/ux] -> [dev admin ui/ux]
+[Ideation 1.0] -> [proposal admin ui/ux]
+[proposal admin ui/ux]  -> [design admin guide]
+[proposal admin ui/ux] -> [dev admin ui/ux]
 [design admin guide] -> [dev admin guide]
 [dev admin ui/ux] -> [test admin ui/ux]
 [dev admin guide] -> [test admin guide]
 
 
-[plan 1.0] -> [dev back-end structural design]
-[plan 1.0] -> [dev back-end api]
+[Ideation 1.0] -> [dev back-end structural design]
+[Ideation 1.0] -> [dev back-end api]
 [dev back-end api] -> [test back-end api]
 
 
 
-[plan 1.0] -> [dev web structural design (player)]
-[plan 1.0] -> [dev web structural design (seller)]
-[plan 1.0] -> [dev admin structural design]
+[Ideation 1.0] -> [dev web structural design (player)]
+[Ideation 1.0] -> [dev web structural design (seller)]
+[Ideation 1.0] -> [dev admin structural design]
 
 2023-05-01 to 2024-02-28 are named [End's committee]
 
